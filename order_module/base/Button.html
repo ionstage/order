@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <style>
+    body {
+      background-color: lightgray;
+      margin: 0;
+    }
+    button {
+      -moz-box-sizing: border-box;
+      border-radius: 0;
+      box-sizing: border-box;
+      display: block;
+      font-size: 14px;
+      height: 28px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <button id="button">&nbsp;</button>
+  <script src="../../js/piece.js"></script>
+  <script>
+  (function() {
+    function addEventListener(el, eventName, handler) {
+      if (el.addEventListener) {
+        el.addEventListener(eventName, handler);
+      } else {
+        el.attachEvent('on' + eventName, function(){
+          var e = window.event;
+          e.target = e.srcElement;
+          e.currentTarget = el;
+          handler.call(el, e);
+        });
+      }
+    }
+
+    var buttonElement = document.getElementById('button');
+
+    addEventListener(buttonElement, 'click', function() {
+      piece.dispatchEvent('click');
+    }, false);
+
+    piece.initialize({
+      label: 'Button',
+      event: {
+        click: {
+          label: 'Click',
+          out: piece.noop,
+          'default': true
+        }
+      }
+    });
+  }());
+  </script>
+</body>
+</html>

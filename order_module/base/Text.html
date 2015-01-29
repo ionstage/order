@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <style>
+    body {
+      background-color: lightgray;
+      margin: 0;
+    }
+    input {
+      -moz-box-sizing: border-box;
+      border-radius: 0;
+      box-sizing: border-box;
+      font-size: 14px;
+      height: 28px;
+      opacity: 1;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <input id="text" autocapitalize="off" autocorrect="off"></input>
+  <script src="../../js/piece.js"></script>
+  <script>
+  (function() {
+    var textElement = document.getElementById('text');
+    var textCache = '';
+
+    function addEventListener(el, eventName, handler) {
+      if (el.addEventListener) {
+        el.addEventListener(eventName, handler);
+      } else {
+        el.attachEvent('on' + eventName, function(){
+          var e = window.event;
+          e.target = e.srcElement;
+          e.currentTarget = el;
+          handler.call(el, e);
+        });
+      }
+    }
+
+    function updatePropertyListener(event) {
+      var value = event.target.value;
+      if (value !== textCache) {
+        textCache = textElement.value;
+        piece.updateProperty('text');
+      }
+    }
+
+    var toString = Object.prototype.toString;
+    function isString(obj) {
+      return toString.call(obj) == '[object String]';
+    }
+    function parseString(obj, isFormat) {
+      if (obj === null || obj === undefined || obj !== obj)
+        return '';
+      if (isString(obj)) {
+        return obj;
+      } else {
+        try {
+          var str = (isFormat) ? JSON.stringify(obj, null, '  ') :
+                                 JSON.stringify(obj);
+          return str;
+        } catch (e) {
+          return String(obj);
+        }
+      }
+    }
+
+    addEventListener(textElement, 'keyup', updatePropertyListener);
+    addEventListener(textElement, 'input', updatePropertyListener);
+
+    piece.initialize({
+      label: 'Text',
+      prop: {
+        text: {
+          label: 'Text',
+          'in': function(value) {
+            if (value !== null) {
+              var args = Array.prototype.slice.call(arguments);
+              value = parseString(args.join(', '));
+              if (value !== textCache) {
+                textCache = value;
+                textElement.value = value;
+                piece.updateProperty('text');
+              }
+            }
+          },
+          out: function() {
+            return textCache;
+          },
+          'default': true,
+          serialize: true
+        }
+      }
+    });
+  }());
+  </script>
+</body>
+</html>
