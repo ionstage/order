@@ -1,5 +1,5 @@
 {
-  "name": "order",
+  "name": "coco",
   "version": "0.1.0",
   "scripts": {
     "start": "browser-sync start --files='index.html, css/*.css, js/*.js' --server"

@@ -110,7 +110,7 @@ var app = app || {};
         var deferred = $.Deferred();
 
         $.ajax({
-          url: 'order_script/' + option.src,
+          url: 'coco_scripts/' + option.src,
           dataType: 'text',
           cache: false
         }).done(function(data) {
@@ -441,7 +441,7 @@ var app = app || {};
     return $module;
   }
   function createModule(variableName, className) {
-    var src = 'order_module/' + className.replace(/\./g, '/') + '.html';
+    var src = 'coco_modules/' + className.replace(/\./g, '/') + '.html';
     var url = src + '?' + (new Date().getTime()) + '#' + variableName;
     var $el = createModuleElement(variableName, className, url);
     var variable = {
@@ -553,7 +553,7 @@ var app = app || {};
     return $connection;
   }
 
-  app.execCommand(':load init.os', app.variables);
+  app.execCommand(':load init.coco', app.variables);
 
   // input
   var $input = $('#header input');
