@@ -1,7 +1,10 @@
 var app = app || {};
 
-(function($) {
+(function() {
   'use strict';
+  var circuit = require('circuit');
+  var $ = require('jquery');
+
   var userAgent = navigator.userAgent;
   var isIE = userAgent.match(/MSIE/) || userAgent.match(/Trident/);
 
@@ -601,4 +604,4 @@ var app = app || {};
     $input.focus();
   }, 0);
 
-}(jQuery));
+})();
