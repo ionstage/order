@@ -1,6 +1,6 @@
 {
   "name": "coco",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "uglifyjs js/bundle.js -o build/bundle.min.js --comments '/^\\!|^@preserve|^@cc_on|\\bMIT\\b|\\bMPL\\b|\\bGPL\\b|\\(c\\)|License|Copyright/' -c -m; uglifyjs js/app.js -o build/app.min.js -c -m; cleancss --s1 node_modules/normalize.css/normalize.css -o build/bundle.min.css; cat css/*.css | cleancss -o build/app.min.css",
     "bundle": "browserify -r circuit -r jquery -o js/bundle.js",
