@@ -4,7 +4,8 @@
   "scripts": {
     "build": "uglifyjs js/bundle.js -o build/bundle.min.js --comments '/^\\!|^@preserve|^@cc_on|\\bMIT\\b|\\bMPL\\b|\\bGPL\\b|\\(c\\)|License|Copyright/' -c -m; uglifyjs js/app.js -o build/app.min.js -c -m; cleancss --s1 node_modules/normalize.css/normalize.css -o build/bundle.min.css; cat css/*.css | cleancss -o build/app.min.css",
     "bundle": "browserify -r circuit -r jquery -o js/bundle.js",
-    "start": "browser-sync start --files='index.html, css/*.css, js/*.js' --server"
+    "start": "browser-sync start --files='index.html, css/*.css, js/*.js' --server",
+    "test": "mocha"
   },
   "dependencies": {
     "circuit": "^0.1.4",
@@ -15,6 +16,7 @@
     "browser-sync": "^2.7.6",
     "browserify": "^10.2.3",
     "clean-css": "^3.3.1",
+    "mocha": "^2.3.3",
     "uglify-js": "^2.4.23"
   },
   "private": true
