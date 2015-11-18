@@ -4,7 +4,7 @@
   var command = {};
 
   command.parseLine = function(line) {
-    line = line.trim();
+    line = line.split('#')[0].trim();
 
     if (!line)
       return [];

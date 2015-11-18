@@ -8,5 +8,11 @@ describe('command', function() {
       assert.equal(command.parseLine(' ').length, 0);
       assert.equal(command.parseLine(' \t ').length, 0);
     });
+
+    it('comment', function() {
+      assert.equal(command.parseLine('#').length, 0);
+      assert.equal(command.parseLine('# comment').length, 0);
+      assert.equal(command.parseLine(' # comment ').length, 0);
+    });
   });
 });
