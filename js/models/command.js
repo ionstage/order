@@ -30,7 +30,7 @@
     if (m)
       return [new command.Declare(m[1].trim(), m[2].trim())];
 
-    var substrings = line.split('->');
+    var substrings = line.split('>>');
     if (substrings.length === 2) {
       var source = substrings[0].split('.');
       var target = substrings[1].split('.');
