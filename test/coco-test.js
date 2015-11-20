@@ -20,6 +20,11 @@ describe('command', function() {
       assert(cmd instanceof command.Declare);
       assert.equal(cmd.variableName, 'x');
       assert.equal(cmd.moduleName, 'Module');
+
+      // with whitespace
+      assert.deepEqual(command.parseLine('x :Module')[0], cmd);
+      assert.deepEqual(command.parseLine('x: Module')[0], cmd);
+      assert.deepEqual(command.parseLine('x : Module')[0], cmd);
     });
 
     it('bind', function() {

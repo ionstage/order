@@ -28,7 +28,7 @@
 
     var m = line.match(/^([^:]+):([^:]+)$/);
     if (m)
-      return [new command.Declare(m[1], m[2])];
+      return [new command.Declare(m[1].trim(), m[2].trim())];
 
     var substrings = line.split('->');
     if (substrings.length === 2) {
