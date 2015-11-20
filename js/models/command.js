@@ -20,6 +20,11 @@
     };
   };
 
+  command.Unbind = function() {
+    // share the implementation of command.Bind
+    command.Bind.apply(this, arguments);
+  };
+
   command.parseLine = function(line) {
     line = line.split('#')[0].trim();
 
@@ -36,6 +41,14 @@
       var target = substrings[1].split('.');
       if (source.length === 2 && target.length === 2)
         return [new command.Bind(source[0].trim(), source[1].trim(), target[0].trim(), target[1].trim())];
+    }
+
+    substrings = line.split('\\\\');
+    if (substrings.length === 2) {
+      var source = substrings[0].split('.');
+      var target = substrings[1].split('.');
+      if (source.length === 2 && target.length === 2)
+        return [new command.Unbind(source[0].trim(), source[1].trim(), target[0].trim(), target[1].trim())];
     }
 
     return [];
