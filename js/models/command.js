@@ -14,15 +14,10 @@
     var args0 = arguments[0].split('.');
     var args1 = arguments[1].split('.');
 
-    this.source = {
-      variableName: args0[0].trim(),
-      memberName: args0[1].trim()
-    };
-
-    this.target = {
-      variableName: args1[0].trim(),
-      memberName: args1[1].trim()
-    };
+    this.sourceVariableName = args0[0].trim();
+    this.sourceMemberName = args0[1].trim();
+    this.targetVariableName = args1[0].trim();
+    this.targetMemberName = args1[1].trim();
   };
 
   command.Unbind = function() {

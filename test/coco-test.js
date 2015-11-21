@@ -42,10 +42,10 @@ describe('command', function() {
     it('bind', function() {
       var cmd = command.parseLine('x.member0 >> y.member1')[0];
       assert(cmd instanceof command.Bind);
-      assert.equal(cmd.source.variableName, 'x');
-      assert.equal(cmd.source.memberName, 'member0');
-      assert.equal(cmd.target.variableName, 'y');
-      assert.equal(cmd.target.memberName, 'member1');
+      assert.equal(cmd.sourceVariableName, 'x');
+      assert.equal(cmd.sourceMemberName, 'member0');
+      assert.equal(cmd.targetVariableName, 'y');
+      assert.equal(cmd.targetMemberName, 'member1');
 
       // without whitespace
       assert.deepEqual(command.parseLine('x.member0>>y.member1')[0], cmd);
@@ -61,10 +61,10 @@ describe('command', function() {
     it('unbind', function() {
       var cmd = command.parseLine('x.member0 \\\\ y.member1')[0];
       assert(cmd instanceof command.Unbind);
-      assert.equal(cmd.source.variableName, 'x');
-      assert.equal(cmd.source.memberName, 'member0');
-      assert.equal(cmd.target.variableName, 'y');
-      assert.equal(cmd.target.memberName, 'member1');
+      assert.equal(cmd.sourceVariableName, 'x');
+      assert.equal(cmd.sourceMemberName, 'member0');
+      assert.equal(cmd.targetVariableName, 'y');
+      assert.equal(cmd.targetMemberName, 'member1');
 
       // without whitespace
       assert.deepEqual(command.parseLine('x.member0\\\\y.member1')[0], cmd);
