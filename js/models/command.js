@@ -3,20 +3,23 @@
 
   var command = {};
 
-  command.Declare = function(variableName, moduleName) {
-    this.variableName = variableName;
-    this.moduleName = moduleName;
+  command.Declare = function() {
+    this.variableName = arguments[0].trim();
+    this.moduleName = arguments[1].trim();
   };
 
-  command.Bind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
+  command.Bind = function() {
+    var args0 = arguments[0].split('.');
+    var args1 = arguments[1].split('.');
+
     this.source = {
-      variableName: sourceVariableName,
-      memberName: sourceMemberName
+      variableName: args0[0].trim(),
+      memberName: args0[1].trim()
     };
 
     this.target = {
-      variableName: targetVariableName,
-      memberName: targetMemberName
+      variableName: args1[0].trim(),
+      memberName: args1[1].trim()
     };
   };
 
@@ -33,22 +36,22 @@
 
     var m = line.match(/^([^:]+):([^:]+)$/);
     if (m)
-      return [new command.Declare(m[1].trim(), m[2].trim())];
+      return [new command.Declare(m[1], m[2])];
 
     var substrings = line.split('>>');
     if (substrings.length === 2) {
-      var source = substrings[0].split('.');
-      var target = substrings[1].split('.');
-      if (source.length === 2 && target.length === 2)
-        return [new command.Bind(source[0].trim(), source[1].trim(), target[0].trim(), target[1].trim())];
+      var args0 = substrings[0].split('.');
+      var args1 = substrings[1].split('.');
+      if (args0.length === 2 && args1.length === 2)
+        return [new command.Bind(args0.join('.'), args1.join('.'))];
     }
 
     substrings = line.split('\\\\');
     if (substrings.length === 2) {
-      var source = substrings[0].split('.');
-      var target = substrings[1].split('.');
-      if (source.length === 2 && target.length === 2)
-        return [new command.Unbind(source[0].trim(), source[1].trim(), target[0].trim(), target[1].trim())];
+      var args0 = substrings[0].split('.');
+      var args1 = substrings[1].split('.');
+      if (args0.length === 2 && args1.length === 2)
+        return [new command.Unbind(args0.join('.'), args1.join('.'))];
     }
 
     return [];
