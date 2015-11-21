@@ -28,6 +28,17 @@
   command.parseStatement = function(line) {
     if (line.charAt(0) !== ':')
       return new command.Noop();
+
+    var args = line.slice(1).split(' ');
+    var cmd = args.shift();
+
+    cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
+    args.unshift(null);
+
+    if (cmd in command)
+      return new (Function.prototype.bind.apply(command[cmd], args));
+
+    return new command.Noop();
   };
 
   command.parseLine = function(line) {

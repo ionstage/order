@@ -4,7 +4,22 @@ var command = require('../js/models/command.js');
 describe('command', function() {
   describe('#parseStatement', function() {
     [
-      ['', command.Noop, {}]
+      [':noop', command.Noop, {}],
+
+      [':declare x Module',
+        command.Declare,
+        { variableName: 'x', moduleName: 'Module'}],
+
+      [':bind x.member0 y.member1',
+        command.Bind,
+        { sourceVariableName: 'x', sourceMemberName: 'member0',
+          targetVariableName: 'y', targetMemberName: 'member1' }],
+
+      [':unbind x.member0 y.member1',
+        command.Unbind,
+        { sourceVariableName: 'x', sourceMemberName: 'member0',
+          targetVariableName: 'y', targetMemberName: 'member1' }]
+
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         var cmd = command.parseStatement(p[0]);
