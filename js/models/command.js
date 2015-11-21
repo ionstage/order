@@ -3,6 +3,8 @@
 
   var command = {};
 
+  command.Noop = function() {};
+
   command.Declare = function() {
     this.variableName = arguments[0].trim();
     this.moduleName = arguments[1].trim();
@@ -26,6 +28,11 @@
   command.Unbind = function() {
     // share the implementation of command.Bind
     command.Bind.apply(this, arguments);
+  };
+
+  command.parseStatement = function(line) {
+    if (line.charAt(0) !== ':')
+      return new command.Noop();
   };
 
   command.parseLine = function(line) {

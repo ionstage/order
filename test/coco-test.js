@@ -2,6 +2,18 @@ var assert = require('assert');
 var command = require('../js/models/command.js');
 
 describe('command', function() {
+  describe('#parseStatement', function() {
+    [
+      ['', command.Noop, {}]
+    ].forEach(function(p) {
+      it('"' + p[0] + '"', function() {
+        var cmd = command.parseStatement(p[0]);
+        assert(cmd instanceof p[1]);
+        assert.deepEqual(cmd, p[2]);
+      });
+    });
+  });
+
   describe('#parseLine', function() {
     it('empty', function() {
       assert.equal(command.parseLine('').length, 0);
