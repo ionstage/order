@@ -72,24 +72,5 @@ describe('command', function() {
       assert.equal(command.parseLine('x.member0 >> y').length, 0);
       assert.equal(command.parseLine('x.member0 >> y.member1.member2').length, 0);
     });
-
-    it('unbind', function() {
-      var cmd = command.parseLine('x.member0 \\\\ y.member1')[0];
-      assert(cmd instanceof command.Unbind);
-      assert.equal(cmd.sourceVariableName, 'x');
-      assert.equal(cmd.sourceMemberName, 'member0');
-      assert.equal(cmd.targetVariableName, 'y');
-      assert.equal(cmd.targetMemberName, 'member1');
-
-      // without whitespace
-      assert.deepEqual(command.parseLine('x.member0\\\\y.member1')[0], cmd);
-      assert.deepEqual(command.parseLine('x.member0 \\\\y.member1')[0], cmd);
-      assert.deepEqual(command.parseLine('x.member0\\\\ y.member1')[0], cmd);
-
-      // invalid
-      assert.equal(command.parseLine('x \\\\ y').length, 0);
-      assert.equal(command.parseLine('x.member0 \\\\ y').length, 0);
-      assert.equal(command.parseLine('x.member0 \\\\ y.member1.member2').length, 0);
-    });
   });
 });

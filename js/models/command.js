@@ -59,14 +59,6 @@
         return [new command.Bind(args0.join('.'), args1.join('.'))];
     }
 
-    substrings = line.split('\\\\');
-    if (substrings.length === 2) {
-      var args0 = substrings[0].split('.');
-      var args1 = substrings[1].split('.');
-      if (args0.length === 2 && args1.length === 2)
-        return [new command.Unbind(args0.join('.'), args1.join('.'))];
-    }
-
     return [];
   };
 
