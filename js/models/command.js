@@ -26,8 +26,11 @@
   };
 
   command.parseStatement = function(line) {
+    if (!line || line === ':')
+      throw new SyntaxError('CocoScript parse error: Unexpected EOF');
+
     if (line.charAt(0) !== ':')
-      return new command.Noop();
+      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  line + '"');
 
     var args = line.slice(1).split(' ');
     var cmd = args.shift();
@@ -38,7 +41,7 @@
     if (cmd in command)
       return new (Function.prototype.bind.apply(command[cmd], args));
 
-    return new command.Noop();
+    throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
   };
 
   command.parseLine = function(line) {

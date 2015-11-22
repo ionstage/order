@@ -29,6 +29,21 @@ describe('command', function() {
     });
   });
 
+  describe('#parseStatement (error)', function() {
+    [
+      [''],
+      [':'],
+      [':_command'],
+      ['command']
+    ].forEach(function(p) {
+      it('"' + p[0] + '"', function() {
+        assert.throws(function() {
+          command.parseStatement(p[0]);
+        }, SyntaxError);
+      });
+    });
+  });
+
   describe('#parseLine', function() {
     it('empty', function() {
       assert.equal(command.parseLine('').length, 0);
