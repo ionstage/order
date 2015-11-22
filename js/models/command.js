@@ -25,14 +25,14 @@
     command.Bind.apply(this, arguments);
   };
 
-  command.parseStatement = function(line) {
-    if (!line || line === ':')
+  command.parseStatement = function(s) {
+    if (!s || s === ':')
       throw new SyntaxError('CocoScript parse error: Unexpected EOF');
 
-    if (line.charAt(0) !== ':')
-      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  line + '"');
+    if (s.charAt(0) !== ':')
+      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
 
-    var args = line.slice(1).split(' ');
+    var args = s.slice(1).split(' ');
     var cmd = args.shift();
 
     cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
