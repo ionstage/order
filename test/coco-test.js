@@ -45,18 +45,6 @@ describe('command', function() {
   });
 
   describe('#parseLine', function() {
-    it('empty', function() {
-      assert.equal(command.parseLine('').length, 0);
-      assert.equal(command.parseLine(' ').length, 0);
-      assert.equal(command.parseLine(' \t ').length, 0);
-    });
-
-    it('comment', function() {
-      assert.equal(command.parseLine('#').length, 0);
-      assert.equal(command.parseLine('# comment').length, 0);
-      assert.equal(command.parseLine(' # comment ').length, 0);
-    });
-
     it('declare', function() {
       var cmd = command.parseLine('x:Module')[0];
       assert(cmd instanceof command.Declare);
@@ -81,6 +69,30 @@ describe('command', function() {
       assert.deepEqual(command.parseLine('x.member0>>y.member1')[0], cmd);
       assert.deepEqual(command.parseLine('x.member0 >>y.member1')[0], cmd);
       assert.deepEqual(command.parseLine('x.member0>> y.member1')[0], cmd);
+    });
+  });
+
+  describe('#parseLine (empty)', function() {
+    [
+      '',
+      ' ',
+      ' \t '
+    ].forEach(function(p) {
+      it('"' + p + '"', function() {
+        assert.equal(command.parseLine(p).length, 0);
+      });
+    });
+  });
+
+  describe('#parseLine (comment)', function() {
+    [
+      '#',
+      '# comment',
+      ' # comment '
+    ].forEach(function(p) {
+      it('"' + p + '"', function() {
+        assert.equal(command.parseLine(p).length, 0);
+      });
     });
   });
 
