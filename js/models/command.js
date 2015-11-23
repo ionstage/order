@@ -44,8 +44,8 @@
     throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
   };
 
-  command.parseLine = function(line) {
-    line = line.split('#')[0].trim();
+  command.parseLine = function(s) {
+    var line = s.split('#')[0].trim();
 
     if (!line)
       return [];
@@ -58,11 +58,14 @@
     if (substrings.length === 2) {
       var args0 = substrings[0].split('.');
       var args1 = substrings[1].split('.');
-      if (args0.length === 2 && args1.length === 2)
-        return [new command.Bind(args0.join('.'), args1.join('.'))];
+
+      if (args0.length !== 2 || args1.length !== 2)
+        throw new SyntaxError('CocoScript parse error: Invalid command "' +  s + '"');
+
+      return [new command.Bind(args0.join('.'), args1.join('.'))];
     }
 
-    return [];
+    throw new SyntaxError('CocoScript parse error: Invalid command "' +  s + '"');
   };
 
   if (typeof module !== 'undefined' && module.exports)

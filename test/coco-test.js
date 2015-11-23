@@ -81,11 +81,20 @@ describe('command', function() {
       assert.deepEqual(command.parseLine('x.member0>>y.member1')[0], cmd);
       assert.deepEqual(command.parseLine('x.member0 >>y.member1')[0], cmd);
       assert.deepEqual(command.parseLine('x.member0>> y.member1')[0], cmd);
+    });
+  });
 
-      // invalid
-      assert.equal(command.parseLine('x >> y').length, 0);
-      assert.equal(command.parseLine('x.member0 >> y').length, 0);
-      assert.equal(command.parseLine('x.member0 >> y.member1.member2').length, 0);
+  describe('#parseLine (error)', function() {
+    [
+      ['x >> y'],
+      ['x.member0 >> y'],
+      ['x.member0 >> y.member1.member2']
+    ].forEach(function(p) {
+      it('"' + p[0] + '"', function() {
+        assert.throws(function() {
+          command.parseLine(p[0]);
+        }, SyntaxError);
+      });
     });
   });
 });
