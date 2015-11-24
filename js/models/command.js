@@ -32,7 +32,7 @@
     if (s.charAt(0) !== ':')
       throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
 
-    var args = s.slice(1).split(' ');
+    var args = s.slice(1).split(/[\s]+/);
     var cmd = args.shift();
 
     cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);

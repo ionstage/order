@@ -10,6 +10,10 @@ describe('command', function() {
         command.Declare,
         { variableName: 'x', moduleName: 'Module'}],
 
+      [':declare  x \t Module',
+        command.Declare,
+        { variableName: 'x', moduleName: 'Module'}],
+
       [':bind x.member0 y.member1',
         command.Bind,
         { sourceVariableName: 'x', sourceMemberName: 'member0',
