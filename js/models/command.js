@@ -65,7 +65,7 @@
       return [new command.Bind(args0.join('.'), args1.join('.'))];
     }
 
-    throw new SyntaxError('CocoScript parse error: Invalid command "' +  s + '"');
+    return [command.parseStatement(line)];
   };
 
   if (typeof module !== 'undefined' && module.exports)
