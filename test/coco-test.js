@@ -35,14 +35,14 @@ describe('command', function() {
 
   describe('#parseStatement (error)', function() {
     [
-      [''],
-      [':'],
-      [':_command'],
-      ['command']
+      '',
+      ':',
+      ':_command',
+      'command'
     ].forEach(function(p) {
-      it('"' + p[0] + '"', function() {
+      it('"' + p + '"', function() {
         assert.throws(function() {
-          command.parseStatement(p[0]);
+          command.parseStatement(p);
         }, SyntaxError);
       });
     });
@@ -102,13 +102,13 @@ describe('command', function() {
 
   describe('#parseLine (error)', function() {
     [
-      ['x >> y'],
-      ['x.member0 >> y'],
-      ['x.member0 >> y.member1.member2']
+      'x >> y',
+      'x.member0 >> y',
+      'x.member0 >> y.member1.member2'
     ].forEach(function(p) {
-      it('"' + p[0] + '"', function() {
+      it('"' + p + '"', function() {
         assert.throws(function() {
-          command.parseLine(p[0]);
+          command.parseLine(p);
         }, SyntaxError);
       });
     });
