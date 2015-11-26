@@ -48,11 +48,11 @@
     var line = s.split('#')[0].trim();
 
     if (!line)
-      return [];
+      return new command.Noop();
 
     var m = line.match(/^([^:]+):([^:]+)$/);
     if (m)
-      return [new command.Declare(m[1], m[2])];
+      return new command.Declare(m[1], m[2]);
 
     var substrings = line.split('>>');
     if (substrings.length === 2) {
@@ -62,10 +62,10 @@
       if (args0.length !== 2 || args1.length !== 2)
         throw new SyntaxError('CocoScript parse error: Invalid command "' +  s + '"');
 
-      return [new command.Bind(args0.join('.'), args1.join('.'))];
+      return new command.Bind(args0.join('.'), args1.join('.'));
     }
 
-    return [command.parseStatement(line)];
+    return command.parseStatement(line);
   };
 
   if (typeof module !== 'undefined' && module.exports)

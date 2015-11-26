@@ -50,19 +50,19 @@ describe('command', function() {
 
   describe('#parseLine', function() {
     it('declare', function() {
-      var cmd = command.parseLine('x:Module')[0];
+      var cmd = command.parseLine('x:Module');
       assert(cmd instanceof command.Declare);
       assert.equal(cmd.variableName, 'x');
       assert.equal(cmd.moduleName, 'Module');
 
       // with whitespace
-      assert.deepEqual(command.parseLine('x :Module')[0], cmd);
-      assert.deepEqual(command.parseLine('x: Module')[0], cmd);
-      assert.deepEqual(command.parseLine('x : Module')[0], cmd);
+      assert.deepEqual(command.parseLine('x :Module'), cmd);
+      assert.deepEqual(command.parseLine('x: Module'), cmd);
+      assert.deepEqual(command.parseLine('x : Module'), cmd);
     });
 
     it('bind', function() {
-      var cmd = command.parseLine('x.member0 >> y.member1')[0];
+      var cmd = command.parseLine('x.member0 >> y.member1');
       assert(cmd instanceof command.Bind);
       assert.equal(cmd.sourceVariableName, 'x');
       assert.equal(cmd.sourceMemberName, 'member0');
@@ -70,9 +70,9 @@ describe('command', function() {
       assert.equal(cmd.targetMemberName, 'member1');
 
       // without whitespace
-      assert.deepEqual(command.parseLine('x.member0>>y.member1')[0], cmd);
-      assert.deepEqual(command.parseLine('x.member0 >>y.member1')[0], cmd);
-      assert.deepEqual(command.parseLine('x.member0>> y.member1')[0], cmd);
+      assert.deepEqual(command.parseLine('x.member0>>y.member1'), cmd);
+      assert.deepEqual(command.parseLine('x.member0 >>y.member1'), cmd);
+      assert.deepEqual(command.parseLine('x.member0>> y.member1'), cmd);
     });
   });
 
@@ -83,7 +83,7 @@ describe('command', function() {
       ' \t '
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert.equal(command.parseLine(p).length, 0);
+        assert(command.parseLine(p) instanceof command.Noop);
       });
     });
   });
@@ -95,7 +95,7 @@ describe('command', function() {
       ' # comment '
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert.equal(command.parseLine(p).length, 0);
+        assert(command.parseLine(p) instanceof command.Noop);
       });
     });
   });
