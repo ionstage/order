@@ -22,6 +22,42 @@ describe('command', function() {
       [':unbind x.member0 y.member1',
         command.Unbind,
         { sourceVariableName: 'x', sourceMemberName: 'member0',
+          targetVariableName: 'y', targetMemberName: 'member1' }],
+
+      ['x:Module',
+        command.Declare,
+        { variableName: 'x', moduleName: 'Module'}],
+
+      ['x :Module',
+        command.Declare,
+        { variableName: 'x', moduleName: 'Module'}],
+
+      ['x: Module',
+        command.Declare,
+        { variableName: 'x', moduleName: 'Module'}],
+
+      ['x : Module',
+        command.Declare,
+        { variableName: 'x', moduleName: 'Module'}],
+
+      ['x.member0 >> y.member1',
+        command.Bind,
+        { sourceVariableName: 'x', sourceMemberName: 'member0',
+          targetVariableName: 'y', targetMemberName: 'member1' }],
+
+      ['x.member0>>y.member1',
+        command.Bind,
+        { sourceVariableName: 'x', sourceMemberName: 'member0',
+          targetVariableName: 'y', targetMemberName: 'member1' }],
+
+      ['x.member0 >>y.member1',
+        command.Bind,
+        { sourceVariableName: 'x', sourceMemberName: 'member0',
+          targetVariableName: 'y', targetMemberName: 'member1' }],
+
+      ['x.member0>> y.member1',
+        command.Bind,
+        { sourceVariableName: 'x', sourceMemberName: 'member0',
           targetVariableName: 'y', targetMemberName: 'member1' }]
 
     ].forEach(function(p) {
@@ -33,82 +69,42 @@ describe('command', function() {
     });
   });
 
-  describe('#parseStatement (error)', function() {
-    [
-      '',
-      ':',
-      ':_command',
-      'command'
-    ].forEach(function(p) {
-      it('"' + p + '"', function() {
-        assert.throws(function() {
-          command.parseStatement(p);
-        }, SyntaxError);
-      });
-    });
-  });
-
-  describe('#parseLine', function() {
-    it('declare', function() {
-      var cmd = command.parseLine('x:Module');
-      assert(cmd instanceof command.Declare);
-      assert.equal(cmd.variableName, 'x');
-      assert.equal(cmd.moduleName, 'Module');
-
-      // with whitespace
-      assert.deepEqual(command.parseLine('x :Module'), cmd);
-      assert.deepEqual(command.parseLine('x: Module'), cmd);
-      assert.deepEqual(command.parseLine('x : Module'), cmd);
-    });
-
-    it('bind', function() {
-      var cmd = command.parseLine('x.member0 >> y.member1');
-      assert(cmd instanceof command.Bind);
-      assert.equal(cmd.sourceVariableName, 'x');
-      assert.equal(cmd.sourceMemberName, 'member0');
-      assert.equal(cmd.targetVariableName, 'y');
-      assert.equal(cmd.targetMemberName, 'member1');
-
-      // without whitespace
-      assert.deepEqual(command.parseLine('x.member0>>y.member1'), cmd);
-      assert.deepEqual(command.parseLine('x.member0 >>y.member1'), cmd);
-      assert.deepEqual(command.parseLine('x.member0>> y.member1'), cmd);
-    });
-  });
-
-  describe('#parseLine (empty)', function() {
+  describe('#parseStatement (empty)', function() {
     [
       '',
       ' ',
       ' \t '
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert(command.parseLine(p) instanceof command.Noop);
+        assert(command.parseStatement(p) instanceof command.Noop);
       });
     });
   });
 
-  describe('#parseLine (comment)', function() {
+  describe('#parseStatement (comment)', function() {
     [
       '#',
       '# comment',
       ' # comment '
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert(command.parseLine(p) instanceof command.Noop);
+        assert(command.parseStatement(p) instanceof command.Noop);
       });
     });
   });
 
-  describe('#parseLine (error)', function() {
+  describe('#parseStatement (error)', function() {
     [
+      ':',
+      ':_command',
+      'command',
       'x >> y',
       'x.member0 >> y',
       'x.member0 >> y.member1.member2'
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
-          command.parseLine(p);
+          command.parseStatement(p);
         }, SyntaxError);
       });
     });

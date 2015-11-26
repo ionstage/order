@@ -26,29 +26,13 @@
   };
 
   command.parseStatement = function(s) {
-    if (!s || s === ':')
-      throw new SyntaxError('CocoScript parse error: Unexpected EOF');
-
-    if (s.charAt(0) !== ':')
-      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
-
-    var args = s.slice(1).split(/[\s]+/);
-    var cmd = args.shift();
-
-    cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
-    args.unshift(null);
-
-    if (cmd in command)
-      return new (Function.prototype.bind.apply(command[cmd], args));
-
-    throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
-  };
-
-  command.parseLine = function(s) {
     var line = s.split('#')[0].trim();
 
     if (!line)
       return new command.Noop();
+
+    if (line === ':')
+      throw new SyntaxError('CocoScript parse error: Unexpected EOF');
 
     var m = line.match(/^([^:]+):([^:]+)$/);
     if (m)
@@ -65,7 +49,19 @@
       return new command.Bind(args0.join('.'), args1.join('.'));
     }
 
-    return command.parseStatement(line);
+    if (line.charAt(0) !== ':')
+      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
+
+    var args = line.slice(1).split(/[\s]+/);
+    var cmd = args.shift();
+
+    cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
+    args.unshift(null);
+
+    if (cmd in command)
+      return new (Function.prototype.bind.apply(command[cmd], args));
+
+    throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
   };
 
   if (typeof module !== 'undefined' && module.exports)
