@@ -62,18 +62,17 @@
     var cmd = args.shift();
 
     cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
+
+    if (!(cmd in command))
+      throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
+
     args.unshift(null);
 
-    if (cmd in command) {
-      try {
-        return new (Function.prototype.bind.apply(command[cmd], args));
-      } catch (e) {
-        throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
-        return;
-      }
+    try {
+      return new (Function.prototype.bind.apply(command[cmd], args));
+    } catch (e) {
+      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
     }
-
-    throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
   };
 
   if (typeof module !== 'undefined' && module.exports)
