@@ -100,6 +100,8 @@ describe('command', function() {
       'command',
       ':declare x',
       ':declare x y z',
+      ':declare x.y z',
+      ':declare x y.z',
       ':bind x.member0',
       ':bind x.member0 y.member1 z.member2',
       'x >> y',

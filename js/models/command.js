@@ -9,8 +9,14 @@
     if (arguments.length !== 2)
       throw new TypeError('Type error');
 
-    this.variableName = arguments[0].trim();
-    this.moduleName = arguments[1].trim();
+    var variableName = arguments[0].trim();
+    var moduleName = arguments[1].trim();
+
+    if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1)
+      throw new TypeError('Type error');
+
+    this.variableName = variableName;
+    this.moduleName = moduleName;
   };
 
   command.Bind = function() {
