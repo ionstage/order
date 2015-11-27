@@ -6,11 +6,17 @@
   command.Noop = function() {};
 
   command.Declare = function() {
+    if (arguments.length !== 2)
+      throw new TypeError('Type error');
+
     this.variableName = arguments[0].trim();
     this.moduleName = arguments[1].trim();
   };
 
   command.Bind = function() {
+    if (arguments.length !== 2)
+      throw new TypeError('Type error');
+
     var args0 = arguments[0].split('.');
     var args1 = arguments[1].split('.');
 
@@ -58,8 +64,14 @@
     cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
     args.unshift(null);
 
-    if (cmd in command)
-      return new (Function.prototype.bind.apply(command[cmd], args));
+    if (cmd in command) {
+      try {
+        return new (Function.prototype.bind.apply(command[cmd], args));
+      } catch (e) {
+        throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
+        return;
+      }
+    }
 
     throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
   };
