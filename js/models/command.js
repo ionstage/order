@@ -26,6 +26,9 @@
     var args0 = arguments[0].split('.');
     var args1 = arguments[1].split('.');
 
+    if (args0.length !== 2 || args1.length !== 2)
+      throw new TypeError('Type error');
+
     this.sourceVariableName = args0[0].trim();
     this.sourceMemberName = args0[1].trim();
     this.targetVariableName = args1[0].trim();
