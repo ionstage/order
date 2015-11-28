@@ -89,6 +89,8 @@ describe('command', function() {
       ':declare x y z',
       ':declare x.y z',
       ':declare x y.z',
+      ':declare _x y',
+      ':declare x _y',
       ':bind x.member0',
       ':bind x.member0 y.member1 z.member2',
       ':bind x y',

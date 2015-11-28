@@ -15,6 +15,9 @@
     if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1)
       throw new TypeError('Type error');
 
+    if (!(/^[a-zA-Z]/.test(variableName)) || !(/^[a-zA-Z]/.test(moduleName)))
+      throw new TypeError('Type error');
+
     this.variableName = variableName;
     this.moduleName = moduleName;
   };
