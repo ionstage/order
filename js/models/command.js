@@ -40,6 +40,23 @@
     command.Bind.apply(this, arguments);
   };
 
+  command.expandAbbreviation = function(s) {
+    var m = s.match(/^([^:]+):([^:]+)$/);
+    if (m)
+      return ':declare ' + m[1].trim() + ' ' + m[2].trim();
+
+    var substrings = s.split('>>');
+    if (substrings.length === 2) {
+      var args0 = substrings[0].trim().split('.');
+      var args1 = substrings[1].trim().split('.');
+
+      if (args0.length === 2 && args1.length === 2)
+        return ':bind ' + args0.join('.') + ' ' + args1.join('.');
+    }
+
+    return s;
+  };
+
   command.parseStatement = function(s) {
     var line = s.split('#')[0].trim();
 

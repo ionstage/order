@@ -2,6 +2,29 @@ var assert = require('assert');
 var command = require('../js/models/command.js');
 
 describe('command', function() {
+  describe('#expandAbbreviation', function() {
+    [
+      ['x:Module', ':declare x Module'],
+      ['x :Module', ':declare x Module'],
+      ['x: Module', ':declare x Module'],
+      ['x : Module', ':declare x Module'],
+
+      ['x.member0 >> y.member1', ':bind x.member0 y.member1'],
+      ['x.member0>>y.member1', ':bind x.member0 y.member1'],
+      ['x.member0 >>y.member1', ':bind x.member0 y.member1'],
+      ['x.member0>> y.member1', ':bind x.member0 y.member1'],
+
+      [':noop', ':noop'],
+      [':declare x Module', ':declare x Module'],
+      [':bind x.member0 y.member1', ':bind x.member0 y.member1'],
+      [':unbind x.member0 y.member1', ':unbind x.member0 y.member1']
+    ].forEach(function(p) {
+      it('"' + p[0] + '"', function() {
+        assert.equal(command.expandAbbreviation(p[0]), p[1]);
+      });
+    });
+  });
+
   describe('#parseStatement', function() {
     [
       [':noop', command.Noop, {}],
