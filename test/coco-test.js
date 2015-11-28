@@ -45,42 +45,6 @@ describe('command', function() {
       [':unbind x.member0 y.member1',
         command.Unbind,
         { sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }],
-
-      ['x:Module',
-        command.Declare,
-        { variableName: 'x', moduleName: 'Module'}],
-
-      ['x :Module',
-        command.Declare,
-        { variableName: 'x', moduleName: 'Module'}],
-
-      ['x: Module',
-        command.Declare,
-        { variableName: 'x', moduleName: 'Module'}],
-
-      ['x : Module',
-        command.Declare,
-        { variableName: 'x', moduleName: 'Module'}],
-
-      ['x.member0 >> y.member1',
-        command.Bind,
-        { sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }],
-
-      ['x.member0>>y.member1',
-        command.Bind,
-        { sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }],
-
-      ['x.member0 >>y.member1',
-        command.Bind,
-        { sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }],
-
-      ['x.member0>> y.member1',
-        command.Bind,
-        { sourceVariableName: 'x', sourceMemberName: 'member0',
           targetVariableName: 'y', targetMemberName: 'member1' }]
 
     ].forEach(function(p) {
@@ -129,10 +93,7 @@ describe('command', function() {
       ':bind x.member0 y.member1 z.member2',
       ':bind x y',
       ':bind x.member0 y',
-      ':bind x.member0 y.member1.member2',
-      'x >> y',
-      'x.member0 >> y',
-      'x.member0 >> y.member1.member2'
+      ':bind x.member0 y.member1.member2'
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {

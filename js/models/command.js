@@ -66,21 +66,6 @@
     if (line === ':')
       throw new SyntaxError('CocoScript parse error: Unexpected EOF');
 
-    var m = line.match(/^([^:]+):([^:]+)$/);
-    if (m)
-      return new command.Declare(m[1], m[2]);
-
-    var substrings = line.split('>>');
-    if (substrings.length === 2) {
-      var args0 = substrings[0].split('.');
-      var args1 = substrings[1].split('.');
-
-      if (args0.length !== 2 || args1.length !== 2)
-        throw new SyntaxError('CocoScript parse error: Invalid command "' +  s + '"');
-
-      return new command.Bind(args0.join('.'), args1.join('.'));
-    }
-
     if (line.charAt(0) !== ':')
       throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
 
