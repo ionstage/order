@@ -9,8 +9,8 @@
     if (arguments.length !== 2)
       throw new TypeError('Type error');
 
-    var variableName = arguments[0].trim();
-    var moduleName = arguments[1].trim();
+    var variableName = arguments[0];
+    var moduleName = arguments[1];
 
     if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1)
       throw new TypeError('Type error');
@@ -29,10 +29,10 @@
     if (args0.length !== 2 || args1.length !== 2)
       throw new TypeError('Type error');
 
-    this.sourceVariableName = args0[0].trim();
-    this.sourceMemberName = args0[1].trim();
-    this.targetVariableName = args1[0].trim();
-    this.targetMemberName = args1[1].trim();
+    this.sourceVariableName = args0[0];
+    this.sourceMemberName = args0[1];
+    this.targetVariableName = args1[0];
+    this.targetMemberName = args1[1];
   };
 
   command.Unbind = function() {
