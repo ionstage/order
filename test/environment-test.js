@@ -3,9 +3,9 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   describe('#exec', function() {
-    it(':noop', function(done) {
+    it(':noop', function() {
       var env = new Environment();
-      env.exec(':noop').then(done);
+      return env.exec(':noop');
     });
   });
 });
