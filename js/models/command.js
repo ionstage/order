@@ -43,6 +43,20 @@
     command.Bind.apply(this, arguments);
   };
 
+  command.Send = function() {
+    if (arguments.length !== 1 && arguments.length !== 2)
+      throw new TypeError('Type error');
+
+    var args0 = arguments[0].split('.');
+
+    if (args0.length !== 2)
+      throw new TypeError('Type error');
+
+    this.variableName = args0[0];
+    this.memberName = args0[1];
+    this.dataText = arguments[1] || '';
+  };
+
   command.expandAbbreviation = function(s) {
     var m = s.match(/^([^:]+):([^:]+)$/);
     if (m)
@@ -72,7 +86,26 @@
     if (line.charAt(0) !== ':')
       throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
 
-    var args = line.slice(1).split(/[\s]+/);
+    // split line string by space, but ignore space in quotes
+    var args = line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {
+      if (i % 2 === 0) {
+        return s.split(/[\s]+/).map(function(arg) {
+          return arg.replace(/\\'/g, '\'').replace(/\\"/g, '"');
+        });
+      } else {
+        s = s.trim();
+        var first = s.charAt(0);
+        var last = s.slice(-1);
+        if (first === last && (first === '\'' || first === '"'))
+          s = s.slice(1, -1);
+        return s;
+      }
+    }).reduce(function(prev, curr) {
+      return prev.concat(curr);
+    }, []).filter(function(arg) {
+      return arg;
+    });
+
     var cmd = args.shift();
 
     cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);

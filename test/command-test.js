@@ -17,7 +17,8 @@ describe('command', function() {
       [':noop', ':noop'],
       [':declare x Module', ':declare x Module'],
       [':bind x.member0 y.member1', ':bind x.member0 y.member1'],
-      [':unbind x.member0 y.member1', ':unbind x.member0 y.member1']
+      [':unbind x.member0 y.member1', ':unbind x.member0 y.member1'],
+      [':send x.member0 data_text', ':send x.member0 data_text']
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);
@@ -45,8 +46,35 @@ describe('command', function() {
       [':unbind x.member0 y.member1',
         command.Unbind,
         { sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }]
+          targetVariableName: 'y', targetMemberName: 'member1' }],
 
+      [':send x.member0',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: '' }],
+
+      [':send x.member0 data_text',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
+
+      [':send x.member0 \'data text\'',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: 'data text' }],
+
+      [':send x.member0 "data text"',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: 'data text' }],
+
+      [':send x.member0 "data_text"',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
+
+      [':send x.member0 \\"data_text"',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: '"data_text"' }],
+
+      [':send x.member0 "data_text\'',
+        command.Send,
+        { variableName: 'x', memberName: 'member0', dataText: '"data_text\'' }]
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         var cmd = command.parseStatement(p[0]);
@@ -95,7 +123,11 @@ describe('command', function() {
       ':bind x.member0 y.member1 z.member2',
       ':bind x y',
       ':bind x.member0 y',
-      ':bind x.member0 y.member1.member2'
+      ':bind x.member0 y.member1.member2',
+      ':send x',
+      ':send x.member0.member1',
+      ':send x.member0 data text',
+      ':send x.member0 \\"data text\\"'
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
