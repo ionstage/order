@@ -8,7 +8,7 @@
 
   Environment.prototype.exec = function(s) {
     return new Promise(function(resolve, reject) {
-      var cmd = command.parseStatement(s);
+      var cmd = command.parseStatement(command.expandAbbreviation(s));
 
       if (cmd instanceof command.Noop) {
         resolve();
