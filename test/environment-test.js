@@ -14,19 +14,18 @@ describe('environment', function() {
     ].forEach(function(p) {
       it(p, function() {
         var env = new Environment();
-        var dummy = {};
 
         env.moduleFactory = function(moduleName) {
           return new Promise(function(resolve) {
-            dummy.name = moduleName;
-            resolve(dummy);
+            resolve({
+              name: moduleName
+            });
           });
         };
 
         return env.exec(p).then(function() {
           var v = env.variables[0];
           assert.equal(v.name, 'x');
-          assert.equal(v.module, dummy);
           assert.equal(v.module.name, 'Module');
         });
       });

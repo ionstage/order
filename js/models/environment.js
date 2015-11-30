@@ -2,6 +2,10 @@
   'use strict';
   var command = app.command || require('./command.js');
 
+  var Module = function(props) {
+    this.name = props.name;
+  };
+
   var Environment = function() {
     this.variables = [];
   };
@@ -13,10 +17,10 @@
       if (cmd instanceof command.Noop) {
         resolve();
       } else if (cmd instanceof command.Declare) {
-        this.moduleFactory(cmd.moduleName).then(function(module) {
+        this.moduleFactory(cmd.moduleName).then(function(props) {
           this.variables.push({
             name: cmd.variableName,
-            module: module
+            module: new Module(props)
           });
           resolve();
         }.bind(this), reject);
