@@ -2,6 +2,16 @@ var assert = require('assert');
 var command = require('../js/models/command.js');
 
 describe('command', function() {
+  it('#names', function() {
+    assert.deepEqual(command.names(), [
+      'noop',
+      'declare',
+      'bind',
+      'unbind',
+      'send'
+    ]);
+  });
+
   describe('#expandAbbreviation', function() {
     [
       ['x:Module', ':declare x Module'],
