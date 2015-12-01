@@ -71,6 +71,15 @@
         return ':bind ' + args0.join('.') + ' ' + args1.join('.');
     }
 
+    substrings = s.split('<<');
+    if (substrings.length === 2) {
+      var args0 = substrings[0].trim().split('.');
+      var arg1 = substrings[1].trim();
+
+      if (args0.length === 2)
+        return ':send ' + args0.join('.') + (arg1 ? ' ' + arg1 : '');
+    }
+
     return s;
   };
 

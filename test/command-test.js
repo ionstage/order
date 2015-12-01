@@ -14,6 +14,14 @@ describe('command', function() {
       ['x.member0 >>y.member1', ':bind x.member0 y.member1'],
       ['x.member0>> y.member1', ':bind x.member0 y.member1'],
 
+      ['x.member0 <<', ':send x.member0'],
+      ['x.member0<<', ':send x.member0'],
+      ['x.member0 << data_text', ':send x.member0 data_text'],
+      ['x.member0<<data_text', ':send x.member0 data_text'],
+      ['x.member0 <<data_text', ':send x.member0 data_text'],
+      ['x.member0<< data_text', ':send x.member0 data_text'],
+      ['x.member0 << "data_text"', ':send x.member0 "data_text"'],
+
       [':noop', ':noop'],
       [':declare x Module', ':declare x Module'],
       [':bind x.member0 y.member1', ':bind x.member0 y.member1'],
