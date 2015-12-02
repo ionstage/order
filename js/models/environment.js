@@ -1,5 +1,6 @@
 (function(app) {
   'use strict';
+  var helper = app.helper || require('../helper.js');
   var command = app.command || require('./command.js');
 
   var Module = function(props) {
@@ -14,9 +15,7 @@
     return new Promise(function(resolve, reject) {
       var cmd = command.parseStatement(command.expandAbbreviation(s));
 
-      var name = command.names().map(function(name) {
-        return name.charAt(0).toUpperCase() + name.slice(1);
-      }).filter(function(name) {
+      var name = command.names().map(helper.capitalize).filter(function(name) {
         return (cmd instanceof command[name]);
       })[0];
 

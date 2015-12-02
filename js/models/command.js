@@ -1,5 +1,6 @@
 (function(app) {
   'use strict';
+  var helper = app.helper || require('../helper.js');
 
   var command = {};
 
@@ -125,7 +126,7 @@
 
     var cmd = args.shift();
 
-    cmd = cmd.charAt(0).toUpperCase() + cmd.slice(1);
+    cmd = helper.capitalize(cmd);
 
     if (!(cmd in command))
       throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
