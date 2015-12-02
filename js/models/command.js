@@ -126,11 +126,10 @@
 
     var cmd = args.shift();
 
+    if (command.names().indexOf(cmd) === -1)
+      throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd + '"');
+
     cmd = helper.capitalize(cmd);
-
-    if (!(cmd in command))
-      throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd.toLowerCase() + '"');
-
     args.unshift(null);
 
     try {

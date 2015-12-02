@@ -137,6 +137,7 @@ describe('command', function() {
       ':declare x y.z',
       ':declare _x y',
       ':declare x _y',
+      ':Declare x Module',
       ':bind x.member0',
       ':bind x.member0 y.member1 z.member2',
       ':bind x y',
