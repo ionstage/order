@@ -30,7 +30,7 @@
     resolve();
   };
 
-  Environment.prototype.execDeclare = function(cmd, resolve, reject) {
+  Environment.prototype.execNew = function(cmd, resolve, reject) {
     this.moduleFactory(cmd.moduleName).then(function(props) {
       this.variables.push({
         name: cmd.variableName,

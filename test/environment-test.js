@@ -9,7 +9,7 @@ describe('environment', function() {
     });
 
     [
-      ':declare x Module',
+      ':new x Module',
       'x:Module'
     ].forEach(function(p) {
       it(p, function() {

@@ -5,7 +5,7 @@ describe('command', function() {
   it('#names', function() {
     assert.deepEqual(command.names(), [
       'noop',
-      'declare',
+      'new',
       'bind',
       'unbind',
       'send',
@@ -15,10 +15,10 @@ describe('command', function() {
 
   describe('#expandAbbreviation', function() {
     [
-      ['x:Module', ':declare x Module'],
-      ['x :Module', ':declare x Module'],
-      ['x: Module', ':declare x Module'],
-      ['x : Module', ':declare x Module'],
+      ['x:Module', ':new x Module'],
+      ['x :Module', ':new x Module'],
+      ['x: Module', ':new x Module'],
+      ['x : Module', ':new x Module'],
 
       ['x.member0 >> y.member1', ':bind x.member0 y.member1'],
       ['x.member0>>y.member1', ':bind x.member0 y.member1'],
@@ -34,7 +34,7 @@ describe('command', function() {
       ['x.member0 << "data_text"', ':send x.member0 "data_text"'],
 
       [':noop', ':noop'],
-      [':declare x Module', ':declare x Module'],
+      [':new x Module', ':new x Module'],
       [':bind x.member0 y.member1', ':bind x.member0 y.member1'],
       [':unbind x.member0 y.member1', ':unbind x.member0 y.member1'],
       [':send x.member0 data_text', ':send x.member0 data_text'],
@@ -50,12 +50,12 @@ describe('command', function() {
     [
       [':noop', command.Noop, {}],
 
-      [':declare x Module',
-        command.Declare,
+      [':new x Module',
+        command.New,
         { variableName: 'x', moduleName: 'Module'}],
 
-      [':declare  x \t Module',
-        command.Declare,
+      [':new  x \t Module',
+        command.New,
         { variableName: 'x', moduleName: 'Module'}],
 
       [':bind x.member0 y.member1',
@@ -137,13 +137,13 @@ describe('command', function() {
       ':',
       ':_command',
       'command',
-      ':declare x',
-      ':declare x y z',
-      ':declare x.y z',
-      ':declare x y.z',
-      ':declare _x y',
-      ':declare x _y',
-      ':Declare x Module',
+      ':new x',
+      ':new x y z',
+      ':new x.y z',
+      ':new x y.z',
+      ':new _x y',
+      ':new x _y',
+      ':New x Module',
       ':bind x.member0',
       ':bind x.member0 y.member1 z.member2',
       ':bind x y',

@@ -6,7 +6,7 @@
 
   command.Noop = function() {};
 
-  command.Declare = function() {
+  command.New = function() {
     if (arguments.length !== 2)
       throw new TypeError('Type error');
 
@@ -84,7 +84,7 @@
   command.expandAbbreviation = function(s) {
     var m = s.match(/^([^:]+):([^:]+)$/);
     if (m)
-      return ':declare ' + m[1].trim() + ' ' + m[2].trim();
+      return ':new ' + m[1].trim() + ' ' + m[2].trim();
 
     var substrings = s.split('>>');
     if (substrings.length === 2) {
