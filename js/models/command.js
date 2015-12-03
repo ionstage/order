@@ -58,6 +58,21 @@
     this.dataText = arguments[1] || '';
   };
 
+  command.Delete = function() {
+    if (arguments.length !== 1)
+      throw new TypeError('Type error');
+
+    var variableName = arguments[0];
+
+    if (variableName.indexOf('.') !== -1)
+      throw new TypeError('Type error');
+
+    if (!(/^[a-zA-Z]/.test(variableName)))
+      throw new TypeError('Type error');
+
+    this.variableName = variableName;
+  };
+
   command.names = function() {
     return Object.keys(command).filter(function(key) {
       return /^[A-Z]/.test(key);
