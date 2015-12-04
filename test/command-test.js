@@ -9,7 +9,8 @@ describe('command', function() {
       'bind',
       'unbind',
       'send',
-      'delete'
+      'delete',
+      'reset'
     ]);
   });
 
@@ -38,7 +39,8 @@ describe('command', function() {
       [':bind x.member0 y.member1', ':bind x.member0 y.member1'],
       [':unbind x.member0 y.member1', ':unbind x.member0 y.member1'],
       [':send x.member0 data_text', ':send x.member0 data_text'],
-      [':delete x', ':delete x']
+      [':delete x', ':delete x'],
+      [':reset', ':reset']
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);
@@ -98,7 +100,9 @@ describe('command', function() {
 
       [':delete x',
         command.Delete,
-        { variableName: 'x' }]
+        { variableName: 'x' }],
+
+      [':reset', command.Reset, {}],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         var cmd = command.parseStatement(p[0]);
@@ -160,7 +164,8 @@ describe('command', function() {
       ':send x.member0 \\"data text\\"',
       ':delete x y',
       ':delete _x',
-      ':delete x.y'
+      ':delete x.y',
+      ':reset x'
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {

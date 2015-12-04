@@ -73,6 +73,11 @@
     this.variableName = variableName;
   };
 
+  command.Reset = function() {
+    if (arguments.length)
+      throw new TypeError('Type error');
+  };
+
   command.names = function() {
     return Object.keys(command).filter(function(key) {
       return /^[A-Z]/.test(key);
