@@ -78,6 +78,13 @@
       throw new TypeError('Type error');
   };
 
+  command.Load = function() {
+    if (arguments.length !== 1)
+      throw new TypeError('Type error');
+
+    this.filePath = arguments[0];
+  };
+
   command.names = function() {
     return Object.keys(command).filter(function(key) {
       return /^[A-Z]/.test(key);
