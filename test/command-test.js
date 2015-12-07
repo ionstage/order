@@ -11,7 +11,8 @@ describe('command', function() {
       'send',
       'delete',
       'reset',
-      'load'
+      'load',
+      'save'
     ]);
   });
 
@@ -42,7 +43,8 @@ describe('command', function() {
       [':send x.member0 data_text', ':send x.member0 data_text'],
       [':delete x', ':delete x'],
       [':reset', ':reset'],
-      [':load /path/to/script', ':load /path/to/script']
+      [':load /path/to/script', ':load /path/to/script'],
+      [':save', ':save']
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);
@@ -108,7 +110,9 @@ describe('command', function() {
 
       [':load /path/to/script',
         command.Load,
-        { filePath: '/path/to/script' }]
+        { filePath: '/path/to/script' }],
+
+      [':save', command.Save, {}]
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         var cmd = command.parseStatement(p[0]);
@@ -178,7 +182,8 @@ describe('command', function() {
       ':delete x.y',
       ':reset x',
       ':load',
-      ':load x y'
+      ':load x y',
+      ':save x'
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
