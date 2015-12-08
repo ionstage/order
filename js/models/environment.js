@@ -7,7 +7,8 @@
     this.name = props.name;
   };
 
-  var Environment = function() {
+  var Environment = function(props) {
+    this.moduleFactory = (props && props.moduleFactory);
     this.variables = [];
   };
 

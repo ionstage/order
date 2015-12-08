@@ -13,15 +13,15 @@ describe('environment', function() {
       'x:Module'
     ].forEach(function(p) {
       it(p, function() {
-        var env = new Environment();
-
-        env.moduleFactory = function(moduleName) {
-          return new Promise(function(resolve) {
-            resolve({
-              name: moduleName
+        var env = new Environment({
+          moduleFactory: function(moduleName) {
+            return new Promise(function(resolve) {
+              resolve({
+                name: moduleName
+              });
             });
-          });
-        };
+          }
+        });
 
         return env.exec(p).then(function() {
           var v = env.variables[0];
