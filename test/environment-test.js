@@ -13,12 +13,11 @@ describe('environment', function() {
       'x:Module'
     ].forEach(function(p) {
       it(p, function() {
+        var dummy = {};
         var env = new Environment({
-          moduleFactory: function(moduleName) {
+          circuitElementFactory: function(moduleName) {
             return new Promise(function(resolve) {
-              resolve({
-                name: moduleName
-              });
+              resolve(dummy);
             });
           }
         });
@@ -27,6 +26,7 @@ describe('environment', function() {
           var v = env.variables[0];
           assert.equal(v.name, 'x');
           assert.equal(v.module.name, 'Module');
+          assert.equal(v.module.circuitElement, dummy);
         });
       });
     });

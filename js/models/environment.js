@@ -5,10 +5,11 @@
 
   var Module = function(props) {
     this.name = props.name;
+    this.circuitElement = props.circuitElement;
   };
 
   var Environment = function(props) {
-    this.moduleFactory = (props && props.moduleFactory);
+    this.circuitElementFactory = (props && props.circuitElementFactory);
     this.variables = [];
   };
 
@@ -32,11 +33,20 @@
   };
 
   Environment.prototype.execNew = function(cmd, resolve, reject) {
-    this.moduleFactory(cmd.moduleName).then(function(props) {
-      this.variables.push({
-        name: cmd.variableName,
-        module: new Module(props)
+    var variableName = cmd.variableName;
+    var moduleName = cmd.moduleName;
+
+    this.circuitElementFactory(moduleName).then(function(circuitElement) {
+      var module = new Module({
+        name: moduleName,
+        circuitElement: circuitElement
       });
+
+      this.variables.push({
+        name: variableName,
+        module: module
+      });
+
       resolve();
     }.bind(this), reject);
   };
