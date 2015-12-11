@@ -27,8 +27,7 @@ describe('environment', function() {
         return env.exec(p).then(function() {
           var v = env.variables[0];
           assert.equal(v.name, 'x');
-          assert.equal(v.module.name, 'Module');
-          assert.equal(v.module.circuitElement, dummy);
+          assert.equal(v.circuitElement, dummy);
         });
       });
     });
