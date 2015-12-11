@@ -4,12 +4,12 @@
   var helper = app.helper || require('../helper.js');
   var Component = app.Component || require('./component.js');
 
-  var ModuleComponent = helper.inherits(function() {
-    ModuleComponent.super_.call(this);
+  var VariableComponent = helper.inherits(function() {
+    VariableComponent.super_.call(this);
   }, Component);
 
   if (typeof module !== 'undefined' && module.exports)
-    module.exports = ModuleComponent;
+    module.exports = VariableComponent;
   else
-    app.ModuleComponent = ModuleComponent;
+    app.VariableComponent = VariableComponent;
 })(this.app || (this.app = {}));
