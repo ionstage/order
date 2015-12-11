@@ -15,7 +15,9 @@ describe('environment', function() {
       it(p, function() {
         var dummy = {};
         var env = new Environment({
-          circuitElementFactory: function(moduleName) {
+          circuitElementFactory: function(props) {
+            assert.equal(props.variableName, 'x');
+            assert.equal(props.moduleName, 'Module');
             return new Promise(function(resolve) {
               resolve(dummy);
             });

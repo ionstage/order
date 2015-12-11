@@ -36,7 +36,10 @@
     var variableName = cmd.variableName;
     var moduleName = cmd.moduleName;
 
-    this.circuitElementFactory(moduleName).then(function(circuitElement) {
+    this.circuitElementFactory({
+      variableName: variableName,
+      moduleName: moduleName
+    }).then(function(circuitElement) {
       var module = new Module({
         name: moduleName,
         circuitElement: circuitElement
