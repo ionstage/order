@@ -22,6 +22,29 @@
     return window.requestAnimationFrame(callback);
   };
 
+  dom.ajax = function(opt) {
+    var type = opt.type;
+    var url = opt.url;
+
+    return new Promise(function(resolve, reject) {
+      var req = new XMLHttpRequest();
+
+      req.onload = function() {
+        if (req.status >= 200 && req.status < 400)
+          resolve(req.responseText);
+        else
+          reject();
+      };
+
+      req.onerror = function() {
+        reject();
+      };
+
+      req.open(type, url, true);
+      req.send();
+    });
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = dom;
   else
