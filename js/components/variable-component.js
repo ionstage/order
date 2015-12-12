@@ -30,22 +30,29 @@
   };
 
   VariableComponent.load = function(props) {
-    var component = new VariableComponent(props);
-    return new Promise(function(resolve, reject) {
-      dom.ajax({
-        type: 'GET',
-        url: 'coco_modules/' + component.moduleName() + '.html'
-      }).then(function(text) {
-        var element = component.render();
-        component.element(element);
-        dom.append(component.parentElement(), element);
+    var name = props.name;
+    var moduleName = props.moduleName;
+    var parentElement = props.parentElement;
 
-        var iframeElement = dom.child(element, 1);
-        dom.writeContent(iframeElement, text);
-        dom.fillContentHeight(iframeElement);
+    return dom.ajax({
+      type: 'GET',
+      url: 'coco_modules/' + moduleName + '.html'
+    }).then(function(text) {
+      var component = new VariableComponent({
+        name: name,
+        moduleName: moduleName,
+        parentElement: parentElement
+      });
 
-        resolve(component);
-      }, reject);
+      var element = component.render();
+      component.element(element);
+      dom.append(parentElement, element);
+
+      var iframeElement = dom.child(element, 1);
+      dom.writeContent(iframeElement, text);
+      dom.fillContentHeight(iframeElement);
+
+      return component;
     });
   };
 
