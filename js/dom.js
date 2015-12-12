@@ -31,7 +31,10 @@
   };
 
   dom.writeContent = function(iframe, s) {
-    iframe.contentDocument.write(s);
+    var doc = iframe.contentDocument;
+    doc.open();
+    doc.write(s);
+    doc.close();
   };
 
   dom.animate = function(callback) {
