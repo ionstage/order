@@ -42,6 +42,7 @@
 
         var iframeElement = dom.child(element, 1);
         dom.writeContent(iframeElement, text);
+        dom.fillContentHeight(iframeElement);
 
         resolve(component);
       }, reject);

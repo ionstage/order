@@ -37,6 +37,10 @@
     doc.close();
   };
 
+  dom.fillContentHeight = function(iframe) {
+    iframe.style.height = iframe.contentDocument.documentElement.scrollHeight + 'px';
+  };
+
   dom.animate = function(callback) {
     return window.requestAnimationFrame(callback);
   };
