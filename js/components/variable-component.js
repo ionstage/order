@@ -13,13 +13,38 @@
     this.parentElement = this.prop(props.parentElement);
   }, Component);
 
+  VariableComponent.prototype.render = function() {
+    var element = dom.el('<div>');
+
+    dom.addClass(element, 'variable');
+
+    dom.html(element, [
+      '<div class="variable-header">',
+      '<div class="variable-name">', this.name(), '</div>',
+      '<div class="variable-module-name">', this.moduleName(), '</div>',
+      '</div>',
+      '<iframe class="variable-content"></iframe>'
+    ].join(''));
+
+    return element;
+  };
+
   VariableComponent.load = function(props) {
     var component = new VariableComponent(props);
-    return new Promise(function(resolve) {
-      var element = dom.el('<div>');
-      dom.append(component.parentElement(), element);
-      component.element(element);
-      resolve(component);
+    return new Promise(function(resolve, reject) {
+      dom.ajax({
+        type: 'GET',
+        url: 'coco_modules/' + component.moduleName() + '.html'
+      }).then(function(text) {
+        var element = component.render();
+        component.element(element);
+        dom.append(component.parentElement(), element);
+
+        var iframeElement = dom.child(element, 1);
+        dom.writeContent(iframeElement, text);
+
+        resolve(component);
+      }, reject);
     });
   };
 

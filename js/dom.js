@@ -18,6 +18,22 @@
     parent.appendChild(el);
   };
 
+  dom.child = function(el, index) {
+    return el.childNodes[index];
+  };
+
+  dom.addClass = function(el, className) {
+    el.classList.add(className);
+  };
+
+  dom.html = function(el, s) {
+    el.innerHTML = s;
+  };
+
+  dom.writeContent = function(iframe, s) {
+    iframe.contentDocument.write(s);
+  };
+
   dom.animate = function(callback) {
     return window.requestAnimationFrame(callback);
   };
