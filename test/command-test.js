@@ -54,78 +54,73 @@ describe('command', function() {
 
   describe('#parseStatement', function() {
     [
-      [':noop', command.Noop, {}],
+      [':noop',
+        { name: 'noop' }],
 
       [':new x Module',
-        command.New,
-        { variableName: 'x', moduleName: 'Module'}],
+        { name: 'new', variableName: 'x', moduleName: 'Module' }],
 
       [':new  x \t Module',
-        command.New,
-        { variableName: 'x', moduleName: 'Module'}],
+        { name: 'new', variableName: 'x', moduleName: 'Module' }],
 
       [':New x Module',
-        command.New,
-        { variableName: 'x', moduleName: 'Module'}],
+        { name: 'new', variableName: 'x', moduleName: 'Module' }],
 
       [':NEW x Module',
-        command.New,
-        { variableName: 'x', moduleName: 'Module'}],
+        { name: 'new', variableName: 'x', moduleName: 'Module' }],
 
       [':bind x.member0 y.member1',
-        command.Bind,
-        { sourceVariableName: 'x', sourceMemberName: 'member0',
+        { name: 'bind',
+          sourceVariableName: 'x', sourceMemberName: 'member0',
           targetVariableName: 'y', targetMemberName: 'member1' }],
 
       [':unbind x.member0 y.member1',
-        command.Unbind,
-        { sourceVariableName: 'x', sourceMemberName: 'member0',
+        { name: 'unbind',
+          sourceVariableName: 'x', sourceMemberName: 'member0',
           targetVariableName: 'y', targetMemberName: 'member1' }],
 
       [':send x.member0',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: '' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: '' }],
 
       [':send x.member0 data_text',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
 
       [':send x.member0 \'data text\'',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: 'data text' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: 'data text' }],
 
       [':send x.member0 "data text"',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: 'data text' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: 'data text' }],
 
       [':send x.member0 "data_text"',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
 
       [':send x.member0 \\"data_text"',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: '"data_text"' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: '"data_text"' }],
 
       [':send x.member0 "data_text\'',
-        command.Send,
-        { variableName: 'x', memberName: 'member0', dataText: '"data_text\'' }],
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: '"data_text\'' }],
 
       [':delete x',
-        command.Delete,
-        { variableName: 'x' }],
+        { name: 'delete', variableName: 'x' }],
 
-      [':reset', command.Reset, {}],
+      [':reset',
+        { name: 'reset' }],
 
       [':load /path/to/script',
-        command.Load,
-        { filePath: '/path/to/script' }],
+        { name: 'load', filePath: '/path/to/script' }],
 
-      [':save', command.Save, {}]
+      [':save',
+        { name: 'save' }]
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
-        var cmd = command.parseStatement(p[0]);
-        assert(cmd instanceof p[1]);
-        assert.deepEqual(cmd, p[2]);
+        assert.deepEqual(command.parseStatement(p[0]), p[1]);
       });
     });
   });
@@ -137,7 +132,7 @@ describe('command', function() {
       ' \t '
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert(command.parseStatement(p) instanceof command.Noop);
+        assert.equal(command.parseStatement(p).name, 'noop');
       });
     });
   });
@@ -149,7 +144,7 @@ describe('command', function() {
       ' # comment '
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert(command.parseStatement(p) instanceof command.Noop);
+        assert.equal(command.parseStatement(p).name, 'noop');
       });
     });
   });

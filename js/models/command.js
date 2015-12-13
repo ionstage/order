@@ -127,8 +127,11 @@
   command.parseStatement = function(s) {
     var line = s.split('#')[0].trim();
 
-    if (!line)
-      return new command.Noop();
+    if (!line) {
+      var cmd = new command.Noop();
+      cmd.name = 'noop';
+      return cmd;
+    }
 
     if (line === ':')
       throw new SyntaxError('CocoScript parse error: Unexpected EOF');
@@ -165,7 +168,9 @@
     args.unshift(null);
 
     try {
-      return new (Function.prototype.bind.apply(commandType, args));
+      var cmd = new (Function.prototype.bind.apply(commandType, args));
+      cmd.name = commandName.toLowerCase();
+      return cmd;
     } catch (e) {
       throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
     }
