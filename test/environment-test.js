@@ -20,9 +20,7 @@ describe('environment', function() {
           circuitElementFactory: function(props) {
             assert.equal(props.variableName, 'x');
             assert.equal(props.moduleName, 'Module');
-            return new Promise(function(resolve) {
-              resolve(dummy);
-            });
+            return Promise.resolve(dummy);
           }
         });
 
