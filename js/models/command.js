@@ -90,14 +90,6 @@
       throw new TypeError('Type error');
   };
 
-  command.names = function() {
-    return Object.keys(command).filter(function(key) {
-      return /^[A-Z]/.test(key);
-    }).map(function(name) {
-      return name.toLowerCase();
-    });
-  };
-
   command.expandAbbreviation = function(s) {
     var m = s.match(/^([^:]+):([^:]+)$/);
     if (m)

@@ -2,20 +2,6 @@ var assert = require('assert');
 var command = require('../js/models/command.js');
 
 describe('command', function() {
-  it('#names', function() {
-    assert.deepEqual(command.names(), [
-      'noop',
-      'new',
-      'bind',
-      'unbind',
-      'send',
-      'delete',
-      'reset',
-      'load',
-      'save'
-    ]);
-  });
-
   describe('#expandAbbreviation', function() {
     [
       ['x:Module', ':new x Module'],
