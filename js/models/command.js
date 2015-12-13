@@ -156,16 +156,16 @@
       return arg;
     });
 
-    var cmd = args.shift();
+    var commandName = args.shift();
+    var commandType = command[helper.capitalize(commandName.toLowerCase())];
 
-    if (command.names().indexOf(cmd) === -1)
-      throw new SyntaxError('CocoScript parse error: Unexpected command "' +  cmd + '"');
+    if (!commandType)
+      throw new SyntaxError('CocoScript parse error: Unexpected command "' +  commandName + '"');
 
-    cmd = helper.capitalize(cmd);
     args.unshift(null);
 
     try {
-      return new (Function.prototype.bind.apply(command[cmd], args));
+      return new (Function.prototype.bind.apply(commandType, args));
     } catch (e) {
       throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
     }

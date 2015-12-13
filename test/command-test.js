@@ -64,6 +64,14 @@ describe('command', function() {
         command.New,
         { variableName: 'x', moduleName: 'Module'}],
 
+      [':New x Module',
+        command.New,
+        { variableName: 'x', moduleName: 'Module'}],
+
+      [':NEW x Module',
+        command.New,
+        { variableName: 'x', moduleName: 'Module'}],
+
       [':bind x.member0 y.member1',
         command.Bind,
         { sourceVariableName: 'x', sourceMemberName: 'member0',
@@ -158,7 +166,6 @@ describe('command', function() {
       ':new x y.z',
       ':new _x y',
       ':new x _y',
-      ':New x Module',
       ':bind',
       ':bind x.member0',
       ':bind x.member0 y.member1 z.member2',
