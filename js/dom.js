@@ -52,16 +52,15 @@
     return new Promise(function(resolve, reject) {
       var req = new XMLHttpRequest();
 
-      req.onload = function() {
+      req.onload = function(event) {
         if (req.status >= 200 && req.status < 400)
           resolve(req.responseText);
         else
-          reject();
+          reject(event);
       };
 
-      req.onerror = function() {
-        reject();
-      };
+      req.onerror = reject;
+      req.onabort = reject;
 
       req.open(type, url, true);
       req.send();
