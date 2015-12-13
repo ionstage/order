@@ -9,16 +9,12 @@
   };
 
   Environment.prototype.exec = function(s) {
-    var cmd = command.parseStatement(command.expandAbbreviation(s));
-
-    var name = command.names().map(helper.capitalize).filter(function(name) {
-      return (cmd instanceof command[name]);
-    })[0];
-
-    if (!name)
-      Promise.reject();
-
-    return this['exec' + name](cmd);
+    try {
+      var cmd = command.parseStatement(command.expandAbbreviation(s));
+      return this['exec' + helper.capitalize(cmd.name)](cmd);
+    } catch (e) {
+      return Promise.reject(e);
+    }
   };
 
   Environment.prototype.execNoop = function(cmd) {
