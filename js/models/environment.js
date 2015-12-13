@@ -25,10 +25,12 @@
     var variableName = cmd.variableName;
     var moduleName = cmd.moduleName;
 
-    return this.circuitElementFactory({
-      variableName: variableName,
-      moduleName: moduleName
-    }).then(function(circuitElement) {
+    return Promise.resolve().then(function() {
+      return this.circuitElementFactory({
+        variableName: variableName,
+        moduleName: moduleName
+      });
+    }.bind(this)).then(function(circuitElement) {
       this.variables.push({
         name: variableName,
         circuitElement: circuitElement
