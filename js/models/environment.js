@@ -9,29 +9,27 @@
   };
 
   Environment.prototype.exec = function(s) {
-    return new Promise(function(resolve, reject) {
-      var cmd = command.parseStatement(command.expandAbbreviation(s));
+    var cmd = command.parseStatement(command.expandAbbreviation(s));
 
-      var name = command.names().map(helper.capitalize).filter(function(name) {
-        return (cmd instanceof command[name]);
-      })[0];
+    var name = command.names().map(helper.capitalize).filter(function(name) {
+      return (cmd instanceof command[name]);
+    })[0];
 
-      if (name)
-        this['exec' + name](cmd, resolve, reject);
-      else
-        reject();
-    }.bind(this));
+    if (!name)
+      Promise.reject();
+
+    return this['exec' + name](cmd);
   };
 
-  Environment.prototype.execNoop = function(cmd, resolve, reject) {
-    resolve();
+  Environment.prototype.execNoop = function(cmd) {
+    return Promise.resolve();
   };
 
-  Environment.prototype.execNew = function(cmd, resolve, reject) {
+  Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
     var moduleName = cmd.moduleName;
 
-    this.circuitElementFactory({
+    return this.circuitElementFactory({
       variableName: variableName,
       moduleName: moduleName
     }).then(function(circuitElement) {
@@ -39,8 +37,7 @@
         name: variableName,
         circuitElement: circuitElement
       });
-      resolve();
-    }.bind(this), reject);
+    }.bind(this));
   };
 
   if (typeof module !== 'undefined' && module.exports)
