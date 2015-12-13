@@ -23,6 +23,14 @@
 
   Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
+
+    var hasVariable = this.variables.some(function(variable) {
+      return variable.name === variableName;
+    });
+
+    if (hasVariable)
+      throw new Error('CocoScript runtime error: variable "' + variableName + '" is already defined');
+
     var moduleName = cmd.moduleName;
 
     return Promise.resolve().then(function() {
