@@ -18,7 +18,7 @@
   };
 
   Environment.prototype.execNoop = function(cmd) {
-    return Promise.resolve();
+    return Promise.resolve(cmd);
   };
 
   Environment.prototype.execNew = function(cmd) {
@@ -33,6 +33,8 @@
         name: variableName,
         circuitElement: circuitElement
       });
+
+      return cmd;
     }.bind(this));
   };
 

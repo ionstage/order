@@ -5,7 +5,9 @@ describe('environment', function() {
   describe('#exec', function() {
     it(':noop', function() {
       var env = new Environment();
-      return env.exec(':noop');
+      return env.exec(':noop').then(function(cmd) {
+        assert.equal(cmd.name, 'noop');
+      });
     });
 
     [
@@ -24,9 +26,10 @@ describe('environment', function() {
           }
         });
 
-        return env.exec(p).then(function() {
+        return env.exec(p).then(function(cmd) {
           var v = env.variables[0];
-          assert.equal(v.name, 'x');
+          assert.equal(cmd.name, 'new');
+          assert.equal(v.name, cmd.variableName);
           assert.equal(v.circuitElement, dummy);
         });
       });
