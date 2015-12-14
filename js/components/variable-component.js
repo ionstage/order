@@ -20,11 +20,19 @@
 
     dom.html(element, [
       '<div class="variable-header">',
-      '<div class="variable-name">', this.name(), '</div>',
-      '<div class="variable-module-name">', this.moduleName(), '</div>',
+      '<div class="variable-name"></div>',
+      '<div class="variable-module-name"></div>',
       '</div>',
       '<iframe class="variable-content"></iframe>'
     ].join(''));
+
+    var headerElement = dom.child(element, 0);
+
+    var nameElement = dom.child(headerElement, 0);
+    dom.text(nameElement, this.name());
+
+    var moduleNameElement = dom.child(headerElement, 1);
+    dom.text(moduleNameElement, this.moduleName());
 
     return element;
   };
