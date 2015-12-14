@@ -42,9 +42,17 @@
     var moduleName = props.moduleName;
     var parentElement = props.parentElement;
 
+    var moduleUrl = [
+      'coco_modules/',
+      moduleName.split('/').map(function(s) {
+        return encodeURIComponent(s);
+      }).join('/'),
+      '.html'
+    ].join('');
+
     return dom.ajax({
       type: 'GET',
-      url: 'coco_modules/' + moduleName + '.html'
+      url: moduleUrl
     }).then(function(text) {
       var component = new VariableComponent({
         name: name,
