@@ -159,13 +159,16 @@
 
     args.unshift(null);
 
+    var cmd;
     try {
-      var cmd = new (Function.prototype.bind.apply(commandType, args));
-      cmd.name = commandName.toLowerCase();
-      return cmd;
+      cmd = new (Function.prototype.bind.apply(commandType, args));
     } catch (e) {
       throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
     }
+
+    cmd.name = commandName.toLowerCase();
+
+    return cmd;
   };
 
   if (typeof module !== 'undefined' && module.exports)
