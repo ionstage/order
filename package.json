@@ -8,7 +8,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "circuit": "^0.1.4",
+    "circuit": "^0.3.2",
     "jquery": "^2.1.4",
     "normalize.css": "^3.0.3"
   },
