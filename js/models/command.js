@@ -79,10 +79,10 @@
   };
 
   command.Load = function() {
-    if (arguments.length !== 1)
+    if (arguments.length !== 0 && arguments.length !== 1)
       throw new TypeError('Type error');
 
-    this.filePath = arguments[0];
+    this.filePath = arguments[0] || '';
   };
 
   command.Save = function() {

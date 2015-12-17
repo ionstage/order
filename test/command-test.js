@@ -30,6 +30,7 @@ describe('command', function() {
       [':send x.member0 data_text', ':send x.member0 data_text'],
       [':delete x', ':delete x'],
       [':reset', ':reset'],
+      [':load', ':load'],
       [':load /path/to/script', ':load /path/to/script'],
       [':save', ':save']
     ].forEach(function(p) {
@@ -99,6 +100,9 @@ describe('command', function() {
 
       [':reset',
         { name: 'reset' }],
+
+      [':load',
+        { name: 'load', filePath: '' }],
 
       [':load /path/to/script',
         { name: 'load', filePath: '/path/to/script' }],
@@ -170,7 +174,6 @@ describe('command', function() {
       ':delete _x',
       ':delete x.y',
       ':reset x',
-      ':load',
       ':load x y',
       ':save x'
     ].forEach(function(p) {
