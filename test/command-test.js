@@ -26,6 +26,7 @@ describe('command', function() {
       [':new x Module', ':new x Module'],
       [':bind x.member0 y.member1', ':bind x.member0 y.member1'],
       [':unbind x.member0 y.member1', ':unbind x.member0 y.member1'],
+      [':send x.member0', ':send x.member0'],
       [':send x.member0 data_text', ':send x.member0 data_text'],
       [':delete x', ':delete x'],
       [':reset', ':reset'],
