@@ -33,19 +33,16 @@ describe('environment', function() {
       });
     });
 
-    it('should not create variables with the same name', function() {
+    it('should not create variables with the same name', function(done) {
       var env = new Environment({
         circuitElementFactory: function() { return {}; }
       });
 
       return env.exec(':new x Module').then(function() {
-        return new Promise(function(resolve, reject) {
-          env.exec(':new x Module').then(function() {
-            reject();
-          }, function() {
-            resolve();
-          });
-        });
+        return env.exec(':new x Module');
+      }).catch(function(e) {
+        assert(e instanceof Error);
+        done();
       });
     });
   });
