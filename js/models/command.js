@@ -86,8 +86,10 @@
   };
 
   command.Save = function() {
-    if (arguments.length)
+    if (arguments.length !== 0 && arguments.length !== 1)
       throw new TypeError('Type error');
+
+    this.filePath = arguments[0] || '';
   };
 
   command.expandAbbreviation = function(s) {
