@@ -2,9 +2,13 @@ var assert = require('assert');
 var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
+  var defaultProps = {
+    circuitElementFactory: function() { return {}; }
+  };
+
   describe('#exec', function() {
     it(':noop', function() {
-      var env = new Environment();
+      var env = new Environment(defaultProps);
       return env.exec(':noop').then(function(cmd) {
         assert.equal(cmd.name, 'noop');
       });
@@ -34,9 +38,7 @@ describe('environment', function() {
     });
 
     it('should not create variables with the same name', function(done) {
-      var env = new Environment({
-        circuitElementFactory: function() { return {}; }
-      });
+      var env = new Environment(defaultProps);
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':new x Module');

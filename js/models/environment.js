@@ -4,7 +4,7 @@
   var command = app.command || require('./command.js');
 
   var Environment = function(props) {
-    this.circuitElementFactory = (props && props.circuitElementFactory);
+    this.circuitElementFactory = props.circuitElementFactory;
     this.variables = [];
   };
 
