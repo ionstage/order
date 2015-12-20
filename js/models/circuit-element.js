@@ -14,26 +14,31 @@
   };
 
   var CircuitElement = function(members) {
-    this.members = members.map(function(member) {
+    var memberMap = {};
+
+    members.slice().reverse().forEach(function(member) {
       // wrap object into array
       member = [].concat(member);
 
       var name = member[0];
-      var arg = member[1];
 
+      if (name in memberMap)
+        return;
+
+      var arg = member[1];
       var CircuitType = (name.indexOf('on') === 0) ? CircuitEvent : CircuitProp;
 
-      return new CircuitType({
+      memberMap[name] = new CircuitType({
         name: name,
         arg: arg
       });
     });
+
+    this.memberMap = memberMap;
   };
 
   CircuitElement.prototype.get = function(name) {
-    var member = this.members.filter(function(member) {
-      return member.name === name;
-    })[0];
+    var member = this.memberMap[name];
 
     if (!member)
       return null;

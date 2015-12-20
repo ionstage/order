@@ -40,4 +40,23 @@ describe('CircuitElement', function() {
     onevent();
     assert(listener.calledOnce);
   });
+
+  it('should make the latter member definition a priority', function() {
+    var listener0 = sinon.spy();
+    var listener1 = sinon.spy();
+    var cel = new CircuitElement([
+      ['prop', 1],
+      ['onevent', listener0],
+      ['prop', 2],
+      ['onevent', listener1]
+    ]);
+
+    var prop = cel.get('prop');
+    var onevent = cel.get('onevent');
+
+    assert.equal(prop(), 2);
+    onevent();
+    assert(listener0.notCalled);
+    assert(listener1.calledOnce);
+  });
 });
