@@ -10,7 +10,7 @@
 
   var CircuitEvent = function(props) {
     this.name = props.name;
-    this.callee = circuit.event();
+    this.callee = circuit.event(props.arg);
   };
 
   var CircuitElement = function(members) {

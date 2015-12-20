@@ -1,4 +1,5 @@
 var assert = require('assert');
+var sinon = require('sinon');
 var CircuitElement = require('../js/models/circuit-element.js');
 
 describe('CircuitElement', function() {
@@ -26,5 +27,17 @@ describe('CircuitElement', function() {
     assert.equal(prop(), 1);
     prop(2);
     assert.equal(prop(), 2);
+  });
+
+  it('has event members with name and listener', function() {
+    var listener = sinon.spy();
+    var cel = new CircuitElement([
+      ['onevent', listener]
+    ]);
+
+    var onevent = cel.get('onevent');
+
+    onevent();
+    assert(listener.calledOnce);
   });
 });
