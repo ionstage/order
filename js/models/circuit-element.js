@@ -5,7 +5,7 @@
 
   var CircuitProp = function(props) {
     this.name = props.name;
-    this.callee = circuit.prop();
+    this.callee = circuit.prop(props.arg);
   };
 
   var CircuitEvent = function(props) {
@@ -19,10 +19,13 @@
       member = [].concat(member);
 
       var name = member[0];
+      var arg = member[1];
+
       var CircuitType = (name.indexOf('on') === 0) ? CircuitEvent : CircuitProp;
 
       return new CircuitType({
-        name: name
+        name: name,
+        arg: arg
       });
     });
   };
