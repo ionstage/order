@@ -2,7 +2,7 @@ var assert = require('assert');
 var CircuitElement = require('../js/models/circuit-element.js');
 
 describe('CircuitElement', function() {
-  it('#get', function() {
+  it('has members with only name', function() {
     var cel = new CircuitElement([
       'prop',
       'onevent'
