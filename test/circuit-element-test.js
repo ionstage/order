@@ -3,6 +3,11 @@ var sinon = require('sinon');
 var CircuitElement = require('../js/models/circuit-element.js');
 
 describe('CircuitElement', function() {
+  it('create empty element', function() {
+    var cel = CircuitElement.empty();
+    assert.equal(Object.keys(cel.memberMap).length, 0);
+  });
+
   it('has members with only name', function() {
     var cel = new CircuitElement([
       'prop',
