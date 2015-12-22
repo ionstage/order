@@ -6,11 +6,21 @@
   var CircuitProp = function(props) {
     this.name = props.name;
     this.callee = circuit.prop(props.arg);
+    this.caller = this.call.bind(this);
+  };
+
+  CircuitProp.prototype.call = function() {
+    return this.callee.apply(this, arguments);
   };
 
   var CircuitEvent = function(props) {
     this.name = props.name;
     this.callee = circuit.event(props.arg);
+    this.caller = this.call.bind(this);
+  };
+
+  CircuitEvent.prototype.call = function() {
+    return this.callee.apply(this, arguments);
   };
 
   var CircuitElement = function(members) {
@@ -43,7 +53,7 @@
     if (!member)
       return null;
 
-    return member.callee;
+    return member.caller;
   };
 
   CircuitElement.empty = function() {
