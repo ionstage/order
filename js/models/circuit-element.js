@@ -83,6 +83,13 @@
     circuit.bind(sourceMember.callee, targetMember.callee);
   };
 
+  CircuitElement.unbind = function(source, target) {
+    var sourceMember = source.unwrap(Wrapper.KEY);
+    var targetMember = target.unwrap(Wrapper.KEY);
+
+    circuit.unbind(sourceMember.callee, targetMember.callee);
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = CircuitElement;
   else

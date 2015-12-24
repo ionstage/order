@@ -82,4 +82,21 @@ describe('CircuitElement', function() {
 
     assert(circuit.bind.calledWith(callee0, callee1));
   });
+
+  it('unbind members', function() {
+    var cel0 = new CircuitElement(['prop']);
+    var cel1 = new CircuitElement(['prop']);
+
+    var prop0 = cel0.get('prop');
+    var prop1 = cel1.get('prop');
+
+    circuit.unbind = sinon.spy();
+
+    CircuitElement.unbind(prop0, prop1);
+
+    var callee0 = cel0.memberMap['prop'].callee;
+    var callee1 = cel1.memberMap['prop'].callee;
+
+    assert(circuit.unbind.calledWith(callee0, callee1));
+  });
 });
