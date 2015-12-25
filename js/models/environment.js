@@ -3,6 +3,11 @@
   var helper = app.helper || require('../helper.js');
   var command = app.command || require('./command.js');
 
+  var Variable = function(props) {
+    this.name = props.name;
+    this.circuitElement = props.circuitElement;
+  };
+
   var Environment = function(props) {
     this.circuitElementFactory = props.circuitElementFactory;
     this.variables = [];
@@ -39,10 +44,10 @@
         moduleName: moduleName
       });
     }.bind(this)).then(function(circuitElement) {
-      this.variables.push({
+      this.variables.push(new Variable({
         name: variableName,
         circuitElement: circuitElement
-      });
+      }));
 
       return cmd;
     }.bind(this));
