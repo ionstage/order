@@ -15,27 +15,22 @@
 
   Wrapper.KEY = {};
 
-  var CircuitProp = function(props) {
-    this.name = props.name;
-    this.callee = circuit.prop(props.arg);
-    this.caller = this.call.bind(this);
+  var CircuitElementMember = function(props) {
+    var name = props.name;
+    var arg = props.arg;
 
-    return new Wrapper(this, this.caller);
+    var type = (name.indexOf('on') === 0) ? 'event' : 'prop';
+    var callee = circuit[type](arg);
+    var caller = this.call.bind(this);
+
+    this.name = name;
+    this.callee = callee;
+    this.caller = caller;
+
+    return new Wrapper(this, caller);
   };
 
-  CircuitProp.prototype.call = function() {
-    return this.callee.apply(this, arguments);
-  };
-
-  var CircuitEvent = function(props) {
-    this.name = props.name;
-    this.callee = circuit.event(props.arg);
-    this.caller = this.call.bind(this);
-
-    return new Wrapper(this, this.caller);
-  };
-
-  CircuitEvent.prototype.call = function() {
+  CircuitElementMember.prototype.call = function() {
     return this.callee.apply(this, arguments);
   };
 
@@ -52,9 +47,8 @@
         return;
 
       var arg = member[1];
-      var CircuitType = (name.indexOf('on') === 0) ? CircuitEvent : CircuitProp;
 
-      memberMap[name] = new CircuitType({
+      memberMap[name] = new CircuitElementMember({
         name: name,
         arg: arg
       });
