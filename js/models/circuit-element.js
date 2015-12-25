@@ -37,21 +37,13 @@
   var CircuitElement = function(members) {
     var memberMap = {};
 
-    members.slice().reverse().forEach(function(member) {
-      // wrap object into array
-      member = [].concat(member);
-
-      var name = member[0];
+    members.slice().reverse().forEach(function(props) {
+      var name = props.name;
 
       if (name in memberMap)
         return;
 
-      var arg = member[1];
-
-      memberMap[name] = new CircuitElementMember({
-        name: name,
-        arg: arg
-      });
+      memberMap[name] = new CircuitElementMember(props);
     });
 
     this.memberMap = memberMap;

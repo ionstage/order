@@ -11,8 +11,8 @@ describe('CircuitElement', function() {
 
   it('has members with only name', function() {
     var cel = new CircuitElement([
-      'prop',
-      'onevent'
+      { name: 'prop' },
+      { name: 'onevent' }
     ]);
 
     var prop = cel.get('prop');
@@ -25,7 +25,7 @@ describe('CircuitElement', function() {
 
   it('has prop members with name and value', function() {
     var cel = new CircuitElement([
-      ['prop', 1]
+      { name: 'prop', arg: 1 }
     ]);
 
     var prop = cel.get('prop');
@@ -38,7 +38,7 @@ describe('CircuitElement', function() {
   it('has event members with name and listener', function() {
     var listener = sinon.spy();
     var cel = new CircuitElement([
-      ['onevent', listener]
+      { name: 'onevent', arg: listener }
     ]);
 
     var onevent = cel.get('onevent');
@@ -51,10 +51,10 @@ describe('CircuitElement', function() {
     var listener0 = sinon.spy();
     var listener1 = sinon.spy();
     var cel = new CircuitElement([
-      ['prop', 1],
-      ['onevent', listener0],
-      ['prop', 2],
-      ['onevent', listener1]
+      { name: 'prop', arg: 1 },
+      { name: 'onevent', arg: listener0 },
+      { name: 'prop', arg: 2 },
+      { name: 'onevent', arg: listener1 }
     ]);
 
     var prop = cel.get('prop');
@@ -67,8 +67,12 @@ describe('CircuitElement', function() {
   });
 
   it('bind members', function() {
-    var cel0 = new CircuitElement(['prop']);
-    var cel1 = new CircuitElement(['prop']);
+    var cel0 = new CircuitElement([
+      { name: 'prop' }
+    ]);
+    var cel1 = new CircuitElement([
+      { name: 'prop' }
+    ]);
 
     var prop0 = cel0.get('prop');
     var prop1 = cel1.get('prop');
@@ -84,8 +88,12 @@ describe('CircuitElement', function() {
   });
 
   it('unbind members', function() {
-    var cel0 = new CircuitElement(['prop']);
-    var cel1 = new CircuitElement(['prop']);
+    var cel0 = new CircuitElement([
+      { name: 'prop' }
+    ]);
+    var cel1 = new CircuitElement([
+      { name: 'prop' }
+    ]);
 
     var prop0 = cel0.get('prop');
     var prop1 = cel1.get('prop');
