@@ -13,6 +13,11 @@
     this.parentElement = this.prop(props.parentElement);
   }, Component);
 
+  VariableComponent.prototype.circuitElement = function() {
+    var contentElement = dom.child(this.element(), 1);
+    return helper.dig(dom.contentWindow(contentElement), 'coco', 'exports');
+  };
+
   VariableComponent.prototype.render = function() {
     var element = dom.el('<div>');
 

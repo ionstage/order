@@ -34,6 +34,10 @@
     el.innerHTML = s;
   };
 
+  dom.contentWindow = function(iframe) {
+    return iframe.contentWindow;
+  };
+
   dom.writeContent = function(iframe, s) {
     var doc = iframe.contentDocument;
     doc.open();
