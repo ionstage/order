@@ -47,5 +47,16 @@ describe('environment', function() {
         done();
       });
     });
+
+    it('should not set circuit element to null', function(done) {
+      var env = new Environment({
+        circuitElementFactory: function() { return null; }
+      });
+
+      return env.exec(':new x Module').catch(function(e) {
+        assert(e instanceof Error);
+        done();
+      });
+    });
   });
 });

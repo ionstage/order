@@ -44,6 +44,9 @@
         moduleName: moduleName
       });
     }.bind(this)).then(function(circuitElement) {
+      if (!circuitElement)
+        throw new Error('CocoScript runtime error: Invalid circuit element');
+
       this.variables.push(new Variable({
         name: variableName,
         circuitElement: circuitElement
