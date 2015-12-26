@@ -18,12 +18,20 @@
     parent.appendChild(el);
   };
 
+  dom.remove = function(el) {
+    el.parentNode.removeChild(el);
+  };
+
   dom.child = function(el, index) {
     return el.childNodes[index];
   };
 
   dom.addClass = function(el, className) {
     el.classList.add(className);
+  };
+
+  dom.name = function(el, s) {
+    el.name = s;
   };
 
   dom.text = function(el, s) {
@@ -51,6 +59,10 @@
 
   dom.animate = function(callback) {
     return window.requestAnimationFrame(callback);
+  };
+
+  dom.on = function(el, type, listener) {
+    el.addEventListener(type, listener);
   };
 
   dom.ajax = function(opt) {

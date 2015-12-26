@@ -70,10 +70,33 @@
       dom.append(parentElement, element);
 
       var iframeElement = dom.child(element, 1);
+      var contentWindow = dom.contentWindow(iframeElement);
+      var data = Date.now().toString();
+
+      dom.name(contentWindow, data);
       dom.writeContent(iframeElement, text);
       dom.fillContentHeight(iframeElement);
 
-      return component;
+      return new Promise(function(resolve, reject) {
+        dom.on(contentWindow, 'message', function(event) {
+          try {
+            if (event.origin !== location.origin)
+              throw new Error('CocoScript runtime error: Invalid content origin');
+
+            if (event.data !== data)
+              throw new Error('CocoScript runtime error: Invalid content data');
+
+            if (!component.circuitElement())
+              throw new Error('CocoScript runtime error: Invalid circuit element');
+
+            resolve(component);
+          } catch (e) {
+            dom.remove(component.element());
+            component.element(null);
+            reject(e);
+          }
+        });
+      });
     });
   };
 
