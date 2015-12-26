@@ -3,9 +3,9 @@
 
   var circuit = require('circuit');
 
-  var Wrapper = function(self, obj) {
+  var Wrapper = function(obj, self) {
     obj.unwrap = this.unwrap.bind(self);
-    return self;
+    return obj;
   };
 
   Wrapper.prototype.unwrap = function(key) {
@@ -25,9 +25,7 @@
 
     this.name = name;
     this.callee = callee;
-    this.caller = caller;
-
-    return new Wrapper(this, caller);
+    this.caller = new Wrapper(caller, this);
   };
 
   CircuitElementMember.prototype.call = function() {
