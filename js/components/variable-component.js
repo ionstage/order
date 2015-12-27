@@ -42,6 +42,41 @@
     return element;
   };
 
+  VariableComponent.prototype.load = function(contentText) {
+    var element = this.render();
+    this.element(element);
+    dom.append(this.parentElement(), element);
+
+    var iframeElement = dom.child(element, 1);
+    var contentWindow = dom.contentWindow(iframeElement);
+    var data = Date.now().toString();
+
+    dom.name(contentWindow, data);
+    dom.writeContent(iframeElement, contentText);
+    dom.fillContentHeight(iframeElement);
+
+    return new Promise(function(resolve, reject) {
+      dom.on(contentWindow, 'message', function(event) {
+        try {
+          if (event.origin !== location.origin)
+            throw new Error('CocoScript runtime error: Invalid content origin');
+
+          if (event.data !== data)
+            throw new Error('CocoScript runtime error: Invalid content data');
+
+          if (!this.circuitElement())
+            throw new Error('CocoScript runtime error: Invalid circuit element');
+
+          resolve(this);
+        } catch (e) {
+          dom.remove(this.element());
+          this.element(null);
+          reject(e);
+        }
+      }.bind(this));
+    }.bind(this));
+  };
+
   VariableComponent.load = function(props) {
     var name = props.name;
     var moduleName = props.moduleName;
@@ -65,38 +100,7 @@
         parentElement: parentElement
       });
 
-      var element = component.render();
-      component.element(element);
-      dom.append(parentElement, element);
-
-      var iframeElement = dom.child(element, 1);
-      var contentWindow = dom.contentWindow(iframeElement);
-      var data = Date.now().toString();
-
-      dom.name(contentWindow, data);
-      dom.writeContent(iframeElement, text);
-      dom.fillContentHeight(iframeElement);
-
-      return new Promise(function(resolve, reject) {
-        dom.on(contentWindow, 'message', function(event) {
-          try {
-            if (event.origin !== location.origin)
-              throw new Error('CocoScript runtime error: Invalid content origin');
-
-            if (event.data !== data)
-              throw new Error('CocoScript runtime error: Invalid content data');
-
-            if (!component.circuitElement())
-              throw new Error('CocoScript runtime error: Invalid circuit element');
-
-            resolve(component);
-          } catch (e) {
-            dom.remove(component.element());
-            component.element(null);
-            reject(e);
-          }
-        });
-      });
+      return component.load(text);
     });
   };
 
