@@ -55,26 +55,31 @@
     dom.writeContent(iframeElement, contentText);
     dom.fillContentHeight(iframeElement);
 
-    return new Promise(function(resolve, reject) {
-      dom.on(contentWindow, 'message', function(event) {
-        try {
-          if (event.origin !== location.origin)
-            throw new Error('CocoScript runtime error: Invalid content origin');
+    return Promise.race([
+      new Promise(function(resolve, reject) {
+        dom.on(contentWindow, 'message', function(event) {
+          try {
+            if (event.origin !== location.origin)
+              throw new Error('CocoScript runtime error: Invalid content origin');
 
-          if (event.data !== data)
-            throw new Error('CocoScript runtime error: Invalid content data');
+            if (event.data !== data)
+              throw new Error('CocoScript runtime error: Invalid content data');
 
-          if (!this.circuitElement())
-            throw new Error('CocoScript runtime error: Invalid circuit element');
+            if (!this.circuitElement())
+              throw new Error('CocoScript runtime error: Invalid circuit element');
 
-          resolve(this);
-        } catch (e) {
-          dom.remove(this.element());
-          this.element(null);
-          reject(e);
-        }
-      }.bind(this));
-    }.bind(this));
+            resolve(this);
+          } catch (e) {
+            dom.remove(this.element());
+            this.element(null);
+            reject(e);
+          }
+        }.bind(this));
+      }.bind(this)),
+      new Promise(function(resolve, reject) {
+        setTimeout(reject, 30 * 1000, new Error('CocoScript runtime error: Load timeout for content'));
+      })
+    ]);
   };
 
   VariableComponent.load = function(props) {
