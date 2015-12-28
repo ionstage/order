@@ -1,4 +1,6 @@
 var assert = require('assert');
+var sinon = require('sinon');
+var CircuitElement = require('../js/models/circuit-element.js');
 var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
@@ -51,6 +53,29 @@ describe('environment', function() {
       return env.exec(':new x Module').catch(function(e) {
         assert(e instanceof Error);
         done();
+      });
+    });
+
+    it('bind circuit element members', function() {
+      var cels = [];
+      var env = new Environment({
+        circuitElementFactory: function() {
+          var cel = new CircuitElement([
+            { name: 'prop' }
+          ]);
+          cels.push(cel);
+          return cel;
+        }
+      });
+
+      CircuitElement.bind = sinon.spy();
+
+      return env.exec(':new x Module').then(function() {
+        return env.exec(':new y Module');
+      }).then(function() {
+        return env.exec(':bind x.prop y.prop');
+      }).then(function() {
+        assert(CircuitElement.bind.calledWith(cels[0].get('prop'), cels[1].get('prop')));
       });
     });
   });

@@ -2,6 +2,7 @@
   'use strict';
   var helper = app.helper || require('../helper.js');
   var command = app.command || require('./command.js');
+  var CircuitElement = require('./circuit-element.js');
 
   var Variable = function(props) {
     this.name = props.name;
@@ -54,6 +55,25 @@
 
       return cmd;
     }.bind(this));
+  };
+
+  Environment.prototype.execBind = function(cmd) {
+    var variables = this.variables;
+
+    var sourceVariable = variables.filter(function(variable) {
+      return variable.name === cmd.sourceVariableName;
+    })[0];
+
+    var targetVariable = variables.filter(function(variable) {
+      return variable.name === cmd.targetVariableName;
+    })[0];
+
+    var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
+    var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);
+
+    CircuitElement.bind(sourceMember, targetMember);
+
+    return Promise.resolve(cmd);
   };
 
   if (typeof module !== 'undefined' && module.exports)
