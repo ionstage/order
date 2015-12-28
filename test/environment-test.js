@@ -75,12 +75,10 @@ describe('environment', function() {
       }).then(function() {
         return env.exec(':bind x.member0 y.member1');
       }).then(function(cmd) {
+        var member0 = cels[0].get(cmd.sourceMemberName);
+        var member1 = cels[1].get(cmd.targetMemberName);
         assert.equal(cmd.name, 'bind');
-        assert.equal(cmd.sourceVariableName, 'x');
-        assert.equal(cmd.sourceMemberName, 'member0');
-        assert.equal(cmd.targetVariableName, 'y');
-        assert.equal(cmd.targetMemberName, 'member1');
-        assert(CircuitElement.bind.calledWith(cels[0].get('member0'), cels[1].get('member1')));
+        assert(CircuitElement.bind.calledWith(member0, member1));
       });
     });
   });
