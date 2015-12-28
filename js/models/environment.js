@@ -14,6 +14,12 @@
     this.variables = [];
   };
 
+  Environment.prototype.findVariable = function(name) {
+    return this.variables.filter(function(variable) {
+      return variable.name === name;
+    })[0];
+  };
+
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
       var cmd = command.parseStatement(command.expandAbbreviation(s));
@@ -27,12 +33,9 @@
 
   Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
+    var variable = this.findVariable(variableName);
 
-    var hasVariable = this.variables.some(function(variable) {
-      return variable.name === variableName;
-    });
-
-    if (hasVariable)
+    if (variable)
       throw new Error('CocoScript runtime error: variable "' + variableName + '" is already defined');
 
     var moduleName = cmd.moduleName;
@@ -56,15 +59,8 @@
   };
 
   Environment.prototype.execBind = function(cmd) {
-    var variables = this.variables;
-
-    var sourceVariable = variables.filter(function(variable) {
-      return variable.name === cmd.sourceVariableName;
-    })[0];
-
-    var targetVariable = variables.filter(function(variable) {
-      return variable.name === cmd.targetVariableName;
-    })[0];
+    var sourceVariable = this.findVariable(cmd.sourceVariableName);
+    var targetVariable = this.findVariable(cmd.targetVariableName);
 
     var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
     var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);
