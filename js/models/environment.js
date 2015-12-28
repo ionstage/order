@@ -2,7 +2,7 @@
   'use strict';
   var helper = app.helper || require('../helper.js');
   var command = app.command || require('./command.js');
-  var CircuitElement = require('./circuit-element.js');
+  var CircuitElement = app.CircuitElement || require('./circuit-element.js');
 
   var Variable = function(props) {
     this.name = props.name;
