@@ -73,9 +73,14 @@ describe('environment', function() {
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
       }).then(function() {
-        return env.exec(':bind x.prop y.prop');
-      }).then(function() {
-        assert(CircuitElement.bind.calledWith(cels[0].get('prop'), cels[1].get('prop')));
+        return env.exec(':bind x.member0 y.member1');
+      }).then(function(cmd) {
+        assert.equal(cmd.name, 'bind');
+        assert.equal(cmd.sourceVariableName, 'x');
+        assert.equal(cmd.sourceMemberName, 'member0');
+        assert.equal(cmd.targetVariableName, 'y');
+        assert.equal(cmd.targetMemberName, 'member1');
+        assert(CircuitElement.bind.calledWith(cels[0].get('member0'), cels[1].get('member1')));
       });
     });
   });
