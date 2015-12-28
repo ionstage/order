@@ -15,16 +15,14 @@
   };
 
   Environment.prototype.exec = function(s) {
-    try {
+    return Promise.resolve().then(function() {
       var cmd = command.parseStatement(command.expandAbbreviation(s));
       return this['exec' + helper.capitalize(cmd.name)](cmd);
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    }.bind(this));
   };
 
   Environment.prototype.execNoop = function(cmd) {
-    return Promise.resolve(cmd);
+    return cmd;
   };
 
   Environment.prototype.execNew = function(cmd) {
@@ -73,7 +71,7 @@
 
     CircuitElement.bind(sourceMember, targetMember);
 
-    return Promise.resolve(cmd);
+    return cmd;
   };
 
   if (typeof module !== 'undefined' && module.exports)
