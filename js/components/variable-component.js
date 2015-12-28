@@ -3,6 +3,7 @@
 
   var helper = app.helper || require('../helper.js');
   var dom = app.dom || require('../dom.js');
+  var CircuitElement = app.CircuitElement || require('../models/circuit-element.js');
   var Component = app.Component || require('./component.js');
 
   var VariableComponent = helper.inherits(function(props) {
@@ -15,7 +16,8 @@
 
   VariableComponent.prototype.circuitElement = function() {
     var contentElement = dom.child(this.element(), 1);
-    return helper.dig(dom.contentWindow(contentElement), 'coco', 'exports');
+    var circuitElement = helper.dig(dom.contentWindow(contentElement), 'coco', 'exports');
+    return circuitElement || CircuitElement.empty();
   };
 
   VariableComponent.prototype.render = function() {
