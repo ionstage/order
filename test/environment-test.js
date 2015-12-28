@@ -81,5 +81,33 @@ describe('environment', function() {
         assert(CircuitElement.bind.calledWith(member0, member1));
       });
     });
+
+    it('unbind circuit element members', function() {
+      var cels = [];
+      var env = new Environment({
+        circuitElementFactory: function() {
+          var cel = new CircuitElement([
+            { name: 'prop' }
+          ]);
+          cels.push(cel);
+          return cel;
+        }
+      });
+
+      CircuitElement.unbind = sinon.spy();
+
+      return env.exec(':new x Module').then(function() {
+        return env.exec(':new y Module');
+      }).then(function() {
+        return env.exec(':bind x.member0 y.member1');
+      }).then(function() {
+        return env.exec(':unbind x.member0 y.member1');
+      }).then(function(cmd) {
+        var member0 = cels[0].get(cmd.sourceMemberName);
+        var member1 = cels[1].get(cmd.targetMemberName);
+        assert.equal(cmd.name, 'unbind');
+        assert(CircuitElement.unbind.calledWith(member0, member1));
+      });
+    });
   });
 });

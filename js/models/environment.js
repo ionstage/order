@@ -70,6 +70,18 @@
     return cmd;
   };
 
+  Environment.prototype.execUnbind = function(cmd) {
+    var sourceVariable = this.findVariable(cmd.sourceVariableName);
+    var targetVariable = this.findVariable(cmd.targetVariableName);
+
+    var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
+    var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);
+
+    CircuitElement.unbind(sourceMember, targetMember);
+
+    return cmd;
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Environment;
   else
