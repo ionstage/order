@@ -7,33 +7,28 @@ describe('environment', function() {
   };
 
   describe('#exec', function() {
-    it(':noop', function() {
+    it('accept empty command', function() {
       var env = new Environment(defaultProps);
-      return env.exec(':noop').then(function(cmd) {
+      return env.exec('').then(function(cmd) {
         assert.equal(cmd.name, 'noop');
       });
     });
 
-    [
-      ':new x Module',
-      'x:Module'
-    ].forEach(function(p) {
-      it(p, function() {
-        var dummy = {};
-        var env = new Environment({
-          circuitElementFactory: function(props) {
-            assert.equal(props.variableName, 'x');
-            assert.equal(props.moduleName, 'Module');
-            return Promise.resolve(dummy);
-          }
-        });
+    it('create new variable', function() {
+      var dummy = {};
+      var env = new Environment({
+        circuitElementFactory: function(props) {
+          assert.equal(props.variableName, 'x');
+          assert.equal(props.moduleName, 'Module');
+          return Promise.resolve(dummy);
+        }
+      });
 
-        return env.exec(p).then(function(cmd) {
-          var v = env.variables[0];
-          assert.equal(cmd.name, 'new');
-          assert.equal(v.name, cmd.variableName);
-          assert.equal(v.circuitElement, dummy);
-        });
+      return env.exec(':new x Module').then(function(cmd) {
+        var v = env.variables[0];
+        assert.equal(cmd.name, 'new');
+        assert.equal(v.name, cmd.variableName);
+        assert.equal(v.circuitElement, dummy);
       });
     });
 
