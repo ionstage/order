@@ -33,22 +33,22 @@
   };
 
   var CircuitElement = function(members) {
-    var memberMap = {};
+    var memberTable = {};
 
     members.slice().reverse().forEach(function(props) {
       var name = props.name;
 
-      if (name in memberMap)
+      if (name in memberTable)
         return;
 
-      memberMap[name] = new CircuitElementMember(props);
+      memberTable[name] = new CircuitElementMember(props);
     });
 
-    this.memberMap = memberMap;
+    this.memberTable = memberTable;
   };
 
   CircuitElement.prototype.get = function(name) {
-    var member = this.memberMap[name];
+    var member = this.memberTable[name];
 
     if (!member)
       return null;

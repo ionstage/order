@@ -6,7 +6,7 @@ var CircuitElement = require('../js/models/circuit-element.js');
 describe('CircuitElement', function() {
   it('create empty element', function() {
     var cel = CircuitElement.empty();
-    assert.equal(Object.keys(cel.memberMap).length, 0);
+    assert.equal(Object.keys(cel.memberTable).length, 0);
   });
 
   it('has members with only name', function() {
@@ -81,8 +81,8 @@ describe('CircuitElement', function() {
 
     CircuitElement.bind(prop0, prop1);
 
-    var callee0 = cel0.memberMap['prop'].callee;
-    var callee1 = cel1.memberMap['prop'].callee;
+    var callee0 = cel0.memberTable['prop'].callee;
+    var callee1 = cel1.memberTable['prop'].callee;
 
     assert(circuit.bind.calledWith(callee0, callee1));
   });
@@ -102,8 +102,8 @@ describe('CircuitElement', function() {
 
     CircuitElement.unbind(prop0, prop1);
 
-    var callee0 = cel0.memberMap['prop'].callee;
-    var callee1 = cel1.memberMap['prop'].callee;
+    var callee0 = cel0.memberTable['prop'].callee;
+    var callee1 = cel1.memberTable['prop'].callee;
 
     assert(circuit.unbind.calledWith(callee0, callee1));
   });
