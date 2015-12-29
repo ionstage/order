@@ -11,13 +11,7 @@
 
   var Environment = function(props) {
     this.circuitElementFactory = props.circuitElementFactory;
-    this.variables = [];
-  };
-
-  Environment.prototype.findVariable = function(name) {
-    return this.variables.filter(function(variable) {
-      return variable.name === name;
-    })[0];
+    this.variableTable = {};
   };
 
   Environment.prototype.exec = function(s) {
@@ -33,7 +27,7 @@
 
   Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
-    var variable = this.findVariable(variableName);
+    var variable = this.variableTable[variableName];
 
     if (variable)
       throw new Error('CocoScript runtime error: variable "' + variableName + '" is already defined');
@@ -49,18 +43,20 @@
       if (!circuitElement)
         throw new Error('CocoScript runtime error: Invalid circuit element');
 
-      this.variables.push(new Variable({
+      this.variableTable[variableName] = new Variable({
         name: variableName,
         circuitElement: circuitElement
-      }));
+      });
 
       return cmd;
     }.bind(this));
   };
 
   Environment.prototype.execBind = function(cmd) {
-    var sourceVariable = this.findVariable(cmd.sourceVariableName);
-    var targetVariable = this.findVariable(cmd.targetVariableName);
+    var variableTable = this.variableTable;
+
+    var sourceVariable = variableTable[cmd.sourceVariableName];
+    var targetVariable = variableTable[cmd.targetVariableName];
 
     var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
     var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);
@@ -71,8 +67,10 @@
   };
 
   Environment.prototype.execUnbind = function(cmd) {
-    var sourceVariable = this.findVariable(cmd.sourceVariableName);
-    var targetVariable = this.findVariable(cmd.targetVariableName);
+    var variableTable = this.variableTable;
+
+    var sourceVariable = variableTable[cmd.sourceVariableName];
+    var targetVariable = variableTable[cmd.targetVariableName];
 
     var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
     var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);

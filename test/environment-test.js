@@ -27,7 +27,7 @@ describe('environment', function() {
       });
 
       return env.exec(':new x Module').then(function(cmd) {
-        var v = env.variables[0];
+        var v = env.variableTable[cmd.variableName];
         assert.equal(cmd.name, 'new');
         assert.equal(v.name, cmd.variableName);
         assert.equal(v.circuitElement, dummy);
