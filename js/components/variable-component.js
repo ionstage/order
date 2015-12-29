@@ -49,13 +49,13 @@
     this.element(element);
     dom.append(this.parentElement(), element);
 
-    var iframeElement = dom.child(element, 1);
-    var contentWindow = dom.contentWindow(iframeElement);
+    var contentElement = dom.child(element, 1);
+    var contentWindow = dom.contentWindow(contentElement);
     var data = Date.now().toString();
 
     dom.name(contentWindow, data);
-    dom.writeContent(iframeElement, contentText);
-    dom.fillContentHeight(iframeElement);
+    dom.writeContent(contentElement, contentText);
+    dom.fillContentHeight(contentElement);
 
     return Promise.race([
       new Promise(function(resolve, reject) {
