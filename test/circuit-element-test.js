@@ -107,4 +107,34 @@ describe('CircuitElement', function() {
 
     assert(circuit.unbind.calledWith(callee0, callee1));
   });
+
+  it('unbind all members', function() {
+    var cel0 = new CircuitElement([
+      { name: 'prop' }
+    ]);
+    var cel1 = new CircuitElement([
+      { name: 'prop' }
+    ]);
+    var cel2 = new CircuitElement([
+      { name: 'prop' }
+    ]);
+
+    var prop0 = cel0.get('prop');
+    var prop1 = cel1.get('prop');
+    var prop2 = cel2.get('prop');
+
+    CircuitElement.bind(prop1, prop0);
+    CircuitElement.bind(prop0, prop2);
+
+    circuit.unbind = sinon.spy();
+
+    CircuitElement.unbindAll(prop0);
+
+    var callee0 = cel0.memberTable['prop'].callee;
+    var callee1 = cel1.memberTable['prop'].callee;
+    var callee2 = cel2.memberTable['prop'].callee;
+
+    assert(circuit.unbind.firstCall.calledWith(callee1, callee0));
+    assert(circuit.unbind.secondCall.calledWith(callee0, callee2));
+  });
 });

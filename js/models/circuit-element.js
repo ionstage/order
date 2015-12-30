@@ -26,6 +26,8 @@
     this.name = name;
     this.callee = callee;
     this.caller = new Wrapper(caller, this);
+    this.sources = [];
+    this.targets = [];
   };
 
   CircuitElementMember.prototype.call = function() {
@@ -65,6 +67,9 @@
     var targetMember = target.unwrap(Wrapper.KEY);
 
     circuit.bind(sourceMember.callee, targetMember.callee);
+
+    sourceMember.targets.push(targetMember);
+    targetMember.sources.push(sourceMember);
   };
 
   CircuitElement.unbind = function(source, target) {
@@ -72,6 +77,26 @@
     var targetMember = target.unwrap(Wrapper.KEY);
 
     circuit.unbind(sourceMember.callee, targetMember.callee);
+
+    var sourceMemberTargets = sourceMember.targets;
+    var targetMemberSources = targetMember.sources;
+
+    sourceMemberTargets.splice(sourceMemberTargets.indexOf(targetMember), 1);
+    targetMemberSources.splice(targetMemberSources.indexOf(sourceMember), 1);
+  };
+
+  CircuitElement.unbindAll = function(caller) {
+    var member = caller.unwrap(Wrapper.KEY);
+    var sources = member.sources;
+    var targets = member.targets;
+
+    sources.forEach(function(source) {
+      circuit.unbind(source.callee, member.callee);
+    });
+
+    targets.forEach(function(target) {
+      circuit.unbind(member.callee, target.callee);
+    });
   };
 
   if (typeof module !== 'undefined' && module.exports)
