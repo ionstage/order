@@ -109,5 +109,15 @@ describe('environment', function() {
         assert(CircuitElement.unbind.calledWith(member0, member1));
       });
     });
+
+    it('delete variable', function() {
+      var env = new Environment(defaultProps);
+      return env.exec(':new x Module').then(function() {
+        return env.exec(':delete x');
+      }).then(function(cmd) {
+        assert.equal(cmd.name, 'delete');
+        assert.equal(Object.keys(env.variableTable).length, 0);
+      });
+    });
   });
 });

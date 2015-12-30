@@ -80,6 +80,23 @@
     return cmd;
   };
 
+  Environment.prototype.execDelete = function(cmd) {
+    var variableTable = this.variableTable;
+
+    var variableName = cmd.variableName;
+    var variable = variableTable[variableName];
+
+    if (!variable)
+      throw new Error('CocoScript runtime error: variable "' + variableName + '" is not defined');
+
+    // unbind all bound members of circuit element
+    variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
+
+    delete variableTable[variableName];
+
+    return cmd;
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Environment;
   else
