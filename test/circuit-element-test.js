@@ -66,6 +66,18 @@ describe('CircuitElement', function() {
     assert(listener1.calledOnce);
   });
 
+  it('get all members', function() {
+    var cel = new CircuitElement([
+      { name: 'prop' },
+      { name: 'onevent' }
+    ]);
+
+    var members = cel.getAll();
+
+    assert.equal(members[0], cel.get('prop'));
+    assert.equal(members[1], cel.get('onevent'));
+  });
+
   it('bind members', function() {
     var cel0 = new CircuitElement([
       { name: 'prop' }

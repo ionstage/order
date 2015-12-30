@@ -36,6 +36,7 @@
 
   var CircuitElement = function(members) {
     var memberTable = {};
+    var names = [];
 
     members.slice().reverse().forEach(function(props) {
       var name = props.name;
@@ -44,9 +45,11 @@
         return;
 
       memberTable[name] = new CircuitElementMember(props);
+      names.unshift(name);
     });
 
     this.memberTable = memberTable;
+    this.names = names;
   };
 
   CircuitElement.prototype.get = function(name) {
@@ -56,6 +59,12 @@
       return null;
 
     return member.caller;
+  };
+
+  CircuitElement.prototype.getAll = function() {
+    return this.names.map(function(name) {
+      return this.memberTable[name].caller;
+    }.bind(this));
   };
 
   CircuitElement.empty = function() {
