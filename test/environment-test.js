@@ -5,7 +5,7 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitElementFactory: function() { return {}; }
+    circuitElementFactory: function() { return CircuitElement.empty(); }
   };
 
   describe('#exec', function() {
