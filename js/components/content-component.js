@@ -22,6 +22,22 @@
     }.bind(this));
   };
 
+  ContentComponent.prototype.deleteVariable = function(name) {
+    var variables = this.variables();
+
+    var variable = variables.filter(function(variable) {
+      return variable.name() === name;
+    })[0];
+
+    if (!variable)
+      return;
+
+    // remove DOM element of variable
+    variable.parentElement(null);
+
+    variables.splice(variables.indexOf(variable), 1);
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = ContentComponent;
   else

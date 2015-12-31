@@ -44,6 +44,17 @@
     return element;
   };
 
+  VariableComponent.prototype.redraw = function() {
+    var element = this.element();
+    var parentElement = this.parentElement();
+
+    // remove element
+    if (!parentElement && element) {
+      dom.remove(element);
+      this.element(null);
+    }
+  };
+
   VariableComponent.prototype.load = function(contentText) {
     var element = this.render();
     this.element(element);
