@@ -57,9 +57,11 @@
     dom.writeContent(contentElement, contentText);
     dom.fillContentHeight(contentElement);
 
+    var onmessage;
+
     return Promise.race([
       new Promise(function(resolve, reject) {
-        dom.on(contentWindow, 'message', function(event) {
+        onmessage = function(event) {
           try {
             if (event.origin !== location.origin)
               throw new Error('CocoScript runtime error: Invalid content origin');
@@ -76,12 +78,20 @@
             this.element(null);
             reject(e);
           }
-        }.bind(this));
+        }.bind(this);
+
+        dom.on(contentWindow, 'message', onmessage);
       }.bind(this)),
       new Promise(function(resolve, reject) {
         setTimeout(reject, 30 * 1000, new Error('CocoScript runtime error: Load timeout for content'));
       })
-    ]);
+    ]).then(function(component) {
+      dom.off(contentWindow, 'message', onmessage);
+      return component;
+    }).catch(function(e) {
+      dom.off(contentWindow, 'message', onmessage);
+      throw e;
+    });
   };
 
   VariableComponent.load = function(props) {

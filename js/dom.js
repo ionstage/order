@@ -65,6 +65,10 @@
     el.addEventListener(type, listener);
   };
 
+  dom.off = function(el, type, listener) {
+    el.removeEventListener(type, listener);
+  };
+
   dom.ajax = function(opt) {
     var type = opt.type;
     var url = opt.url;
