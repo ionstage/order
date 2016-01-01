@@ -119,5 +119,17 @@ describe('environment', function() {
         assert.equal(Object.keys(env.variableTable).length, 0);
       });
     });
+
+    it('reset', function() {
+      var env = new Environment(defaultProps);
+      return env.exec(':new x Module').then(function() {
+        return env.exec(':new y Module');
+      }).then(function() {
+        return env.exec(':reset');
+      }).then(function(cmd) {
+        assert.equal(cmd.name, 'reset');
+        assert.equal(Object.keys(env.variableTable).length, 0);
+      });
+    });
   });
 });

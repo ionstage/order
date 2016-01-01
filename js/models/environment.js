@@ -97,6 +97,21 @@
     return cmd;
   };
 
+  Environment.prototype.execReset = function(cmd) {
+    var variableTable = this.variableTable;
+
+    Object.keys(variableTable).forEach(function(name) {
+      var variable = variableTable[name];
+
+      // unbind all bound members of circuit element
+      variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
+
+      delete variableTable[name];
+    });
+
+    return cmd;
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Environment;
   else
