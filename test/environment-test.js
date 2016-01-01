@@ -131,5 +131,13 @@ describe('environment', function() {
         assert.equal(Object.keys(env.variableTable).length, 0);
       });
     });
+
+    it('load command', function() {
+      var env = new Environment(defaultProps);
+      return env.exec(':load /path/to/script').then(function(cmd) {
+        assert.equal(cmd.name, 'load');
+        assert.equal(cmd.filePath, '/path/to/script');
+      });
+    });
   });
 });

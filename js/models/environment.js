@@ -112,6 +112,11 @@
     return cmd;
   };
 
+  Environment.prototype.execLoad = function(cmd) {
+    // just returning command object
+    return cmd;
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Environment;
   else
