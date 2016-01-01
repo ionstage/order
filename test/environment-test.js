@@ -139,5 +139,13 @@ describe('environment', function() {
         assert.equal(cmd.filePath, '/path/to/script');
       });
     });
+
+    it('save command', function() {
+      var env = new Environment(defaultProps);
+      return env.exec(':save /path/to/script').then(function(cmd) {
+        assert.equal(cmd.name, 'save');
+        assert.equal(cmd.filePath, '/path/to/script');
+      });
+    });
   });
 });

@@ -117,6 +117,11 @@
     return cmd;
   };
 
+  Environment.prototype.execSave = function(cmd) {
+    // just returning command object
+    return cmd;
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Environment;
   else
