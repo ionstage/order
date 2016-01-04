@@ -80,6 +80,22 @@
     return cmd;
   };
 
+  Environment.prototype.execSend = function(cmd) {
+    var variableTable = this.variableTable;
+
+    var variableName = cmd.variableName;
+    var variable = variableTable[variableName];
+
+    if (!variable)
+      throw new Error('CocoScript runtime error: variable "' + variableName + '" is not defined');
+
+    var member = variable.circuitElement.get(cmd.memberName);
+
+    member(cmd.dataText);
+
+    return cmd;
+  };
+
   Environment.prototype.execDelete = function(cmd) {
     var variableTable = this.variableTable;
 

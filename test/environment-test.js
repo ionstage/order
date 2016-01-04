@@ -110,6 +110,24 @@ describe('environment', function() {
       });
     });
 
+    it('send data to a member of circuit element', function() {
+      var env = new Environment({
+        circuitElementFactory: function() {
+          return new CircuitElement([
+            { name: 'prop' }
+          ]);
+        }
+      });
+
+      return env.exec(':new x Module').then(function() {
+        return env.exec(':send x.prop data_text');
+      }).then(function(cmd) {
+        var member = env.variableTable[cmd.variableName].circuitElement.get(cmd.memberName);
+        assert.equal(cmd.name, 'send');
+        assert.equal(member(), 'data_text');
+      });
+    });
+
     it('delete variable', function() {
       var env = new Environment(defaultProps);
       return env.exec(':new x Module').then(function() {
