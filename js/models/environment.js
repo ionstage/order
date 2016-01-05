@@ -89,7 +89,11 @@
     if (!variable)
       throw new Error('CocoScript runtime error: variable "' + variableName + '" is not defined');
 
-    var member = variable.circuitElement.get(cmd.memberName);
+    var memberName = cmd.memberName;
+    var member = variable.circuitElement.get(memberName);
+
+    if (!member)
+      throw new Error('CocoScript runtime error: member "' + variableName + '.' + memberName + '" is not defined');
 
     member(cmd.dataText);
 
