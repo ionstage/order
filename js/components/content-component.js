@@ -11,14 +11,14 @@
     this.element = this.prop(props.element);
   }, Component);
 
-  ContentComponent.prototype.circuitElementFactory = function(props) {
+  ContentComponent.prototype.loadVariable = function(name, moduleName) {
     return VariableComponent.load({
-      name: props.variableName,
-      moduleName: props.moduleName,
+      name: name,
+      moduleName: moduleName,
       parentElement: this.element()
     }).then(function(component) {
       this.variables().push(component);
-      return component.circuitElement();
+      return component;
     }.bind(this));
   };
 
