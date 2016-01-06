@@ -27,10 +27,10 @@
   };
 
   Environment.prototype.execNew = function(cmd) {
+    var variableTable = this.variableTable;
     var variableName = cmd.variableName;
-    var variable = this.variableTable[variableName];
 
-    if (variable)
+    if (variableName in variableTable)
       throw new Error('CocoScript runtime error: variable "' + variableName + '" is already defined');
 
     var moduleName = cmd.moduleName;
@@ -44,13 +44,13 @@
       if (!circuitElement)
         throw new Error('CocoScript runtime error: Invalid circuit element');
 
-      this.variableTable[variableName] = new Variable({
+      variableTable[variableName] = new Variable({
         name: variableName,
         circuitElement: circuitElement
       });
 
       return cmd;
-    }.bind(this));
+    });
   };
 
   Environment.prototype.execBind = function(cmd) {
