@@ -5,7 +5,8 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitElementFactory: function() { return CircuitElement.empty(); }
+    circuitElementFactory: function() { return CircuitElement.empty(); },
+    circuitElementDisposal: function() { /* do nothing */ }
   };
 
   describe('#exec', function() {
@@ -130,16 +131,23 @@ describe('environment', function() {
 
     it('delete variable', function() {
       var env = new Environment(defaultProps);
+
+      env.circuitElementDisposal = sinon.spy();
+
       return env.exec(':new x Module').then(function() {
         return env.exec(':delete x');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'delete');
         assert.equal(Object.keys(env.variableTable).length, 0);
+        assert(env.circuitElementDisposal.calledOnce);
       });
     });
 
     it('reset', function() {
       var env = new Environment(defaultProps);
+
+      env.circuitElementDisposal = sinon.spy();
+
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
       }).then(function() {
@@ -147,6 +155,7 @@ describe('environment', function() {
       }).then(function(cmd) {
         assert.equal(cmd.name, 'reset');
         assert.equal(Object.keys(env.variableTable).length, 0);
+        assert(env.circuitElementDisposal.calledTwice);
       });
     });
 

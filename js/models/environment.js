@@ -11,6 +11,7 @@
 
   var Environment = function(props) {
     this.circuitElementFactory = props.circuitElementFactory;
+    this.circuitElementDisposal = props.circuitElementDisposal;
     this.variableTable = {};
   };
 
@@ -109,27 +110,39 @@
     if (!variable)
       throw new Error('CocoScript runtime error: variable "' + variableName + '" is not defined');
 
-    // unbind all bound members of circuit element
-    variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
+    return Promise.resolve().then(function() {
+      return this.circuitElementDisposal({
+        variableName: variableName
+      });
+    }.bind(this)).then(function() {
+      // unbind all bound members of circuit element
+      variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
 
-    delete variableTable[variableName];
+      delete variableTable[variableName];
 
-    return cmd;
+      return cmd;
+    });
   };
 
   Environment.prototype.execReset = function(cmd) {
     var variableTable = this.variableTable;
 
-    Object.keys(variableTable).forEach(function(name) {
-      var variable = variableTable[name];
+    return Promise.all(Object.keys(variableTable).map(function(variableName) {
+      return Promise.resolve().then(function() {
+        return this.circuitElementDisposal({
+          variableName: variableName
+        });
+      }.bind(this)).then(function() {
+        var variable = variableTable[variableName];
 
-      // unbind all bound members of circuit element
-      variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
+        // unbind all bound members of circuit element
+        variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
 
-      delete variableTable[name];
+        delete variableTable[variableName];
+      });
+    }.bind(this))).then(function() {
+      return cmd;
     });
-
-    return cmd;
   };
 
   Environment.prototype.execLoad = function(cmd) {
