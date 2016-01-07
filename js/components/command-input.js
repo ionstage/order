@@ -5,17 +5,17 @@
   var dom = app.dom || require('../dom.js');
   var Component = app.Component || require('./component.js');
 
-  var TextInput = helper.inherits(function(props) {
-    TextInput.super_.call(this);
+  var CommandInput = helper.inherits(function(props) {
+    CommandInput.super_.call(this);
 
     var element = props.element;
     this.element = this.prop(element);
     this.onenter = props.onenter;
 
-    dom.on(element, 'keydown', TextInput.onkeydown.bind(this));
+    dom.on(element, 'keydown', CommandInput.onkeydown.bind(this));
   }, Component);
 
-  TextInput.prototype.text = function(s) {
+  CommandInput.prototype.text = function(s) {
     var element = this.element();
 
     if (typeof s === 'undefined')
@@ -24,13 +24,13 @@
     element.value = s;
   };
 
-  TextInput.onkeydown = function(event) {
+  CommandInput.onkeydown = function(event) {
     if (event.which === 13)
       this.onenter();
   };
 
   if (typeof module !== 'undefined' && module.exports)
-    module.exports = TextInput;
+    module.exports = CommandInput;
   else
-    app.TextInput = TextInput;
+    app.CommandInput = CommandInput;
 })(this.app || (this.app = {}));
