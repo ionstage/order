@@ -16,12 +16,7 @@
   }, Component);
 
   CommandInput.prototype.text = function(s) {
-    var element = this.element();
-
-    if (typeof s === 'undefined')
-      return element.value;
-
-    element.value = s;
+    return dom.value(this.element(), s);
   };
 
   CommandInput.prototype.onkeydown = function(event) {

@@ -44,6 +44,13 @@
     el.innerHTML = s;
   };
 
+  dom.value = function(el, s) {
+    if (typeof s === 'undefined')
+      return el.value;
+
+    el.value = s;
+  };
+
   dom.contentWindow = function(iframe) {
     return iframe.contentWindow;
   };
