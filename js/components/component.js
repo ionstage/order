@@ -58,7 +58,7 @@
     };
 
     return function() {
-      if (dom.disabled())
+      if (dom.unsupported())
         return;
 
       if (dirtyComponents.indexOf(this) === -1)

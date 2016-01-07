@@ -3,7 +3,7 @@
 
   var dom = {};
 
-  dom.disabled = function() {
+  dom.unsupported = function() {
     return (typeof document === 'undefined');
   };
 
