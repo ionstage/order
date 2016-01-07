@@ -10,9 +10,9 @@
 
     var element = props.element;
     this.element = this.prop(element);
-    this.onenter = props.onenter;
+    this.executor = props.executor;
 
-    dom.on(element, 'keydown', CommandInput.onkeydown.bind(this));
+    dom.on(element, 'keydown', CommandInput.prototype.onkeydown.bind(this));
   }, Component);
 
   CommandInput.prototype.text = function(s) {
@@ -24,9 +24,20 @@
     element.value = s;
   };
 
-  CommandInput.onkeydown = function(event) {
+  CommandInput.prototype.onkeydown = function(event) {
     if (event.which === 13)
       this.onenter();
+  };
+
+  CommandInput.prototype.onenter = function() {
+    Promise.resolve().then(function() {
+      return this.executor(this.text());
+    }.bind(this)).then(function() {
+      // clear input text
+      this.text('');
+    }.bind(this)).catch(function(e) {
+      console.error(e);
+    });
   };
 
   if (typeof module !== 'undefined' && module.exports)
