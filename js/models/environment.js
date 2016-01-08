@@ -7,6 +7,7 @@
 
   var Variable = function(props) {
     this.name = props.name;
+    this.moduleName = props.moduleName;
     this.circuitElement = props.circuitElement;
   };
 
@@ -48,6 +49,7 @@
 
       variableTable[variableName] = new Variable({
         name: variableName,
+        moduleName: moduleName,
         circuitElement: circuitElement
       });
 

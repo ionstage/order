@@ -32,6 +32,7 @@ describe('environment', function() {
         var v = env.variableTable[cmd.variableName];
         assert.equal(cmd.name, 'new');
         assert.equal(v.name, cmd.variableName);
+        assert.equal(v.moduleName, cmd.moduleName);
         assert.equal(v.circuitElement, dummy);
       });
     });
