@@ -19,6 +19,10 @@
     return dom.value(this.element(), s);
   };
 
+  CommandInput.prototype.disabled = function(disabled) {
+    dom.disabled(this.element(), disabled);
+  };
+
   CommandInput.prototype.onkeydown = function(event) {
     if (event.which === 13)
       this.onenter();
@@ -26,13 +30,16 @@
 
   CommandInput.prototype.onenter = function() {
     Promise.resolve().then(function() {
+      this.disabled(true);
       return this.executor(this.text());
     }.bind(this)).then(function() {
       // clear input text
       this.text('');
+      this.disabled(false);
     }.bind(this)).catch(function(e) {
       console.error(e);
-    });
+      this.disabled(false);
+    }.bind(this));
   };
 
   if (typeof module !== 'undefined' && module.exports)

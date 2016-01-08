@@ -51,6 +51,10 @@
     el.value = s;
   };
 
+  dom.disabled = function(el, disabled) {
+    el.disabled = disabled;
+  };
+
   dom.contentWindow = function(iframe) {
     return iframe.contentWindow;
   };
