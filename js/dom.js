@@ -89,15 +89,19 @@
     return new Promise(function(resolve, reject) {
       var req = new XMLHttpRequest();
 
-      req.onload = function(event) {
+      var onfailed = function() {
+        reject(new Error('Failed to load resource: ' + type + ' ' + url));
+      };
+
+      req.onload = function() {
         if (req.status >= 200 && req.status < 400)
           resolve(req.responseText);
         else
-          reject(event);
+          onfailed();
       };
 
-      req.onerror = reject;
-      req.onabort = reject;
+      req.onerror = onfailed;
+      req.onabort = onfailed;
 
       req.open(type, url, true);
       req.send();
