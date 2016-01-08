@@ -6,7 +6,8 @@ var Environment = require('../js/models/environment.js');
 describe('environment', function() {
   var defaultProps = {
     circuitElementFactory: function() { return CircuitElement.empty(); },
-    circuitElementDisposal: function() { /* do nothing */ }
+    circuitElementDisposal: function() { /* do nothing */ },
+    scriptLoader: function() { /* do nothing */ }
   };
 
   describe('#exec', function() {
@@ -161,9 +162,15 @@ describe('environment', function() {
 
     it('load command', function() {
       var env = new Environment(defaultProps);
+
+      env.scriptLoader = sinon.spy(function() {
+        return ':new x Module';
+      });
+
       return env.exec(':load /path/to/script').then(function(cmd) {
         assert.equal(cmd.name, 'load');
-        assert.equal(cmd.filePath, '/path/to/script');
+        assert(env.scriptLoader.calledWith(cmd.filePath));
+        assert('x' in env.variableTable);
       });
     });
 
