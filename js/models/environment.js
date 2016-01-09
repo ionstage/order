@@ -57,6 +57,12 @@
     this.names.splice(index, 1);
   };
 
+  VariableTable.prototype.list = function() {
+    return this.names.map(function() {
+      return this.table[name];
+    });
+  };
+
   var Binding = function(props) {
     this.sourceVariableName = props.sourceVariableName;
     this.sourceMemberName = props.sourceMemberName;

@@ -144,7 +144,7 @@ describe('environment', function() {
         return env.exec(':delete x');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'delete');
-        assert.equal(env.variableTable.names.length, 0);
+        assert.equal(env.variableTable.list().length, 0);
         assert(env.circuitElementDisposal.calledOnce);
       });
     });
@@ -160,7 +160,7 @@ describe('environment', function() {
         return env.exec(':reset');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'reset');
-        assert.equal(env.variableTable.names.length, 0);
+        assert.equal(env.variableTable.list().length, 0);
         assert(env.circuitElementDisposal.calledTwice);
       });
     });
