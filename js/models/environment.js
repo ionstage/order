@@ -58,9 +58,9 @@
   };
 
   VariableTable.prototype.list = function() {
-    return this.names.map(function() {
+    return this.names.map(function(name) {
       return this.table[name];
-    });
+    }.bind(this));
   };
 
   var Binding = function(props) {
