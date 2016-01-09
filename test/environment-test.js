@@ -7,7 +7,8 @@ describe('environment', function() {
   var defaultProps = {
     circuitElementFactory: function() { return CircuitElement.empty(); },
     circuitElementDisposal: function() { /* do nothing */ },
-    scriptLoader: function() { /* do nothing */ }
+    scriptLoader: function() { /* do nothing */ },
+    scriptSaver: function() { /* do nothing */ }
   };
 
   describe('#exec', function() {
@@ -181,9 +182,14 @@ describe('environment', function() {
 
     it('save command', function() {
       var env = new Environment(defaultProps);
-      return env.exec(':save /path/to/script').then(function(cmd) {
+
+      env.scriptSaver = sinon.spy();
+
+      return env.exec(':new x Module').then(function() {
+        return env.exec(':save /path/to/script');
+      }).then(function(cmd) {
         assert.equal(cmd.name, 'save');
-        assert.equal(cmd.filePath, '/path/to/script');
+        assert(env.scriptSaver.calledWith(cmd.filePath, 'x:Module\n'));
       });
     });
   });

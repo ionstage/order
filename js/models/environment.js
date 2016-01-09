@@ -96,6 +96,7 @@
     this.circuitElementFactory = props.circuitElementFactory;
     this.circuitElementDisposal = props.circuitElementDisposal;
     this.scriptLoader = props.scriptLoader;
+    this.scriptSaver = props.scriptSaver;
     this.variableTable = new VariableTable();
     this.bindingList = new BindingList();
   };
@@ -259,8 +260,29 @@
   };
 
   Environment.prototype.execSave = function(cmd) {
-    // just returning command object
-    return cmd;
+    var filePath = cmd.filePath;
+
+    return Promise.resolve().then(function() {
+      var variables = this.variableTable.list();
+      var bindings = this.bindingList.toArray();
+
+      var newCommandText = variables.map(function(variable) {
+        return variable.name + ':' + variable.moduleName;
+      }).join('\n');
+
+      var bindCommandText = bindings.map(function(binding) {
+        return (binding.sourceVariableName + '.' + binding.sourceMemberName + ' >> ' +
+                binding.targetVariableName + '.' + binding.targetMemberName);
+      }).join('\n');
+
+      var scriptText = [newCommandText, bindCommandText].filter(function(text) {
+        return text;
+      }).join('\n') + '\n';
+
+      return this.scriptSaver(filePath, scriptText);
+    }.bind(this)).then(function() {
+      return cmd;
+    });
   };
 
   if (typeof module !== 'undefined' && module.exports)
