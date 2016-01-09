@@ -57,11 +57,41 @@
     this.names.splice(index, 1);
   };
 
+  var Binding = function(props) {
+    this.sourceVariableName = props.sourceVariableName;
+    this.sourceMemberName = props.sourceMemberName;
+    this.targetVariableName = props.targetVariableName;
+    this.targetMemberName = props.targetMemberName;
+  };
+
+  var BindingList = helper.inherits(function() {
+    BindingList.super_.call(this);
+  }, helper.List);
+
+  BindingList.prototype.equal = function(a, b) {
+    return a.sourceVariableName === b.sourceVariableName &&
+           a.sourceMemberName === b.sourceMemberName &&
+           a.targetVariableName === b.targetVariableName &&
+           a.targetMemberName === b.targetMemberName;
+  };
+
+  BindingList.prototype.removeVariable = function(name) {
+    var data = this.data;
+
+    for (var i = data.length - 1; i >= 0; i--) {
+      var item = data[i];
+      if (item.sourceVariableName === name || item.targetVariableName === name) {
+        data.splice(i, 1);
+      }
+    }
+  };
+
   var Environment = function(props) {
     this.circuitElementFactory = props.circuitElementFactory;
     this.circuitElementDisposal = props.circuitElementDisposal;
     this.scriptLoader = props.scriptLoader;
     this.variableTable = new VariableTable();
+    this.bindingList = new BindingList();
   };
 
   Environment.prototype.exec = function(s) {
@@ -114,6 +144,8 @@
 
     CircuitElement.bind(sourceMember, targetMember);
 
+    this.bindingList.add(new Binding(cmd));
+
     return cmd;
   };
 
@@ -127,6 +159,8 @@
     var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
 
     CircuitElement.unbind(sourceMember, targetMember);
+
+    this.bindingList.remove(new Binding(cmd));
 
     return cmd;
   };
@@ -154,10 +188,12 @@
       // unbind all bound members of circuit element
       variable.members().forEach(CircuitElement.unbindAll);
 
+      this.bindingList.removeVariable(variableName);
+
       variableTable.delete(variableName);
 
       return cmd;
-    });
+    }.bind(this));
   };
 
   Environment.prototype.execReset = function(cmd) {
@@ -174,8 +210,10 @@
         // unbind all bound members of circuit element
         variable.members().forEach(CircuitElement.unbindAll);
 
+        this.bindingList.removeVariable(variableName);
+
         variableTable.delete(variableName);
-      });
+      }.bind(this));
     }.bind(this))).then(function() {
       return cmd;
     });

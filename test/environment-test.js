@@ -83,6 +83,7 @@ describe('environment', function() {
         var member1 = cels[1].get(cmd.targetMemberName);
         assert.equal(cmd.name, 'bind');
         assert(CircuitElement.bind.calledWith(member0, member1));
+        assert.equal(env.bindingList.data.length, 1);
       });
     });
 
@@ -112,6 +113,7 @@ describe('environment', function() {
         var member1 = cels[1].get(cmd.targetMemberName);
         assert.equal(cmd.name, 'unbind');
         assert(CircuitElement.unbind.calledWith(member0, member1));
+        assert.equal(env.bindingList.data.length, 0);
       });
     });
 
