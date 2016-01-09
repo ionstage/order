@@ -29,7 +29,7 @@ describe('environment', function() {
       });
 
       return env.exec(':new x Module').then(function(cmd) {
-        var v = env.variableTable[cmd.variableName];
+        var v = env.variableTable.fetch(cmd.variableName);
         assert.equal(cmd.name, 'new');
         assert.equal(v.name, cmd.variableName);
         assert.equal(v.moduleName, cmd.moduleName);
@@ -64,7 +64,8 @@ describe('environment', function() {
       var env = new Environment({
         circuitElementFactory: function() {
           var cel = new CircuitElement([
-            { name: 'prop' }
+            { name: 'member0' },
+            { name: 'member1' }
           ]);
           cels.push(cel);
           return cel;
@@ -90,7 +91,8 @@ describe('environment', function() {
       var env = new Environment({
         circuitElementFactory: function() {
           var cel = new CircuitElement([
-            { name: 'prop' }
+            { name: 'member0' },
+            { name: 'member1' }
           ]);
           cels.push(cel);
           return cel;
@@ -125,7 +127,7 @@ describe('environment', function() {
       return env.exec(':new x Module').then(function() {
         return env.exec(':send x.prop data_text');
       }).then(function(cmd) {
-        var member = env.variableTable[cmd.variableName].circuitElement.get(cmd.memberName);
+        var member = env.variableTable.fetch(cmd.variableName).circuitElement.get(cmd.memberName);
         assert.equal(cmd.name, 'send');
         assert.equal(member(), 'data_text');
       });
@@ -140,7 +142,7 @@ describe('environment', function() {
         return env.exec(':delete x');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'delete');
-        assert.equal(Object.keys(env.variableTable).length, 0);
+        assert.equal(env.variableTable.names.length, 0);
         assert(env.circuitElementDisposal.calledOnce);
       });
     });
@@ -156,7 +158,7 @@ describe('environment', function() {
         return env.exec(':reset');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'reset');
-        assert.equal(Object.keys(env.variableTable).length, 0);
+        assert.equal(env.variableTable.names.length, 0);
         assert(env.circuitElementDisposal.calledTwice);
       });
     });
@@ -171,7 +173,7 @@ describe('environment', function() {
       return env.exec(':load /path/to/script').then(function(cmd) {
         assert.equal(cmd.name, 'load');
         assert(env.scriptLoader.calledWith(cmd.filePath));
-        assert('x' in env.variableTable);
+        assert(env.variableTable.has('x'));
       });
     });
 

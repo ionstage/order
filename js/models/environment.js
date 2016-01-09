@@ -11,11 +11,57 @@
     this.circuitElement = props.circuitElement;
   };
 
+  Variable.prototype.fetchMember = function(name) {
+    var member = this.circuitElement.get(name);
+
+    if (!member)
+      throw new Error('CocoScript runtime error: member "' + this.name + '.' + name + '" is not defined');
+
+    return member;
+  };
+
+  Variable.prototype.members = function() {
+    return this.circuitElement.getAll();
+  };
+
+  var VariableTable = function() {
+    this.table = {};
+    this.names = [];
+  };
+
+  VariableTable.prototype.has = function(name) {
+    return (this.names.indexOf(name) !== -1);
+  };
+
+  VariableTable.prototype.fetch = function(name) {
+    if (!this.has(name))
+      throw new Error('CocoScript runtime error: variable "' + name + '" is not defined');
+
+    return this.table[name];
+  };
+
+  VariableTable.prototype.store = function(name, variable) {
+    if (!this.has(name))
+      this.names.push(name);
+
+    this.table[name] = variable;
+  };
+
+  VariableTable.prototype.delete = function(name) {
+    var index = this.names.indexOf(name);
+
+    if (index === -1)
+      return;
+
+    delete this.table[name];
+    this.names.splice(index, 1);
+  };
+
   var Environment = function(props) {
     this.circuitElementFactory = props.circuitElementFactory;
     this.circuitElementDisposal = props.circuitElementDisposal;
     this.scriptLoader = props.scriptLoader;
-    this.variableTable = {};
+    this.variableTable = new VariableTable();
   };
 
   Environment.prototype.exec = function(s) {
@@ -33,7 +79,7 @@
     var variableTable = this.variableTable;
     var variableName = cmd.variableName;
 
-    if (variableName in variableTable)
+    if (variableTable.has(variableName))
       throw new Error('CocoScript runtime error: variable "' + variableName + '" is already defined');
 
     var moduleName = cmd.moduleName;
@@ -47,11 +93,11 @@
       if (!circuitElement)
         throw new Error('CocoScript runtime error: Invalid circuit element');
 
-      variableTable[variableName] = new Variable({
+      variableTable.store(variableName, new Variable({
         name: variableName,
         moduleName: moduleName,
         circuitElement: circuitElement
-      });
+      }));
 
       return cmd;
     });
@@ -60,11 +106,11 @@
   Environment.prototype.execBind = function(cmd) {
     var variableTable = this.variableTable;
 
-    var sourceVariable = variableTable[cmd.sourceVariableName];
-    var targetVariable = variableTable[cmd.targetVariableName];
+    var sourceVariable = variableTable.fetch(cmd.sourceVariableName);
+    var targetVariable = variableTable.fetch(cmd.targetVariableName);
 
-    var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
-    var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);
+    var sourceMember = sourceVariable.fetchMember(cmd.sourceMemberName);
+    var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
 
     CircuitElement.bind(sourceMember, targetMember);
 
@@ -74,11 +120,11 @@
   Environment.prototype.execUnbind = function(cmd) {
     var variableTable = this.variableTable;
 
-    var sourceVariable = variableTable[cmd.sourceVariableName];
-    var targetVariable = variableTable[cmd.targetVariableName];
+    var sourceVariable = variableTable.fetch(cmd.sourceVariableName);
+    var targetVariable = variableTable.fetch(cmd.targetVariableName);
 
-    var sourceMember = sourceVariable.circuitElement.get(cmd.sourceMemberName);
-    var targetMember = targetVariable.circuitElement.get(cmd.targetMemberName);
+    var sourceMember = sourceVariable.fetchMember(cmd.sourceMemberName);
+    var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
 
     CircuitElement.unbind(sourceMember, targetMember);
 
@@ -86,19 +132,8 @@
   };
 
   Environment.prototype.execSend = function(cmd) {
-    var variableTable = this.variableTable;
-
-    var variableName = cmd.variableName;
-    var variable = variableTable[variableName];
-
-    if (!variable)
-      throw new Error('CocoScript runtime error: variable "' + variableName + '" is not defined');
-
-    var memberName = cmd.memberName;
-    var member = variable.circuitElement.get(memberName);
-
-    if (!member)
-      throw new Error('CocoScript runtime error: member "' + variableName + '.' + memberName + '" is not defined');
+    var variable = this.variableTable.fetch(cmd.variableName);
+    var member = variable.fetchMember(cmd.memberName);
 
     member(cmd.dataText);
 
@@ -109,10 +144,7 @@
     var variableTable = this.variableTable;
 
     var variableName = cmd.variableName;
-    var variable = variableTable[variableName];
-
-    if (!variable)
-      throw new Error('CocoScript runtime error: variable "' + variableName + '" is not defined');
+    var variable = variableTable.fetch(variableName);
 
     return Promise.resolve().then(function() {
       return this.circuitElementDisposal({
@@ -120,9 +152,9 @@
       });
     }.bind(this)).then(function() {
       // unbind all bound members of circuit element
-      variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
+      variable.members().forEach(CircuitElement.unbindAll);
 
-      delete variableTable[variableName];
+      variableTable.delete(variableName);
 
       return cmd;
     });
@@ -131,18 +163,18 @@
   Environment.prototype.execReset = function(cmd) {
     var variableTable = this.variableTable;
 
-    return Promise.all(Object.keys(variableTable).map(function(variableName) {
+    return Promise.all(variableTable.names.map(function(variableName) {
       return Promise.resolve().then(function() {
         return this.circuitElementDisposal({
           variableName: variableName
         });
       }.bind(this)).then(function() {
-        var variable = variableTable[variableName];
+        var variable = variableTable.fetch(variableName);
 
         // unbind all bound members of circuit element
-        variable.circuitElement.getAll().forEach(CircuitElement.unbindAll);
+        variable.members().forEach(CircuitElement.unbindAll);
 
-        delete variableTable[variableName];
+        variableTable.delete(variableName);
       });
     }.bind(this))).then(function() {
       return cmd;
