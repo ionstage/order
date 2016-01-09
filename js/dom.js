@@ -55,6 +55,10 @@
     el.disabled = disabled;
   };
 
+  dom.focus = function(el) {
+    el.focus();
+  };
+
   dom.contentWindow = function(iframe) {
     return iframe.contentWindow;
   };

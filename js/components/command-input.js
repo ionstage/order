@@ -23,6 +23,10 @@
     dom.disabled(this.element(), disabled);
   };
 
+  CommandInput.prototype.focus = function() {
+    dom.focus(this.element());
+  };
+
   CommandInput.prototype.onkeydown = function(event) {
     if (event.which === 13)
       this.onenter();
@@ -36,9 +40,11 @@
       // clear input text
       this.text('');
       this.disabled(false);
+      this.focus();
     }.bind(this)).catch(function(e) {
       console.error(e);
       this.disabled(false);
+      this.focus();
     }.bind(this));
   };
 
