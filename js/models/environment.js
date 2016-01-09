@@ -141,6 +141,12 @@
   };
 
   Environment.prototype.execBind = function(cmd) {
+    var bindingList = this.bindingList;
+    var binding = new Binding(cmd);
+
+    if (bindingList.contains(binding))
+      throw new Error('CocoScript runtime error: Already bound');
+
     var variableTable = this.variableTable;
 
     var sourceVariable = variableTable.fetch(cmd.sourceVariableName);
@@ -151,12 +157,18 @@
 
     CircuitElement.bind(sourceMember, targetMember);
 
-    this.bindingList.add(new Binding(cmd));
+    bindingList.add(binding);
 
     return cmd;
   };
 
   Environment.prototype.execUnbind = function(cmd) {
+    var bindingList = this.bindingList;
+    var binding = new Binding(cmd);
+
+    if (!bindingList.contains(binding))
+      throw new Error('CocoScript runtime error: Already unbound');
+
     var variableTable = this.variableTable;
 
     var sourceVariable = variableTable.fetch(cmd.sourceVariableName);
@@ -167,7 +179,7 @@
 
     CircuitElement.unbind(sourceMember, targetMember);
 
-    this.bindingList.remove(new Binding(cmd));
+    bindingList.remove(binding);
 
     return cmd;
   };
