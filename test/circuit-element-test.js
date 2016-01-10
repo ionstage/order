@@ -4,6 +4,18 @@ var sinon = require('sinon');
 var CircuitElement = require('../js/models/circuit-element.js');
 
 describe('CircuitElement', function() {
+  beforeEach(function() {
+    Object.keys(circuit).forEach(function(key) {
+      sinon.spy(circuit, key);
+    });
+  });
+
+  afterEach(function() {
+    Object.keys(circuit).forEach(function(key) {
+      circuit[key].restore();
+    });
+  });
+
   it('create empty element', function() {
     var cel = CircuitElement.empty();
     assert.equal(Object.keys(cel.memberTable).length, 0);
@@ -89,8 +101,6 @@ describe('CircuitElement', function() {
     var prop0 = cel0.get('prop');
     var prop1 = cel1.get('prop');
 
-    circuit.bind = sinon.spy();
-
     CircuitElement.bind(prop0, prop1);
 
     var callee0 = cel0.memberTable['prop'].callee;
@@ -110,8 +120,7 @@ describe('CircuitElement', function() {
     var prop0 = cel0.get('prop');
     var prop1 = cel1.get('prop');
 
-    circuit.unbind = sinon.spy();
-
+    CircuitElement.bind(prop0, prop1);
     CircuitElement.unbind(prop0, prop1);
 
     var callee0 = cel0.memberTable['prop'].callee;
@@ -137,9 +146,6 @@ describe('CircuitElement', function() {
 
     CircuitElement.bind(prop1, prop0);
     CircuitElement.bind(prop0, prop2);
-
-    circuit.unbind = sinon.spy();
-
     CircuitElement.unbindAll(prop0);
 
     var callee0 = cel0.memberTable['prop'].callee;
