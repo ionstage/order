@@ -74,6 +74,26 @@
     iframe.style.height = iframe.contentDocument.documentElement.scrollHeight + 'px';
   };
 
+  dom.openWindow = function(title, content) {
+    return new Promise(function(resolve, reject) {
+      var win = window.open();
+
+      if (win) {
+        var doc = win.document;
+
+        doc.open();
+        doc.write(content);
+        doc.close();
+
+        doc.title = title;
+
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  };
+
   dom.animate = function(callback) {
     return window.requestAnimationFrame(callback);
   };
