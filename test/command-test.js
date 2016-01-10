@@ -43,7 +43,11 @@ describe('command', function() {
       ['# comment', '# comment'],
       [' # comment ', ' # comment '],
       ['# x:Module', '# x:Module'],
-      [' :noop # comment', ' :noop # comment']
+      [' :noop # comment', ' :noop # comment'],
+
+      [' :noop ', ' :noop '],
+      [':send x.member0 ">>y.member1"', ':send x.member0 ">>y.member1"'],
+      [':send x.member0 "<<"', ':send x.member0 "<<"']
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);

@@ -96,7 +96,7 @@
   command.expandAbbreviation = function(s) {
     var line = s.split('#')[0].trim();
 
-    if (!line)
+    if (!line || line.charAt(0) === ':')
       return s;
 
     var m = line.match(/^([^:]+):([^:]+)$/);
