@@ -70,6 +70,14 @@
     });
   };
 
+  helper.bindAll = function(obj) {
+    var proto = Object.getPrototypeOf(obj);
+
+    for (var key in proto) {
+      obj[key] = proto[key].bind(obj);
+    }
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = helper;
   else
