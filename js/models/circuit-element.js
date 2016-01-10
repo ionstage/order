@@ -18,8 +18,11 @@
   var CircuitElementMember = function(props) {
     var name = props.name;
     var arg = props.arg;
+    var type = props.type;
 
-    var type = (name.indexOf('on') === 0) ? 'event' : 'prop';
+    if (typeof type === 'undefined' || (type !== 'prop' && type !== 'event'))
+      type = (name.indexOf('on') === 0) ? 'event' : 'prop';
+
     var callee = circuit[type](arg);
     var caller = this.call.bind(this);
 
