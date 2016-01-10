@@ -37,7 +37,13 @@ describe('command', function() {
 
       ['', ''],
       [' ', ' '],
-      [' \t ', ' \t ']
+      [' \t ', ' \t '],
+
+      ['#', '#'],
+      ['# comment', '# comment'],
+      [' # comment ', ' # comment '],
+      ['# x:Module', '# x:Module'],
+      [' :noop # comment', ' :noop # comment']
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);
@@ -140,7 +146,9 @@ describe('command', function() {
     [
       '#',
       '# comment',
-      ' # comment '
+      ' # comment ',
+      '# x:Module',
+      ' :noop # comment'
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.equal(command.parseStatement(p).name, 'noop');

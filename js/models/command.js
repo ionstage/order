@@ -94,16 +94,16 @@
   };
 
   command.expandAbbreviation = function(s) {
-    var line = s.trim();
+    var line = s.split('#')[0].trim();
 
     if (!line)
       return s;
 
-    var m = s.match(/^([^:]+):([^:]+)$/);
+    var m = line.match(/^([^:]+):([^:]+)$/);
     if (m)
       return ':new ' + m[1].trim() + ' ' + m[2].trim();
 
-    var substrings = s.split('>>');
+    var substrings = line.split('>>');
     if (substrings.length === 2) {
       var args0 = substrings[0].trim().split('.');
       var args1 = substrings[1].trim().split('.');
@@ -112,7 +112,7 @@
         return ':bind ' + args0.join('.') + ' ' + args1.join('.');
     }
 
-    substrings = s.split('<<');
+    substrings = line.split('<<');
     if (substrings.length === 2) {
       var args0 = substrings[0].trim().split('.');
       var arg1 = substrings[1].trim();
