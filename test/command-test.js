@@ -33,7 +33,11 @@ describe('command', function() {
       [':load', ':load'],
       [':load /path/to/script', ':load /path/to/script'],
       [':save', ':save'],
-      [':save /path/to/script', ':save /path/to/script']
+      [':save /path/to/script', ':save /path/to/script'],
+
+      ['', ''],
+      [' ', ' '],
+      [' \t ', ' \t ']
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);

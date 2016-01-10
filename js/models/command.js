@@ -94,6 +94,11 @@
   };
 
   command.expandAbbreviation = function(s) {
+    var line = s.trim();
+
+    if (!line)
+      return s;
+
     var m = s.match(/^([^:]+):([^:]+)$/);
     if (m)
       return ':new ' + m[1].trim() + ' ' + m[2].trim();
