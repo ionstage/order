@@ -60,11 +60,16 @@
   };
 
   CommandInput.prototype.onenter = function() {
+    var text = this.text();
+
+    if (!text)
+      return;
+
     Promise.resolve().then(function() {
       this.disabled(true);
-      return this.executor(this.text());
+      return this.executor(text);
     }.bind(this)).then(function() {
-      this.inputHistory.push(this.text());
+      this.inputHistory.push(text);
       // clear input text
       this.text('');
       this.disabled(false);
