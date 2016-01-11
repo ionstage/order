@@ -16,9 +16,9 @@
       name: name,
       moduleName: moduleName,
       parentElement: this.element()
-    }).then(function(component) {
-      this.variables().push(component);
-      return component;
+    }).then(function(variable) {
+      this.variables().push(variable);
+      return variable;
     }.bind(this));
   };
 
