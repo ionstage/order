@@ -74,9 +74,9 @@
     return new CircuitElement([]);
   };
 
-  CircuitElement.bind = function(source, target) {
-    var sourceMember = source.unwrap(Wrapper.KEY);
-    var targetMember = target.unwrap(Wrapper.KEY);
+  CircuitElement.bind = function(sourceCaller, targetCaller) {
+    var sourceMember = sourceCaller.unwrap(Wrapper.KEY);
+    var targetMember = targetCaller.unwrap(Wrapper.KEY);
 
     circuit.bind(sourceMember.callee, targetMember.callee);
 
@@ -84,9 +84,9 @@
     targetMember.sources.push(sourceMember);
   };
 
-  CircuitElement.unbind = function(source, target) {
-    var sourceMember = source.unwrap(Wrapper.KEY);
-    var targetMember = target.unwrap(Wrapper.KEY);
+  CircuitElement.unbind = function(sourceCaller, targetCaller) {
+    var sourceMember = sourceCaller.unwrap(Wrapper.KEY);
+    var targetMember = targetCaller.unwrap(Wrapper.KEY);
 
     circuit.unbind(sourceMember.callee, targetMember.callee);
 
