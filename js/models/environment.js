@@ -15,7 +15,7 @@
     var member = this.circuitElement.get(name);
 
     if (!member)
-      throw new Error('CocoScript runtime error: member "' + this.name + '.' + name + '" is not defined');
+      throw new Error('OrderScript runtime error: member "' + this.name + '.' + name + '" is not defined');
 
     return member;
   };
@@ -35,7 +35,7 @@
 
   VariableTable.prototype.fetch = function(name) {
     if (!this.has(name))
-      throw new Error('CocoScript runtime error: variable "' + name + '" is not defined');
+      throw new Error('OrderScript runtime error: variable "' + name + '" is not defined');
 
     return this.table[name];
   };
@@ -117,7 +117,7 @@
     var variableName = cmd.variableName;
 
     if (variableTable.has(variableName))
-      throw new Error('CocoScript runtime error: variable "' + variableName + '" is already defined');
+      throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
 
     var moduleName = cmd.moduleName;
 
@@ -128,7 +128,7 @@
       });
     }.bind(this)).then(function(circuitElement) {
       if (!circuitElement)
-        throw new Error('CocoScript runtime error: Invalid circuit element');
+        throw new Error('OrderScript runtime error: Invalid circuit element');
 
       variableTable.store(variableName, new Variable({
         name: variableName,
@@ -145,7 +145,7 @@
     var binding = new Binding(cmd);
 
     if (bindingList.contains(binding))
-      throw new Error('CocoScript runtime error: Already bound');
+      throw new Error('OrderScript runtime error: Already bound');
 
     var variableTable = this.variableTable;
 
@@ -167,7 +167,7 @@
     var binding = new Binding(cmd);
 
     if (!bindingList.contains(binding))
-      throw new Error('CocoScript runtime error: Already unbound');
+      throw new Error('OrderScript runtime error: Already unbound');
 
     var variableTable = this.variableTable;
 

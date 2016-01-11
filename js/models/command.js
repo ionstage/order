@@ -134,10 +134,10 @@
     }
 
     if (line === ':')
-      throw new SyntaxError('CocoScript parse error: Unexpected EOF');
+      throw new SyntaxError('OrderScript parse error: Unexpected EOF');
 
     if (line.charAt(0) !== ':')
-      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
+      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
 
     // split line string by space, but ignore space in quotes
     var args = line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {
@@ -163,7 +163,7 @@
     var commandType = command[helper.capitalize(commandName.toLowerCase())];
 
     if (!commandType)
-      throw new SyntaxError('CocoScript parse error: Unexpected command "' +  commandName + '"');
+      throw new SyntaxError('OrderScript parse error: Unexpected command "' +  commandName + '"');
 
     args.unshift(null);
 
@@ -171,7 +171,7 @@
     try {
       cmd = new (Function.prototype.bind.apply(commandType, args));
     } catch (e) {
-      throw new SyntaxError('CocoScript parse error: Unexpected identifier "' +  s + '"');
+      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
 
     cmd.name = commandName.toLowerCase();

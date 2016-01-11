@@ -16,7 +16,7 @@
 
   VariableComponent.prototype.circuitElement = function() {
     var contentElement = dom.child(this.element(), 1);
-    var circuitElement = helper.dig(dom.contentWindow(contentElement), 'coco', 'exports');
+    var circuitElement = helper.dig(dom.contentWindow(contentElement), 'order', 'exports');
     return circuitElement || CircuitElement.empty();
   };
 
@@ -75,13 +75,13 @@
         onmessage = function(event) {
           try {
             if (event.origin !== location.origin)
-              throw new Error('CocoScript runtime error: Invalid content origin');
+              throw new Error('OrderScript runtime error: Invalid content origin');
 
             if (event.data !== data)
-              throw new Error('CocoScript runtime error: Invalid content data');
+              throw new Error('OrderScript runtime error: Invalid content data');
 
             if (!this.circuitElement())
-              throw new Error('CocoScript runtime error: Invalid circuit element');
+              throw new Error('OrderScript runtime error: Invalid circuit element');
 
             resolve(this);
           } catch (e) {
@@ -94,7 +94,7 @@
         dom.on(contentWindow, 'message', onmessage);
       }.bind(this)),
       new Promise(function(resolve, reject) {
-        setTimeout(reject, 30 * 1000, new Error('CocoScript runtime error: Load timeout for content'));
+        setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
       })
     ]).then(function(component) {
       dom.off(contentWindow, 'message', onmessage);
@@ -111,7 +111,7 @@
     var parentElement = props.parentElement;
 
     var moduleUrl = [
-      'coco_modules/',
+      'order_modules/',
       moduleName.split('/').map(function(s) {
         return encodeURIComponent(s);
       }).join('/'),
