@@ -99,15 +99,13 @@
 
   CircuitElement.unbindAll = function(caller) {
     var member = caller.unwrap(Wrapper.KEY);
-    var sources = member.sources;
-    var targets = member.targets;
 
-    sources.forEach(function(source) {
-      circuit.unbind(source.callee, member.callee);
+    member.sources.forEach(function(source) {
+      CircuitElement.unbind(source.caller, member.caller);
     });
 
-    targets.forEach(function(target) {
-      circuit.unbind(member.callee, target.callee);
+    member.targets.forEach(function(target) {
+      CircuitElement.unbind(member.caller, target.caller);
     });
   };
 
