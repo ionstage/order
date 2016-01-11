@@ -4,11 +4,11 @@
   var circuit = require('circuit');
 
   var Wrapper = function(obj, self) {
-    obj.unwrap = this.unwrap.bind(self);
+    obj.unwrap = Wrapper.unwrap.bind(self);
     return obj;
   };
 
-  Wrapper.prototype.unwrap = function(key) {
+  Wrapper.unwrap = function(key) {
     if (key === Wrapper.KEY)
       return this;
   };
