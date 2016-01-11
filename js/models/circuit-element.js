@@ -24,7 +24,7 @@
       type = (name.indexOf('on') === 0) ? 'event' : 'prop';
 
     var callee = circuit[type](arg);
-    var caller = this.call.bind(this);
+    var caller = CircuitElementMember.prototype.call.bind(this);
 
     this.name = name;
     this.callee = callee;
