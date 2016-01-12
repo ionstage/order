@@ -4,7 +4,7 @@
   "scripts": {
     "build": "uglifyjs js/bundle.js -o build/bundle.min.js --comments '/^\\!|^@preserve|^@cc_on|\\bMIT\\b|\\bMPL\\b|\\bGPL\\b|\\(c\\)|License|Copyright/' -c -m; uglifyjs js/app.js -o build/app.min.js -c -m; cat css/*.css | cleancss -o build/app.min.css",
     "bundle": "browserify -r circuit -o js/bundle.js",
-    "start": "browser-sync start --files='index.html, css/*.css, js/*.js' --server",
+    "start": "browser-sync start --files='index.html, css/**/*.css, js/**/*.js' --server",
     "test": "mocha"
   },
   "dependencies": {
