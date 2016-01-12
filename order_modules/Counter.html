@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #content {
+      box-sizing: border-box;
+      font-family: monospace;
+      font-size: 42px;
+      height: 48px;
+      overflow: hidden;
+      padding-right: 6px;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="content"></div>
+  <script src="js/order-module.js"></script>
+  <script>
+    (function() {
+      var countValue = 0;
+
+      var contentElement = document.getElementById('content');
+
+      var prop = {
+        count: function(value) {
+          countValue = parseInt(value, 10);
+          contentElement.textContent = countValue;
+          return countValue;
+        }
+      };
+
+      var event = {
+        up: function() {
+          countValue += 1;
+          cel.get('count')(countValue);
+        },
+        reset: function() {
+          cel.get('count')(0);
+        }
+      };
+
+      var cel = new order.CircuitElement([
+        { name: 'count', arg: prop.count },
+        { name: 'up', arg: event.up, type: 'event' },
+        { name: 'reset', arg: event.reset, type: 'event' }
+      ]);
+
+      contentElement.textContent = countValue;
+
+      order.exports = cel;
+    })();
+  </script>
+</body>
+</html>

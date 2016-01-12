@@ -1,3 +1,3 @@
-x:base.Text
-y:base.Text
-x.text => y.text
+x:TextInput
+y:TextInput
+x.text >> y.text

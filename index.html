@@ -1,49 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
   <title>Order</title>
-  <link rel="stylesheet" href="node_modules/normalize.css/normalize.css">
   <link rel="stylesheet" href="css/app.css">
-  <!--[if IE]>
-  <style>
-    #header input {
-      line-height: 26px;
-    }
-  </style>
-  <![endif]-->
-  <script id="module-template" type="text/template">
-    <div class="module">
-      <div class="header">
-        <div class="variable-name"></div>
-        <div class="class-name"></div>
-      </div>
-      <div class="loading">Loading...</div>
-      <div>
-        <iframe class="component" frameborder="0"></iframe>
-      </div>
-    </div>
-  </script>
-  <script id="connection-template" type="text/template">
-    <div class="connection"></div>
-  </script>
 </head>
 <body>
-  <div id="header">
-    <div><input autocapitalize="off" autocorrect="off" spellcheck="false"/></div>
+  <div class="header">
+    <input class="command-input" type="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" autofocus>
   </div>
-  <div id="content">
-    <div id="module-list">
-      <div class="container"></div>
-      <div class="spacer">&nbsp;</div>
-    </div>
-    <div id="connection-list">
-      <div class="container"></div>
-      <div class="spacer">&nbsp;</div>
-    </div>
-  </div>
+  <div class="content"></div>
   <script src="js/bundle.js"></script>
+  <script src="js/helper.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/models/command.js"></script>
+  <script src="js/models/circuit-element.js"></script>
+  <script src="js/models/environment.js"></script>
+  <script src="js/components/component.js"></script>
+  <script src="js/components/command-input.js"></script>
+  <script src="js/components/variable-component.js"></script>
+  <script src="js/components/content-component.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
