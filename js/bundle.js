@@ -1,6 +1,6 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"circuit":[function(require,module,exports){
 /**
- * circuit v0.3.2
+ * circuit v1.0.0
  * (c) 2015 iOnStage
  * Released under the MIT License.
  */
@@ -28,140 +28,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     return value;
   };
 
-  var sendMessage = function(target, args, type) {
-    setTimeout(function() {
-      if (typeof target['in'] === 'function') {
-        if (type === 'prop')
-          target['in'].apply(target, args);
-        else
-          target['in']();
-      }
-    }, 0);
-  };
-
-  var processConnection = function(element, type, key) {
-    var source = element[type][key];
-
-    if (typeof source === 'undefined')
-      return;
-
-    if (typeof source.out !== 'function')
-      return;
-
-    var targets = source.targets;
-
-    if (type !== 'prop' || targets.length === 0)
-      source.out();
-
-    for (var ti = 0, tlen = targets.length; ti < tlen; ti++) {
-      var target = targets[ti];
-      var args = [];
-      if (type === 'prop') {
-        var sources = target.sources;
-        for (var si = 0, slen = sources.length; si < slen; si++) {
-          args.push(sources[si].out());
-        }
-      }
-      sendMessage(target, args, type);
-    }
-  };
-
-  var updateProperty = function(key) {
-    processConnection(this, 'prop', key);
-  };
-
-  var dispatchEvent = function(key) {
-    processConnection(this, 'event', key);
-  };
-
   var circuit = {};
-
-  circuit.create = function(base) {
-    var element = {
-      updateProperty: updateProperty,
-      dispatchEvent: dispatchEvent
-    };
-    var types = ['prop', 'event'];
-
-    for (var i = 0, len = types.length; i < len; i++) {
-      var type = types[i];
-      var typeObject = {};
-      var baseTypeObject = (base && type in base) ? base[type] : {};
-
-      for (var key in baseTypeObject) {
-        var keyObject = {};
-
-        var baseInFunc = baseTypeObject[key]['in'];
-        var baseOutFunc = baseTypeObject[key].out;
-        if (typeof baseInFunc === 'function')
-          keyObject['in'] = baseInFunc;
-        if (typeof baseOutFunc === 'function')
-          keyObject.out = baseOutFunc;
-
-        keyObject.el = keyObject.element = element;
-        keyObject.type = type;
-        keyObject.targets = [];
-        keyObject.sources = [];
-
-        typeObject[key] = keyObject;
-      }
-
-      element[type] = typeObject;
-    }
-
-    if (base && typeof base.init === 'function')
-      base.init.call({element: element, el: element});
-
-    return element;
-  };
-
-  circuit.connect = function(source, target) {
-    if (!source || !target)
-      throw new TypeError('Not enough arguments');
-
-    if (source.type !== target.type)
-      throw new TypeError('Cannot connect prop and event');
-
-    if (typeof source.out !== 'function')
-      throw new TypeError("Source must have 'out' function");
-
-    if (typeof target['in'] !== 'function')
-      throw new TypeError("Target must have 'in' function");
-
-    if (lastIndexOf(source.targets, target) !== -1)
-      throw new Error('Already connected');
-
-    target.sources.push(source);
-    source.targets.push(target);
-
-    if (source.type === 'prop') {
-      setTimeout(function() {
-        if (typeof target['in'] === 'function') {
-          var sources = target.sources;
-          var args = [];
-          for (var i = 0, len = sources.length; i < len; i++) {
-            args.push(sources[i].out());
-          }
-          target['in'].apply(target, args);
-        }
-      }, 0);
-    }
-  };
-
-  circuit.disconnect = function(source, target) {
-    if (!source || !target)
-      throw new TypeError('Not enough arguments');
-
-    var targetIndex = lastIndexOf(source.targets, target);
-    if (targetIndex === -1)
-      throw new Error('Already disconnected');
-
-    var sourceIndex = lastIndexOf(target.sources, source);
-    target.sources.splice(sourceIndex, 1);
-    source.targets.splice(targetIndex, 1);
-  };
-
-  circuit.noop = function() {};
 
   var CircuitProp = function(initialValue) {
     var self = this;
@@ -185,7 +52,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     this.func = func;
     this.targets = [];
     this.sources = [];
-    this.type = 'prop';
 
     if (typeof initialValue !== 'function') {
       this.cache = initialValue;
@@ -314,7 +180,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     this.func = func;
     this.targets = [];
     this.sources = [];
-    this.type = 'event';
 
     return func;
   };
@@ -343,13 +208,13 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     var sourceSelf = source._self;
     var targetSelf = target._self;
 
-    if (sourceSelf.type !== targetSelf.type)
+    if (sourceSelf.constructor !== targetSelf.constructor)
       throw new TypeError('Cannot bind prop and event');
 
     sourceSelf.targets.push(target);
     targetSelf.sources.push(source);
 
-    if (sourceSelf.type === 'prop')
+    if (sourceSelf.constructor === CircuitProp)
       CircuitProp.markDirtyTargets([target]);
   };
 
@@ -365,7 +230,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     if (targetIndex === -1)
       throw new Error('Already unbound');
 
-    if (targetSelf.type === 'prop' && targetSelf.dirty)
+    if (targetSelf.constructor === CircuitProp && targetSelf.dirty)
       target();
 
     var sourceIndex = lastIndexOf(targetSelf.sources, source);

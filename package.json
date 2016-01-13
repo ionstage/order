@@ -8,7 +8,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "circuit": "^0.3.2"
+    "circuit": "^1.0.0"
   },
   "devDependencies": {
     "browser-sync": "^2.7.6",
