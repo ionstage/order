@@ -74,7 +74,7 @@
       new Promise(function(resolve, reject) {
         onmessage = function(event) {
           try {
-            if (event.origin !== location.origin)
+            if (event.origin !== dom.origin())
               throw new Error('OrderScript runtime error: Invalid content origin');
 
             if (event.data !== data)

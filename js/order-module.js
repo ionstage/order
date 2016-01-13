@@ -20,6 +20,6 @@
   window.order = order;
 
   window.addEventListener('load', function() {
-    window.postMessage(window.name, location.origin);
+    window.postMessage(window.name, location.protocol + '//' + location.host);
   });
 })(this);

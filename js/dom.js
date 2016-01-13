@@ -132,6 +132,10 @@
     });
   };
 
+  dom.origin = function() {
+    return location.protocol + '//' + location.host;
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = dom;
   else
