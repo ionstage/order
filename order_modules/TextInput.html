@@ -21,27 +21,27 @@
   <input id="text-input" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false">
   <script src="js/order-module.js"></script>
   <script>
-  (function() {
-    var textInputElement = document.getElementById('text-input');
+    (function() {
+      var textInputElement = document.getElementById('text-input');
 
-    var prop = {
-      text: function(value) {
-        value = value || '';
-        textInputElement.value = value;
-        return value;
-      }
-    };
+      var prop = {
+        text: function(value) {
+          value = value || '';
+          textInputElement.value = value;
+          return value;
+        }
+      };
 
-    var cel = new order.CircuitElement([
-      { name: 'text', arg: prop.text }
-    ]);
+      var cel = new order.CircuitElement([
+        { name: 'text', arg: prop.text }
+      ]);
 
-    textInputElement.addEventListener('input', function(event) {
-      cel.get('text')(event.target.value);
-    });
+      textInputElement.addEventListener('input', function(event) {
+        cel.get('text')(event.target.value);
+      });
 
-    order.exports = cel;
-  })();
+      order.exports = cel;
+    })();
   </script>
 </body>
 </html>
