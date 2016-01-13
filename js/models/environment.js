@@ -167,7 +167,7 @@
     var binding = new Binding(cmd);
 
     if (!bindingList.contains(binding))
-      throw new Error('OrderScript runtime error: Already unbound');
+      throw new Error('OrderScript runtime error: Not bound');
 
     var variableTable = this.variableTable;
 
