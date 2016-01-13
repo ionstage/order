@@ -28,7 +28,10 @@
       var prop = {
         text: function(value) {
           value = value || '';
-          textInputElement.value = value;
+
+          if (textInputElement.value !== value)
+            textInputElement.value = value;
+
           return value;
         }
       };
