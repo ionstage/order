@@ -12,6 +12,10 @@
   </div>
   <div class="content"></div>
   <script src="js/bundle.js"></script>
+  <script>
+    if (typeof Promise === 'undefined')
+      require('es6-promise').polyfill();
+  </script>
   <script src="js/helper.js"></script>
   <script src="js/dom.js"></script>
   <script src="js/models/command.js"></script>
