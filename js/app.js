@@ -3,7 +3,7 @@
 
   var helper = app.helper || require('./helper.js');
   var dom = app.dom || require('./dom.js');
-  var Environment = app.Environment || require('./model/environment.js');
+  var Environment = app.Environment || require('./models/environment.js');
   var CommandInput = app.CommandInput || require('./components/command-input.js');
   var ContentComponent = app.ContentComponent || require('./components/content-component.js');
 
