@@ -57,7 +57,7 @@
     this.names.splice(index, 1);
   };
 
-  VariableTable.prototype.list = function() {
+  VariableTable.prototype.variables = function() {
     return this.names.map(function(name) {
       return this.table[name];
     }.bind(this));
@@ -275,7 +275,7 @@
     var filePath = cmd.filePath;
 
     return Promise.resolve().then(function() {
-      var variables = this.variableTable.list();
+      var variables = this.variableTable.variables();
       var bindings = this.bindingList.toArray();
 
       var newCommandText = variables.map(function(variable) {
