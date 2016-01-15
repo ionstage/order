@@ -5,7 +5,7 @@
 
   var order = {};
 
-  order.CircuitElement = function(member) {
+  order.Module = function(member) {
     var self = new CircuitElement(member);
     var wrapper = {
       get: CircuitElement.prototype.get.bind(self),
