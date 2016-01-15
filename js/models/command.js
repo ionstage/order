@@ -159,11 +159,12 @@
       return arg;
     });
 
-    var commandName = args.shift();
-    var commandType = command[helper.capitalize(commandName.toLowerCase())];
+    var arg = args.shift();
+    var commandName = arg.toLowerCase();
+    var commandType = command[helper.capitalize(commandName)];
 
     if (!commandType)
-      throw new SyntaxError('OrderScript parse error: Unexpected command "' +  commandName + '"');
+      throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
 
     args.unshift(null);
 
@@ -174,7 +175,7 @@
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
 
-    cmd.name = commandName.toLowerCase();
+    cmd.name = commandName;
 
     return cmd;
   };
