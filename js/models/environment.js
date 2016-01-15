@@ -113,10 +113,9 @@
   };
 
   Environment.prototype.execNew = function(cmd) {
-    var variableTable = this.variableTable;
     var variableName = cmd.variableName;
 
-    if (variableTable.has(variableName))
+    if (this.variableTable.has(variableName))
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
 
     var moduleName = cmd.moduleName;
@@ -130,14 +129,14 @@
       if (!circuitElement)
         throw new Error('OrderScript runtime error: Invalid circuit element');
 
-      variableTable.store(variableName, new Variable({
+      this.variableTable.store(variableName, new Variable({
         name: variableName,
         moduleName: moduleName,
         circuitElement: circuitElement
       }));
 
       return cmd;
-    });
+    }.bind(this));
   };
 
   Environment.prototype.execBind = function(cmd) {
@@ -194,10 +193,8 @@
   };
 
   Environment.prototype.execDelete = function(cmd) {
-    var variableTable = this.variableTable;
-
     var variableName = cmd.variableName;
-    var variable = variableTable.fetch(variableName);
+    var variable = this.variableTable.fetch(variableName);
 
     return Promise.resolve().then(function() {
       return this.circuitElementDisposal({
@@ -209,21 +206,20 @@
 
       this.bindingList.removeVariable(variableName);
 
-      variableTable.delete(variableName);
+      this.variableTable.delete(variableName);
 
       return cmd;
     }.bind(this));
   };
 
   Environment.prototype.execReset = function(cmd) {
-    var variableTable = this.variableTable;
-
-    return Promise.all(variableTable.names.map(function(variableName) {
+    return Promise.all(this.variableTable.names.map(function(variableName) {
       return Promise.resolve().then(function() {
         return this.circuitElementDisposal({
           variableName: variableName
         });
       }.bind(this)).then(function() {
+        var variableTable = this.variableTable;
         var variable = variableTable.fetch(variableName);
 
         // unbind all bound members of circuit element
