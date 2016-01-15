@@ -25,17 +25,18 @@
   ContentComponent.prototype.deleteVariable = function(name) {
     var variables = this.variables();
 
-    var variable = variables.filter(function(variable) {
-      return variable.name() === name;
-    })[0];
+    for (var i = variables.length - 1; i >= 0; i--) {
+      var variable = variables[i];
 
-    if (!variable)
-      return;
+      if (variable.name() === name) {
+        // remove DOM element of variable
+        variable.parentElement(null);
 
-    // remove DOM element of variable
-    variable.parentElement(null);
+        variables.splice(i, 1);
 
-    variables.splice(variables.indexOf(variable), 1);
+        return;
+      }
+    }
   };
 
   if (typeof module !== 'undefined' && module.exports)
