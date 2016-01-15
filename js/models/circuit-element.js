@@ -28,7 +28,7 @@
 
     this.name = name;
     this.callee = callee;
-    this.caller = new Wrapper(caller, this);
+    this.wrapper = new Wrapper(caller, this);
     this.sources = [];
     this.targets = [];
   };
@@ -61,12 +61,12 @@
     if (!member)
       return null;
 
-    return member.caller;
+    return member.wrapper;
   };
 
   CircuitElement.prototype.getAll = function() {
     return this.names.map(function(name) {
-      return this.memberTable[name].caller;
+      return this.memberTable[name].wrapper;
     }.bind(this));
   };
 
@@ -74,9 +74,9 @@
     return new CircuitElement([]);
   };
 
-  CircuitElement.bind = function(sourceCaller, targetCaller) {
-    var sourceMember = sourceCaller.unwrap(Wrapper.KEY);
-    var targetMember = targetCaller.unwrap(Wrapper.KEY);
+  CircuitElement.bind = function(sourceWrapper, targetWrapper) {
+    var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
+    var targetMember = targetWrapper.unwrap(Wrapper.KEY);
 
     circuit.bind(sourceMember.callee, targetMember.callee);
 
@@ -84,9 +84,9 @@
     targetMember.sources.push(sourceMember);
   };
 
-  CircuitElement.unbind = function(sourceCaller, targetCaller) {
-    var sourceMember = sourceCaller.unwrap(Wrapper.KEY);
-    var targetMember = targetCaller.unwrap(Wrapper.KEY);
+  CircuitElement.unbind = function(sourceWrapper, targetWrapper) {
+    var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
+    var targetMember = targetWrapper.unwrap(Wrapper.KEY);
 
     circuit.unbind(sourceMember.callee, targetMember.callee);
 
@@ -97,15 +97,15 @@
     targetMemberSources.splice(targetMemberSources.indexOf(sourceMember), 1);
   };
 
-  CircuitElement.unbindAll = function(caller) {
-    var member = caller.unwrap(Wrapper.KEY);
+  CircuitElement.unbindAll = function(wrapper) {
+    var member = wrapper.unwrap(Wrapper.KEY);
 
     member.sources.forEach(function(source) {
-      CircuitElement.unbind(source.caller, member.caller);
+      CircuitElement.unbind(source.wrapper, member.wrapper);
     });
 
     member.targets.forEach(function(target) {
-      CircuitElement.unbind(member.caller, target.caller);
+      CircuitElement.unbind(member.wrapper, target.wrapper);
     });
   };
 
