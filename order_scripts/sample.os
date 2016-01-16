@@ -1,3 +1,3 @@
-x:TextInput
-y:TextInput
-x.text >> y.text
+b:Button
+c:Counter
+b.click >> c.up
