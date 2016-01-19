@@ -150,7 +150,7 @@
         var first = s.charAt(0);
         var last = s.slice(-1);
         if (first === last && (first === '\'' || first === '"'))
-          s = s.slice(1, -1);
+          s = s.slice(1, -1).replace(/\\(.)/g, '$1');
         return s;
       }
     }).reduce(function(prev, curr) {

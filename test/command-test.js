@@ -110,6 +110,14 @@ describe('command', function() {
         { name: 'send',
           variableName: 'x', memberName: 'member0', dataText: '"data_text\'' }],
 
+      [':send x.member0 \'data \\\' text\'',
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: 'data \' text' }],
+
+      [':send x.member0 \'data \\\\ text\'',
+        { name: 'send',
+          variableName: 'x', memberName: 'member0', dataText: 'data \\ text' }],
+
       [':delete x',
         { name: 'delete', variableName: 'x' }],
 
