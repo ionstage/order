@@ -21,6 +21,7 @@
   };
 
   InputHistory.prototype.push = function(text) {
+    this.data = this.data.slice(-InputHistory.MAX_SIZE - 1);
     this.data.push(text);
     this.index = this.data.length;
   };
@@ -29,13 +30,31 @@
     return this.data[this.index] || '';
   };
 
+  InputHistory.prototype.get = function() {
+    return this.data;
+  };
+
+  InputHistory.prototype.set = function(data) {
+    this.data = data.slice(-InputHistory.MAX_SIZE);
+    this.index = this.data.length;
+  };
+
+  InputHistory.MAX_SIZE = 100;
+
   var CommandInput = helper.inherits(function(props) {
     CommandInput.super_.call(this);
 
     var element = props.element;
+
     this.element = this.prop(element);
     this.executor = props.executor;
+    this.historyLoader = props.historyLoader;
+    this.historySaver = props.historySaver;
     this.inputHistory = new InputHistory();
+
+    this.loadHistory().then(function() {
+      this.focus();
+    }.bind(this));
 
     dom.on(element, 'keydown', CommandInput.prototype.onkeydown.bind(this));
   }, Component);
@@ -70,6 +89,7 @@
       return this.executor(text);
     }.bind(this)).then(function() {
       this.inputHistory.push(text);
+      this.saveHistory();
       // clear input text
       this.text('');
       this.disabled(false);
@@ -89,6 +109,21 @@
   CommandInput.prototype.ondown = function(event) {
     event.preventDefault();
     this.text(this.inputHistory.forward());
+  };
+
+  CommandInput.prototype.loadHistory = function() {
+    this.disabled(true);
+
+    return this.historyLoader().then(function(data) {
+      this.inputHistory.set(data);
+      this.disabled(false);
+    }.bind(this)).catch(function() {
+      this.disabled(false);
+    }.bind(this));
+  };
+
+  CommandInput.prototype.saveHistory = function() {
+    this.historySaver(this.inputHistory.get());
   };
 
   CommandInput.keyMap = {

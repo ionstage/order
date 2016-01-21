@@ -19,7 +19,9 @@
 
     this.commandInput = new CommandInput({
       element: dom.el('.command-input'),
-      executor: this.executor
+      executor: this.executor,
+      historyLoader: this.historyLoader,
+      historySaver: this.historySaver
     });
 
     this.contentComponent = new ContentComponent({
@@ -56,6 +58,20 @@
   App.prototype.executor = function(text) {
     return this.env.exec(text);
   };
+
+  App.prototype.historyLoader = function() {
+    return Promise.resolve().then(function() {
+      return dom.load(App.KEY_INPUT_HISTORY, []);
+    });
+  };
+
+  App.prototype.historySaver = function(data) {
+    return Promise.resolve().then(function() {
+      dom.save(App.KEY_INPUT_HISTORY, data);
+    });
+  };
+
+  App.KEY_INPUT_HISTORY = 'order/input-history';
 
   app.main = new App();
 
