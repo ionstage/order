@@ -136,6 +136,19 @@
     return location.protocol + '//' + location.host;
   };
 
+  dom.load = function(key, defaultValue) {
+    var value = localStorage.getItem(key);
+
+    if (value === null && typeof defaultValue !== 'undefined')
+      return defaultValue;
+
+    return JSON.parse(value);
+  };
+
+  dom.save = function(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
   if (typeof module !== 'undefined' && module.exports)
     module.exports = dom;
   else
