@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  color: #333;
+  color: #212121;
   font-family: Courier, monospace;
   font-size: 16px;
   height: 100%;
@@ -12,7 +12,7 @@ body {
 
 .header {
   background-color: #f5f5f5;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #e0e0e0;
   box-sizing: border-box;
   padding: 8px;
   position: fixed;
@@ -20,7 +20,7 @@ body {
 }
 
 .command-input {
-  border: 1px solid #ccc;
+  border: 1px solid #bdbdbd;
   border-radius: 0;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
   box-sizing: border-box;
@@ -39,7 +39,7 @@ body {
 
 .variable {
   background-color: #f5f5f5;
-  border: 1px solid #d8d8d8;
+  border: 1px solid #bdbdbd;
   margin-top: 16px;
   padding: 8px;
 }
@@ -56,13 +56,13 @@ body {
 }
 
 .variable-module-name {
-  color: #999;
+  color: #9e9e9e;
   float: right;
 }
 
 .variable-content {
   background-color: white;
-  border: 1px solid #eee;
+  border: 1px solid #e0e0e0;
   display: block;
   height: 0;
   margin-top: 8px;
