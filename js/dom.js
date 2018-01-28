@@ -28,6 +28,13 @@
     return el.childNodes[index];
   };
 
+  dom.css = function(el, props) {
+    var style = el.style;
+    Object.keys(props).forEach(function(key) {
+      style[key] = props[key];
+    });
+  };
+
   dom.addClass = function(el, className) {
     el.classList.add(className);
   };
@@ -70,8 +77,8 @@
     doc.close();
   };
 
-  dom.fillContentHeight = function(iframe) {
-    iframe.style.height = iframe.contentDocument.documentElement.scrollHeight + 'px';
+  dom.contentHeight = function(iframe) {
+    return iframe.contentDocument.documentElement.scrollHeight;
   };
 
   dom.openWindow = function(title, content) {

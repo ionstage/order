@@ -63,6 +63,7 @@ body {
 .variable-content {
   background-color: white;
   border: 1px solid #e0e0e0;
+  box-sizing: border-box;
   display: block;
   height: 0;
   margin-top: 8px;
