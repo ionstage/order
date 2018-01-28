@@ -5,16 +5,16 @@ html {
 body {
   color: #333;
   font-family: Courier, monospace;
-  font-size: 14px;
+  font-size: 16px;
   height: 100%;
   margin: 0;
 }
 
 .header {
   background-color: #f5f5f5;
-  border-bottom: 1px solid #e5e5e5;
+  border: 1px solid #e5e5e5;
   box-sizing: border-box;
-  padding: 10px;
+  padding: 8px;
   position: fixed;
   width: 100%;
 }
@@ -26,21 +26,21 @@ body {
   box-sizing: border-box;
   color: inherit;
   font: inherit;
-  height: 26px;
+  height: 32px;
   padding: 0 4px;
   width: 100%;
 }
 
 .content {
   box-sizing: border-box;
-  padding: 47px 10px 10px;
+  padding: 50px 16px 16px;
   width: 100%;
 }
 
 .variable {
   background-color: #f5f5f5;
   border: 1px solid #d8d8d8;
-  margin-top: 10px;
+  margin-top: 16px;
   padding: 8px;
 }
 
@@ -65,7 +65,7 @@ body {
   border: 1px solid #eee;
   display: block;
   height: 0;
-  margin-top: 6px;
+  margin-top: 8px;
   overflow: hidden;
   vertical-align: bottom;
   width: 100%;
