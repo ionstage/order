@@ -1,12 +1,7 @@
-html {
-  height: 100%;
-}
-
 body {
   color: #212121;
   font-family: Courier, monospace;
   font-size: 16px;
-  height: 100%;
   margin: 0;
 }
 
@@ -34,7 +29,6 @@ body {
 .content {
   box-sizing: border-box;
   padding: 50px 16px 16px;
-  width: 100%;
 }
 
 .variable {
@@ -47,7 +41,6 @@ body {
 .variable-header {
   height: 16px;
   line-height: 16px;
-  width: 100%;
 }
 
 .variable-name {
@@ -67,7 +60,5 @@ body {
   display: block;
   height: 0;
   margin-top: 8px;
-  overflow: hidden;
-  vertical-align: bottom;
   width: 100%;
 }
