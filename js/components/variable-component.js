@@ -66,7 +66,7 @@
 
     dom.name(contentWindow, data);
     dom.writeContent(contentElement, contentText);
-    dom.css(contentElement, { height: (dom.contentHeight(contentElement) + 2) + 'px' });
+    dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
 
     var onmessage;
 
