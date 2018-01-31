@@ -38,9 +38,16 @@ body {
 }
 
 .variable-header {
-  height: 16px;
   line-height: 16px;
   margin-bottom: 8px;
+}
+
+.variable-header::after {
+  clear: both;
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
 }
 
 .variable-name {
