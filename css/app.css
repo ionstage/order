@@ -54,9 +54,8 @@ body {
 }
 
 .variable-content {
-  background-color: white;
+  background-color: #ffffff;
   border: 0;
-  box-sizing: border-box;
   display: block;
   height: 0;
   width: 100%;
