@@ -27,37 +27,38 @@
   <script src="js/order-module.js"></script>
   <script>
     (function() {
-      var countValue = 0;
-
+      var count = 0;
       var contentElement = document.getElementById('content');
 
-      var prop = {
+      var props = {
         count: function(value) {
-          countValue = parseInt(value, 10);
-          contentElement.textContent = countValue;
-          return countValue;
-        }
+          value = parseInt((!isNaN(value) ? Number(value) : count), 10);
+          if (value !== count) {
+            count = value;
+            contentElement.textContent = count;
+          }
+          return count;
+        },
       };
 
-      var event = {
+      var events = {
         up: function() {
-          countValue += 1;
-          cel.get('count')(countValue);
+          module.get('count')(count + 1);
         },
         reset: function() {
-          cel.get('count')(0);
-        }
+          module.get('count')(0);
+        },
       };
 
-      var cel = new order.Module([
-        { name: 'count', arg: prop.count },
-        { name: 'up', arg: event.up, type: 'event' },
-        { name: 'reset', arg: event.reset, type: 'event' }
+      var module = new order.Module([
+        { name: 'count', type: 'prop', arg: props.count },
+        { name: 'up', type: 'event', arg: events.up },
+        { name: 'reset', type: 'event', arg: events.reset },
       ]);
 
-      contentElement.textContent = countValue;
+      contentElement.textContent = count;
 
-      order.exports = cel;
+      order.exports = module;
     })();
   </script>
 </body>
