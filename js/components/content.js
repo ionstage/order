@@ -5,13 +5,13 @@
   var Component = app.Component || require('./component.js');
   var VariableComponent = app.VariableComponent || require('./variable-component.js');
 
-  var ContentComponent = helper.inherits(function(props) {
-    ContentComponent.super_.call(this);
+  var Content = helper.inherits(function(props) {
+    Content.super_.call(this);
     this.variables = this.prop([]);
     this.element = this.prop(props.element);
   }, Component);
 
-  ContentComponent.prototype.loadVariable = function(name, moduleName) {
+  Content.prototype.loadVariable = function(name, moduleName) {
     return VariableComponent.load({
       name: name,
       moduleName: moduleName,
@@ -22,7 +22,7 @@
     }.bind(this));
   };
 
-  ContentComponent.prototype.deleteVariable = function(name) {
+  Content.prototype.deleteVariable = function(name) {
     var variables = this.variables();
 
     for (var i = variables.length - 1; i >= 0; i--) {
@@ -40,7 +40,7 @@
   };
 
   if (typeof module !== 'undefined' && module.exports)
-    module.exports = ContentComponent;
+    module.exports = Content;
   else
-    app.ContentComponent = ContentComponent;
+    app.Content = Content;
 })(this.app || (this.app = {}));

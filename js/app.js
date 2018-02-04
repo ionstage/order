@@ -5,7 +5,7 @@
   var dom = app.dom || require('./dom.js');
   var Environment = app.Environment || require('./models/environment.js');
   var CommandInput = app.CommandInput || require('./components/command-input.js');
-  var ContentComponent = app.ContentComponent || require('./components/content-component.js');
+  var Content = app.Content || require('./components/content.js');
 
   var App = function() {
     helper.bindAll(this);
@@ -24,19 +24,19 @@
       historySaver: this.historySaver
     });
 
-    this.contentComponent = new ContentComponent({
+    this.content = new Content({
       element: dom.el('.content')
     });
   };
 
   App.prototype.circuitElementFactory = function(props) {
-    return this.contentComponent.loadVariable(props.variableName, props.moduleName).then(function(variable) {
+    return this.content.loadVariable(props.variableName, props.moduleName).then(function(variable) {
       return variable.circuitElement();
     });
   };
 
   App.prototype.circuitElementDisposal = function(props) {
-    this.contentComponent.deleteVariable(props.variableName);
+    this.content.deleteVariable(props.variableName);
   };
 
   App.prototype.scriptLoader = function(filePath) {
