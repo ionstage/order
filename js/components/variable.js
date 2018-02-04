@@ -6,21 +6,21 @@
   var CircuitElement = app.CircuitElement || require('../models/circuit-element.js');
   var Component = app.Component || require('./component.js');
 
-  var VariableComponent = helper.inherits(function(props) {
-    VariableComponent.super_.call(this);
+  var Variable = helper.inherits(function(props) {
+    Variable.super_.call(this);
     this.name = this.prop(props.name);
     this.moduleName = this.prop(props.moduleName);
     this.element = this.prop(null);
     this.parentElement = this.prop(props.parentElement);
   }, Component);
 
-  VariableComponent.prototype.circuitElement = function() {
+  Variable.prototype.circuitElement = function() {
     var contentElement = dom.child(this.element(), 1);
     var circuitElement = helper.dig(dom.contentWindow(contentElement), 'order', 'exports');
     return circuitElement || CircuitElement.empty();
   };
 
-  VariableComponent.prototype.render = function() {
+  Variable.prototype.render = function() {
     var element = dom.el('<div>');
 
     dom.addClass(element, 'variable');
@@ -44,7 +44,7 @@
     return element;
   };
 
-  VariableComponent.prototype.redraw = function() {
+  Variable.prototype.redraw = function() {
     var element = this.element();
     var parentElement = this.parentElement();
 
@@ -55,7 +55,7 @@
     }
   };
 
-  VariableComponent.prototype.load = function(contentText) {
+  Variable.prototype.load = function(contentText) {
     var element = this.render();
     this.element(element);
     dom.append(this.parentElement(), element);
@@ -105,7 +105,7 @@
     });
   };
 
-  VariableComponent.load = function(props) {
+  Variable.load = function(props) {
     var name = props.name;
     var moduleName = props.moduleName;
     var parentElement = props.parentElement;
@@ -122,7 +122,7 @@
       type: 'GET',
       url: moduleUrl
     }).then(function(text) {
-      var component = new VariableComponent({
+      var component = new Variable({
         name: name,
         moduleName: moduleName,
         parentElement: parentElement
@@ -133,7 +133,7 @@
   };
 
   if (typeof module !== 'undefined' && module.exports)
-    module.exports = VariableComponent;
+    module.exports = Variable;
   else
-    app.VariableComponent = VariableComponent;
+    app.Variable = Variable;
 })(this.app || (this.app = {}));

@@ -3,7 +3,7 @@
 
   var helper = app.helper || require('../helper.js');
   var Component = app.Component || require('./component.js');
-  var VariableComponent = app.VariableComponent || require('./variable-component.js');
+  var Variable = app.Variable || require('./variable.js');
 
   var Content = helper.inherits(function(props) {
     Content.super_.call(this);
@@ -12,7 +12,7 @@
   }, Component);
 
   Content.prototype.loadVariable = function(name, moduleName) {
-    return VariableComponent.load({
+    return Variable.load({
       name: name,
       moduleName: moduleName,
       parentElement: this.element()
