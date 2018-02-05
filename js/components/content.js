@@ -1,46 +1,32 @@
 (function(app) {
   'use strict';
 
-  var helper = app.helper || require('../helper.js');
-  var Component = app.Component || require('./component.js');
+  var jCore = require('jcore');
   var Variable = app.Variable || require('./variable.js');
 
-  var Content = helper.inherits(function(props) {
-    Content.super_.call(this);
-    this.variables = this.prop([]);
-    this.element = this.prop(props.element);
-  }, Component);
+  var Content = jCore.Component.inherits(function() {
+    this.variableTable = {};
+  });
 
   Content.prototype.loadVariable = function(name, moduleName) {
     return Variable.load({
       name: name,
       moduleName: moduleName,
-      parentElement: this.element()
+      parentElement: this.element(),
     }).then(function(variable) {
-      this.variables().push(variable);
+      this.variableTable[name] = variable;
       return variable;
     }.bind(this));
   };
 
   Content.prototype.deleteVariable = function(name) {
-    var variables = this.variables();
-
-    for (var i = variables.length - 1; i >= 0; i--) {
-      var variable = variables[i];
-
-      if (variable.name() === name) {
-        // remove DOM element of variable
-        variable.parentElement(null);
-
-        variables.splice(i, 1);
-
-        return;
-      }
-    }
+    this.variableTable[name].parentElement(null);
+    delete this.variableTable[name];
   };
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = Content;
-  else
+  } else {
     app.Content = Content;
+  }
 })(this.app || (this.app = {}));
