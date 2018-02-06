@@ -1,9 +1,8 @@
 (function(app) {
   'use strict';
 
-  var helper = app.helper || require('../helper.js');
+  var jCore = require('jcore');
   var dom = app.dom || require('../dom.js');
-  var Component = app.Component || require('./component.js');
 
   var InputHistory = function() {
     this.data = [];
@@ -41,12 +40,7 @@
 
   InputHistory.MAX_SIZE = 100;
 
-  var CommandInput = helper.inherits(function(props) {
-    CommandInput.super_.call(this);
-
-    var element = props.element;
-
-    this.element = this.prop(element);
+  var CommandInput = jCore.Component.inherits(function(props) {
     this.executor = props.executor;
     this.historyLoader = props.historyLoader;
     this.historySaver = props.historySaver;
@@ -56,8 +50,8 @@
       this.focus();
     }.bind(this));
 
-    dom.on(element, 'keydown', CommandInput.prototype.onkeydown.bind(this));
-  }, Component);
+    dom.on(this.element(), 'keydown', CommandInput.prototype.onkeydown.bind(this));
+  });
 
   CommandInput.prototype.text = function(s) {
     return dom.value(this.element(), s);
