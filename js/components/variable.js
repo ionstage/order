@@ -1,18 +1,15 @@
 (function(app) {
   'use strict';
 
+  var jCore = require('jcore');
   var helper = app.helper || require('../helper.js');
   var dom = app.dom || require('../dom.js');
   var CircuitElement = app.CircuitElement || require('../models/circuit-element.js');
-  var Component = app.Component || require('./component.js');
 
-  var Variable = helper.inherits(function(props) {
-    Variable.super_.call(this);
+  var Variable = jCore.Component.inherits(function(props) {
     this.name = this.prop(props.name);
     this.moduleName = this.prop(props.moduleName);
-    this.element = this.prop(null);
-    this.parentElement = this.prop(props.parentElement);
-  }, Component);
+  });
 
   Variable.prototype.circuitElement = function() {
     var contentElement = dom.child(this.element(), 1);
@@ -33,33 +30,21 @@
       '<iframe class="variable-content"></iframe>'
     ].join(''));
 
-    var headerElement = dom.child(element, 0);
+    return element;
+  };
+
+  Variable.prototype.onredraw = function() {
+    var headerElement = dom.child(this.element(), 0);
 
     var nameElement = dom.child(headerElement, 0);
     dom.text(nameElement, this.name());
 
     var moduleNameElement = dom.child(headerElement, 1);
     dom.text(moduleNameElement, this.moduleName());
-
-    return element;
-  };
-
-  Variable.prototype.redraw = function() {
-    var element = this.element();
-    var parentElement = this.parentElement();
-
-    // remove element
-    if (!parentElement && element) {
-      dom.remove(element);
-      this.element(null);
-    }
   };
 
   Variable.prototype.load = function(contentText) {
-    var element = this.render();
-    this.element(element);
-    dom.append(this.parentElement(), element);
-
+    var element = this.element();
     var contentElement = dom.child(element, 1);
     var contentWindow = dom.contentWindow(contentElement);
     var data = Date.now().toString();
@@ -125,9 +110,9 @@
       var component = new Variable({
         name: name,
         moduleName: moduleName,
-        parentElement: parentElement
       });
-
+      component.parentElement(parentElement);
+      component.redraw();
       return component.load(text);
     });
   };
