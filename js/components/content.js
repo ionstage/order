@@ -9,11 +9,13 @@
   });
 
   Content.prototype.loadVariable = function(name, moduleName) {
-    return Variable.load({
+    var variable = new Variable({
       name: name,
       moduleName: moduleName,
-      parentElement: this.element(),
-    }).then(function(variable) {
+    });
+    variable.parentElement(this.element());
+    variable.redraw();
+    return variable.load().then(function() {
       this.variableTable[name] = variable;
       return variable;
     }.bind(this));

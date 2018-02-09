@@ -43,78 +43,63 @@
     dom.text(moduleNameElement, this.moduleName());
   };
 
-  Variable.prototype.load = function(contentText) {
-    var element = this.element();
-    var contentElement = dom.child(element, 1);
-    var contentWindow = dom.contentWindow(contentElement);
-    var data = Date.now().toString();
-
-    dom.name(contentWindow, data);
-    dom.writeContent(contentElement, contentText);
-    dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
-
-    var onmessage;
-
-    return Promise.race([
-      new Promise(function(resolve, reject) {
-        onmessage = function(event) {
-          try {
-            if (event.origin !== dom.origin())
-              throw new Error('OrderScript runtime error: Invalid content origin');
-
-            if (event.data !== data)
-              throw new Error('OrderScript runtime error: Invalid content data');
-
-            if (!this.circuitElement())
-              throw new Error('OrderScript runtime error: Invalid circuit element');
-
-            resolve(this);
-          } catch (e) {
-            dom.remove(this.element());
-            this.element(null);
-            reject(e);
-          }
-        }.bind(this);
-
-        dom.on(contentWindow, 'message', onmessage);
-      }.bind(this)),
-      new Promise(function(resolve, reject) {
-        setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
-      })
-    ]).then(function(component) {
-      dom.off(contentWindow, 'message', onmessage);
-      return component;
-    }).catch(function(e) {
-      dom.off(contentWindow, 'message', onmessage);
-      throw e;
-    });
-  };
-
-  Variable.load = function(props) {
-    var name = props.name;
-    var moduleName = props.moduleName;
-    var parentElement = props.parentElement;
-
+  Variable.prototype.load = function() {
     var moduleUrl = [
       'order_modules/',
-      moduleName.split('/').map(function(s) {
+      this.moduleName().split('/').map(function(s) {
         return encodeURIComponent(s);
       }).join('/'),
       '.html'
     ].join('');
-
     return dom.ajax({
       type: 'GET',
       url: moduleUrl
     }).then(function(text) {
-      var component = new Variable({
-        name: name,
-        moduleName: moduleName,
+      var element = this.element();
+      var contentElement = dom.child(element, 1);
+      var contentWindow = dom.contentWindow(contentElement);
+      var data = Date.now().toString();
+
+      dom.name(contentWindow, data);
+      dom.writeContent(contentElement, text);
+      dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
+
+      var onmessage;
+
+      return Promise.race([
+        new Promise(function(resolve, reject) {
+          onmessage = function(event) {
+            try {
+              if (event.origin !== dom.origin())
+                throw new Error('OrderScript runtime error: Invalid content origin');
+
+              if (event.data !== data)
+                throw new Error('OrderScript runtime error: Invalid content data');
+
+              if (!this.circuitElement())
+                throw new Error('OrderScript runtime error: Invalid circuit element');
+
+              resolve(this);
+            } catch (e) {
+              dom.remove(this.element());
+              this.element(null);
+              reject(e);
+            }
+          }.bind(this);
+
+          dom.on(contentWindow, 'message', onmessage);
+        }.bind(this)),
+        new Promise(function(resolve, reject) {
+          setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
+        })
+      ]).then(function(component) {
+        dom.off(contentWindow, 'message', onmessage);
+        return component;
+      }).catch(function(e) {
+        dom.off(contentWindow, 'message', onmessage);
+        throw e;
       });
-      component.parentElement(parentElement);
-      component.redraw();
-      return component.load(text);
-    });
+    }.bind(this));
   };
 
   if (typeof module !== 'undefined' && module.exports)
