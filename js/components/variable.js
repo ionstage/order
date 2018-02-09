@@ -11,6 +11,10 @@
     this.moduleName = this.prop(props.moduleName);
   });
 
+  Variable.prototype.contentUrl = function() {
+    return 'order_modules/' + encodeURI(this.moduleName()) + '.html';
+  };
+
   Variable.prototype.circuitElement = function() {
     var contentElement = dom.child(this.element(), 1);
     var circuitElement = helper.dig(dom.contentWindow(contentElement), 'order', 'exports');
@@ -44,16 +48,9 @@
   };
 
   Variable.prototype.load = function() {
-    var moduleUrl = [
-      'order_modules/',
-      this.moduleName().split('/').map(function(s) {
-        return encodeURIComponent(s);
-      }).join('/'),
-      '.html'
-    ].join('');
     return dom.ajax({
       type: 'GET',
-      url: moduleUrl
+      url: this.contentUrl(),
     }).then(function(text) {
       var element = this.element();
       var contentElement = dom.child(element, 1);
