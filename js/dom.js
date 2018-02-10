@@ -28,6 +28,12 @@
     return el.childNodes[index];
   };
 
+  dom.attr = function(el, props) {
+    Object.keys(props).forEach(function(key) {
+      el.setAttribute(key, props[key]);
+    });
+  };
+
   dom.css = function(el, props) {
     var style = el.style;
     Object.keys(props).forEach(function(key) {
@@ -111,6 +117,14 @@
 
   dom.off = function(el, type, listener) {
     el.removeEventListener(type, listener);
+  };
+
+  dom.once = function(el, type, listener) {
+    var wrapper = function() {
+      dom.off(el, type, wrapper);
+      listener.apply(null, arguments);
+    };
+    dom.on(el, type, wrapper);
   };
 
   dom.ajax = function(opt) {

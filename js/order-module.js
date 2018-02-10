@@ -18,8 +18,4 @@
   order.exports = CircuitElement.empty();
 
   window.order = order;
-
-  window.addEventListener('load', function() {
-    window.postMessage(window.name, location.protocol + '//' + location.host);
-  });
 })(this);

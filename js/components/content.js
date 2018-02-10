@@ -18,7 +18,9 @@
     return variable.load().then(function() {
       this.variableTable[name] = variable;
       return variable;
-    }.bind(this));
+    }.bind(this)).catch(function() {
+      variable.parentElement(null);
+    });
   };
 
   Content.prototype.deleteVariable = function(name) {

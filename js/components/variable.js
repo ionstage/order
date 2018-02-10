@@ -48,55 +48,20 @@
   };
 
   Variable.prototype.load = function() {
-    return dom.ajax({
-      type: 'GET',
-      url: this.contentUrl(),
-    }).then(function(text) {
-      var element = this.element();
-      var contentElement = dom.child(element, 1);
-      var contentWindow = dom.contentWindow(contentElement);
-      var data = Date.now().toString();
-
-      dom.name(contentWindow, data);
-      dom.writeContent(contentElement, text);
+    var contentElement = this.findElement('.variable-content');
+    return new Promise(function(resolve, reject) {
+      var timeoutID = setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
+      dom.once(contentElement, 'load', function() {
+        clearTimeout(timeoutID);
+        resolve(this.circuitElement());
+      }.bind(this));
+      dom.attr(contentElement, { src: this.contentUrl() });
+    }.bind(this)).then(function(circuitElement) {
+      if (!circuitElement) {
+        throw new Error('OrderScript runtime error: Invalid circuit element');
+      }
       dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
-
-      var onmessage;
-
-      return Promise.race([
-        new Promise(function(resolve, reject) {
-          onmessage = function(event) {
-            try {
-              if (event.origin !== dom.origin())
-                throw new Error('OrderScript runtime error: Invalid content origin');
-
-              if (event.data !== data)
-                throw new Error('OrderScript runtime error: Invalid content data');
-
-              if (!this.circuitElement())
-                throw new Error('OrderScript runtime error: Invalid circuit element');
-
-              resolve(this);
-            } catch (e) {
-              dom.remove(this.element());
-              this.element(null);
-              reject(e);
-            }
-          }.bind(this);
-
-          dom.on(contentWindow, 'message', onmessage);
-        }.bind(this)),
-        new Promise(function(resolve, reject) {
-          setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
-        })
-      ]).then(function(component) {
-        dom.off(contentWindow, 'message', onmessage);
-        return component;
-      }).catch(function(e) {
-        dom.off(contentWindow, 'message', onmessage);
-        throw e;
-      });
-    }.bind(this));
+    });
   };
 
   if (typeof module !== 'undefined' && module.exports)
