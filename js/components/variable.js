@@ -22,19 +22,7 @@
   };
 
   Variable.prototype.render = function() {
-    var element = dom.el('<div>');
-
-    dom.addClass(element, 'variable');
-
-    dom.html(element, [
-      '<div class="variable-header">',
-      '<div class="variable-name"></div>',
-      '<div class="variable-module-name"></div>',
-      '</div>',
-      '<iframe class="variable-content"></iframe>'
-    ].join(''));
-
-    return element;
+    return dom.render(Variable.HTML_TEXT);
   };
 
   Variable.prototype.onredraw = function() {
@@ -63,6 +51,16 @@
       dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
     });
   };
+
+  Variable.HTML_TEXT = [
+    '<div class="variable">',
+      '<div class="variable-header">',
+        '<div class="variable-name"></div>',
+        '<div class="variable-module-name"></div>',
+      '</div>',
+      '<iframe class="variable-content"></iframe>',
+    '</div>',
+  ].join('');
 
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Variable;
