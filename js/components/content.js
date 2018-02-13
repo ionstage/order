@@ -18,8 +18,9 @@
     return variable.load().then(function() {
       this.variableTable[name] = variable;
       return variable;
-    }.bind(this)).catch(function() {
+    }.bind(this)).catch(function(e) {
       variable.parentElement(null);
+      throw e;
     });
   };
 
