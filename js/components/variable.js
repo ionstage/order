@@ -11,6 +11,14 @@
     this.moduleName = this.prop(props.moduleName);
   });
 
+  Variable.prototype.nameElement = function() {
+    return this.findElement('.variable-name');
+  };
+
+  Variable.prototype.moduleNameElement = function() {
+    return this.findElement('.variable-module-name');
+  };
+
   Variable.prototype.contentUrl = function() {
     return 'order_modules/' + encodeURI(this.moduleName()) + '.html';
   };
@@ -25,14 +33,9 @@
     return dom.render(Variable.HTML_TEXT);
   };
 
-  Variable.prototype.onredraw = function() {
-    var headerElement = dom.child(this.element(), 0);
-
-    var nameElement = dom.child(headerElement, 0);
-    dom.text(nameElement, this.name());
-
-    var moduleNameElement = dom.child(headerElement, 1);
-    dom.text(moduleNameElement, this.moduleName());
+  Variable.prototype.oninit = function() {
+    dom.text(this.nameElement(), this.name());
+    dom.text(this.moduleNameElement(), this.moduleName());
   };
 
   Variable.prototype.load = function() {
