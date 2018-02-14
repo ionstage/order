@@ -7,6 +7,7 @@
   var InputHistory = function() {
     this.data = [];
     this.index = 0;
+    this.size = 100;
   };
 
   InputHistory.prototype.back = function() {
@@ -20,7 +21,7 @@
   };
 
   InputHistory.prototype.push = function(text) {
-    this.data = this.data.slice(-InputHistory.MAX_SIZE - 1);
+    this.data = this.data.slice(-this.size - 1);
     this.data.push(text);
     this.index = this.data.length;
   };
@@ -34,11 +35,9 @@
   };
 
   InputHistory.prototype.set = function(data) {
-    this.data = data.slice(-InputHistory.MAX_SIZE);
+    this.data = data.slice(-this.size);
     this.index = this.data.length;
   };
-
-  InputHistory.MAX_SIZE = 100;
 
   var CommandInput = jCore.Component.inherits(function(props) {
     this.executor = props.executor;
