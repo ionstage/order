@@ -12,8 +12,8 @@
     helper.bindAll(this);
 
     this.env = new Environment({
-      circuitElementFactory: this.circuitElementFactory,
-      circuitElementDisposal: this.circuitElementDisposal,
+      circuitModuleFactory: this.circuitModuleFactory,
+      circuitModuleDisposal: this.circuitModuleDisposal,
       scriptLoader: this.scriptLoader,
       scriptSaver: this.scriptSaver
     });
@@ -30,13 +30,13 @@
     });
   });
 
-  Main.prototype.circuitElementFactory = function(props) {
+  Main.prototype.circuitModuleFactory = function(props) {
     return this.content.loadVariable(props.variableName, props.moduleName).then(function(variable) {
-      return variable.circuitElement();
+      return variable.circuitModule();
     });
   };
 
-  Main.prototype.circuitElementDisposal = function(props) {
+  Main.prototype.circuitModuleDisposal = function(props) {
     this.content.deleteVariable(props.variableName);
   };
 

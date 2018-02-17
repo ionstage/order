@@ -6,7 +6,7 @@
   app.main = new Main();
 
   if (typeof module !== 'undefined' && module.exports) {
-    app.CircuitElement = require('./models/circuit-element.js');
+    app.CircuitModule = require('./models/circuit-module.js');
     global.app = app;
   }
 })(this.app || (this.app = {}));

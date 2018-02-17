@@ -1,21 +1,21 @@
 (function(window) {
   'use strict';
 
-  var CircuitElement = window.parent.app.CircuitElement;
+  var CircuitModule = window.parent.app.CircuitModule;
 
   var order = {};
 
   order.Module = function(member) {
-    var self = new CircuitElement(member);
+    var self = new CircuitModule(member);
     var wrapper = {
-      get: CircuitElement.prototype.get.bind(self),
-      getAll: CircuitElement.prototype.getAll.bind(self)
+      get: CircuitModule.prototype.get.bind(self),
+      getAll: CircuitModule.prototype.getAll.bind(self)
     };
 
     return wrapper;
   };
 
-  order.exports = CircuitElement.empty();
+  order.exports = CircuitModule.empty();
 
   window.order = order;
 })(this);

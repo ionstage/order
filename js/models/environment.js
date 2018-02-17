@@ -3,16 +3,16 @@
 
   var helper = app.helper || require('../helper.js');
   var command = app.command || require('./command.js');
-  var CircuitElement = app.CircuitElement || require('./circuit-element.js');
+  var CircuitModule = app.CircuitModule || require('./circuit-module.js');
 
   var Variable = function(props) {
     this.name = props.name;
     this.moduleName = props.moduleName;
-    this.circuitElement = props.circuitElement;
+    this.circuitModule = props.circuitModule;
   };
 
   Variable.prototype.fetchMember = function(name) {
-    var member = this.circuitElement.get(name);
+    var member = this.circuitModule.get(name);
 
     if (!member)
       throw new Error('OrderScript runtime error: member "' + this.name + '.' + name + '" is not defined');
@@ -21,7 +21,7 @@
   };
 
   Variable.prototype.members = function() {
-    return this.circuitElement.getAll();
+    return this.circuitModule.getAll();
   };
 
   var VariableTable = function() {
@@ -93,8 +93,8 @@
   };
 
   var Environment = function(props) {
-    this.circuitElementFactory = props.circuitElementFactory;
-    this.circuitElementDisposal = props.circuitElementDisposal;
+    this.circuitModuleFactory = props.circuitModuleFactory;
+    this.circuitModuleDisposal = props.circuitModuleDisposal;
     this.scriptLoader = props.scriptLoader;
     this.scriptSaver = props.scriptSaver;
     this.variableTable = new VariableTable();
@@ -121,18 +121,18 @@
     var moduleName = cmd.moduleName;
 
     return Promise.resolve().then(function() {
-      return this.circuitElementFactory({
+      return this.circuitModuleFactory({
         variableName: variableName,
         moduleName: moduleName
       });
-    }.bind(this)).then(function(circuitElement) {
-      if (!circuitElement)
-        throw new Error('OrderScript runtime error: Invalid circuit element');
+    }.bind(this)).then(function(circuitModule) {
+      if (!circuitModule)
+        throw new Error('OrderScript runtime error: Invalid circuit module');
 
       this.variableTable.store(variableName, new Variable({
         name: variableName,
         moduleName: moduleName,
-        circuitElement: circuitElement
+        circuitModule: circuitModule
       }));
 
       return cmd;
@@ -154,7 +154,7 @@
     var sourceMember = sourceVariable.fetchMember(cmd.sourceMemberName);
     var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
 
-    CircuitElement.bind(sourceMember, targetMember);
+    CircuitModule.bind(sourceMember, targetMember);
 
     bindingList.add(binding);
 
@@ -176,7 +176,7 @@
     var sourceMember = sourceVariable.fetchMember(cmd.sourceMemberName);
     var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
 
-    CircuitElement.unbind(sourceMember, targetMember);
+    CircuitModule.unbind(sourceMember, targetMember);
 
     bindingList.remove(binding);
 
@@ -197,12 +197,12 @@
     var variable = this.variableTable.fetch(variableName);
 
     return Promise.resolve().then(function() {
-      return this.circuitElementDisposal({
+      return this.circuitModuleDisposal({
         variableName: variableName
       });
     }.bind(this)).then(function() {
-      // unbind all bound members of circuit element
-      variable.members().forEach(CircuitElement.unbindAll);
+      // unbind all bound members of circuit module
+      variable.members().forEach(CircuitModule.unbindAll);
 
       this.bindingList.removeVariable(variableName);
 
@@ -215,15 +215,15 @@
   Environment.prototype.execReset = function(cmd) {
     return Promise.all(this.variableTable.names.map(function(variableName) {
       return Promise.resolve().then(function() {
-        return this.circuitElementDisposal({
+        return this.circuitModuleDisposal({
           variableName: variableName
         });
       }.bind(this)).then(function() {
         var variableTable = this.variableTable;
         var variable = variableTable.fetch(variableName);
 
-        // unbind all bound members of circuit element
-        variable.members().forEach(CircuitElement.unbindAll);
+        // unbind all bound members of circuit module
+        variable.members().forEach(CircuitModule.unbindAll);
 
         this.bindingList.removeVariable(variableName);
 

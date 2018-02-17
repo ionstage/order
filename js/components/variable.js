@@ -4,7 +4,7 @@
   var jCore = require('jcore');
   var helper = app.helper || require('../helper.js');
   var dom = app.dom || require('../dom.js');
-  var CircuitElement = app.CircuitElement || require('../models/circuit-element.js');
+  var CircuitModule = app.CircuitModule || require('../models/circuit-module.js');
 
   var Variable = jCore.Component.inherits(function(props) {
     this.name = this.prop(props.name);
@@ -23,10 +23,10 @@
     return 'order_modules/' + encodeURI(this.moduleName()) + '.html';
   };
 
-  Variable.prototype.circuitElement = function() {
+  Variable.prototype.circuitModule = function() {
     var contentElement = dom.child(this.element(), 1);
-    var circuitElement = helper.dig(dom.contentWindow(contentElement), 'order', 'exports');
-    return circuitElement || CircuitElement.empty();
+    var circuitModule = helper.dig(dom.contentWindow(contentElement), 'order', 'exports');
+    return circuitModule || CircuitModule.empty();
   };
 
   Variable.prototype.render = function() {
@@ -44,12 +44,12 @@
       var timeoutID = setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
       dom.once(contentElement, 'load', function() {
         clearTimeout(timeoutID);
-        resolve(this.circuitElement());
+        resolve(this.circuitModule());
       }.bind(this));
       dom.attr(contentElement, { src: this.contentUrl() });
-    }.bind(this)).then(function(circuitElement) {
-      if (!circuitElement) {
-        throw new Error('OrderScript runtime error: Invalid circuit element');
+    }.bind(this)).then(function(circuitModule) {
+      if (!circuitModule) {
+        throw new Error('OrderScript runtime error: Invalid circuit module');
       }
       dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
     });

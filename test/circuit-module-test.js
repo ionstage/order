@@ -1,9 +1,9 @@
 var assert = require('assert');
 var circuit = require('circuit');
 var sinon = require('sinon');
-var CircuitElement = require('../js/models/circuit-element.js');
+var CircuitModule = require('../js/models/circuit-module.js');
 
-describe('CircuitElement', function() {
+describe('CircuitModule', function() {
   beforeEach(function() {
     Object.keys(circuit).forEach(function(key) {
       sinon.spy(circuit, key);
@@ -17,12 +17,12 @@ describe('CircuitElement', function() {
   });
 
   it('create empty element', function() {
-    var cel = CircuitElement.empty();
+    var cel = CircuitModule.empty();
     assert.equal(Object.keys(cel.memberTable).length, 0);
   });
 
   it('has members with only name', function() {
-    var cel = new CircuitElement([
+    var cel = new CircuitModule([
       { name: 'prop' },
       { name: 'onevent' }
     ]);
@@ -36,7 +36,7 @@ describe('CircuitElement', function() {
   });
 
   it('has prop members with name and value', function() {
-    var cel = new CircuitElement([
+    var cel = new CircuitModule([
       { name: 'prop', arg: 1 }
     ]);
 
@@ -49,7 +49,7 @@ describe('CircuitElement', function() {
 
   it('has event members with name and listener', function() {
     var listener = sinon.spy();
-    var cel = new CircuitElement([
+    var cel = new CircuitModule([
       { name: 'onevent', arg: listener }
     ]);
 
@@ -62,7 +62,7 @@ describe('CircuitElement', function() {
   it('has members with type setting', function() {
     var arg = {};
     var listener = function() {};
-    var cel = new CircuitElement([
+    var cel = new CircuitModule([
       { name: 'onprop', arg: arg, type: 'prop' },
       { name: 'event', arg: listener, type: 'event' }
     ]);
@@ -74,7 +74,7 @@ describe('CircuitElement', function() {
   it('should make the latter member definition a priority', function() {
     var listener0 = sinon.spy();
     var listener1 = sinon.spy();
-    var cel = new CircuitElement([
+    var cel = new CircuitModule([
       { name: 'prop', arg: 1 },
       { name: 'onevent', arg: listener0 },
       { name: 'prop', arg: 2 },
@@ -91,7 +91,7 @@ describe('CircuitElement', function() {
   });
 
   it('get all members', function() {
-    var cel = new CircuitElement([
+    var cel = new CircuitModule([
       { name: 'prop' },
       { name: 'onevent' }
     ]);
@@ -103,17 +103,17 @@ describe('CircuitElement', function() {
   });
 
   it('bind members', function() {
-    var cel0 = new CircuitElement([
+    var cel0 = new CircuitModule([
       { name: 'prop' }
     ]);
-    var cel1 = new CircuitElement([
+    var cel1 = new CircuitModule([
       { name: 'prop' }
     ]);
 
     var prop0 = cel0.get('prop');
     var prop1 = cel1.get('prop');
 
-    CircuitElement.bind(prop0, prop1);
+    CircuitModule.bind(prop0, prop1);
 
     var callee0 = cel0.memberTable['prop'].callee;
     var callee1 = cel1.memberTable['prop'].callee;
@@ -122,18 +122,18 @@ describe('CircuitElement', function() {
   });
 
   it('unbind members', function() {
-    var cel0 = new CircuitElement([
+    var cel0 = new CircuitModule([
       { name: 'prop' }
     ]);
-    var cel1 = new CircuitElement([
+    var cel1 = new CircuitModule([
       { name: 'prop' }
     ]);
 
     var prop0 = cel0.get('prop');
     var prop1 = cel1.get('prop');
 
-    CircuitElement.bind(prop0, prop1);
-    CircuitElement.unbind(prop0, prop1);
+    CircuitModule.bind(prop0, prop1);
+    CircuitModule.unbind(prop0, prop1);
 
     var callee0 = cel0.memberTable['prop'].callee;
     var callee1 = cel1.memberTable['prop'].callee;
@@ -142,13 +142,13 @@ describe('CircuitElement', function() {
   });
 
   it('unbind all members', function() {
-    var cel0 = new CircuitElement([
+    var cel0 = new CircuitModule([
       { name: 'prop' }
     ]);
-    var cel1 = new CircuitElement([
+    var cel1 = new CircuitModule([
       { name: 'prop' }
     ]);
-    var cel2 = new CircuitElement([
+    var cel2 = new CircuitModule([
       { name: 'prop' }
     ]);
 
@@ -156,9 +156,9 @@ describe('CircuitElement', function() {
     var prop1 = cel1.get('prop');
     var prop2 = cel2.get('prop');
 
-    CircuitElement.bind(prop1, prop0);
-    CircuitElement.bind(prop0, prop2);
-    CircuitElement.unbindAll(prop0);
+    CircuitModule.bind(prop1, prop0);
+    CircuitModule.bind(prop0, prop2);
+    CircuitModule.unbindAll(prop0);
 
     var callee0 = cel0.memberTable['prop'].callee;
     var callee1 = cel1.memberTable['prop'].callee;

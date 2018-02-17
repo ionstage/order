@@ -1,12 +1,12 @@
 var assert = require('assert');
 var sinon = require('sinon');
-var CircuitElement = require('../js/models/circuit-element.js');
+var CircuitModule = require('../js/models/circuit-module.js');
 var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitElementFactory: function() { return CircuitElement.empty(); },
-    circuitElementDisposal: function() { /* do nothing */ },
+    circuitModuleFactory: function() { return CircuitModule.empty(); },
+    circuitModuleDisposal: function() { /* do nothing */ },
     scriptLoader: function() { /* do nothing */ },
     scriptSaver: function() { /* do nothing */ }
   };
@@ -22,7 +22,7 @@ describe('environment', function() {
     it('create new variable', function() {
       var dummy = {};
       var env = new Environment({
-        circuitElementFactory: function(props) {
+        circuitModuleFactory: function(props) {
           assert.equal(props.variableName, 'x');
           assert.equal(props.moduleName, 'Module');
           return Promise.resolve(dummy);
@@ -34,7 +34,7 @@ describe('environment', function() {
         assert.equal(cmd.name, 'new');
         assert.equal(v.name, cmd.variableName);
         assert.equal(v.moduleName, cmd.moduleName);
-        assert.equal(v.circuitElement, dummy);
+        assert.equal(v.circuitModule, dummy);
       });
     });
 
@@ -49,9 +49,9 @@ describe('environment', function() {
       });
     });
 
-    it('should not set circuit element to null', function(done) {
+    it('should not set circuit module to null', function(done) {
       var env = new Environment({
-        circuitElementFactory: function() { return null; }
+        circuitModuleFactory: function() { return null; }
       });
 
       return env.exec(':new x Module').catch(function(e) {
@@ -60,11 +60,11 @@ describe('environment', function() {
       });
     });
 
-    it('bind circuit element members', function() {
+    it('bind circuit module members', function() {
       var cels = [];
       var env = new Environment({
-        circuitElementFactory: function() {
-          var cel = new CircuitElement([
+        circuitModuleFactory: function() {
+          var cel = new CircuitModule([
             { name: 'member0' },
             { name: 'member1' }
           ]);
@@ -73,7 +73,7 @@ describe('environment', function() {
         }
       });
 
-      CircuitElement.bind = sinon.spy();
+      CircuitModule.bind = sinon.spy();
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
@@ -83,16 +83,16 @@ describe('environment', function() {
         var member0 = cels[0].get(cmd.sourceMemberName);
         var member1 = cels[1].get(cmd.targetMemberName);
         assert.equal(cmd.name, 'bind');
-        assert(CircuitElement.bind.calledWith(member0, member1));
+        assert(CircuitModule.bind.calledWith(member0, member1));
         assert.equal(env.bindingList.data.length, 1);
       });
     });
 
-    it('unbind circuit element members', function() {
+    it('unbind circuit module members', function() {
       var cels = [];
       var env = new Environment({
-        circuitElementFactory: function() {
-          var cel = new CircuitElement([
+        circuitModuleFactory: function() {
+          var cel = new CircuitModule([
             { name: 'member0' },
             { name: 'member1' }
           ]);
@@ -101,7 +101,7 @@ describe('environment', function() {
         }
       });
 
-      CircuitElement.unbind = sinon.spy();
+      CircuitModule.unbind = sinon.spy();
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
@@ -113,15 +113,15 @@ describe('environment', function() {
         var member0 = cels[0].get(cmd.sourceMemberName);
         var member1 = cels[1].get(cmd.targetMemberName);
         assert.equal(cmd.name, 'unbind');
-        assert(CircuitElement.unbind.calledWith(member0, member1));
+        assert(CircuitModule.unbind.calledWith(member0, member1));
         assert.equal(env.bindingList.data.length, 0);
       });
     });
 
-    it('send data to a member of circuit element', function() {
+    it('send data to a member of circuit module', function() {
       var env = new Environment({
-        circuitElementFactory: function() {
-          return new CircuitElement([
+        circuitModuleFactory: function() {
+          return new CircuitModule([
             { name: 'prop' }
           ]);
         }
@@ -130,7 +130,7 @@ describe('environment', function() {
       return env.exec(':new x Module').then(function() {
         return env.exec(':send x.prop data_text');
       }).then(function(cmd) {
-        var member = env.variableTable.fetch(cmd.variableName).circuitElement.get(cmd.memberName);
+        var member = env.variableTable.fetch(cmd.variableName).circuitModule.get(cmd.memberName);
         assert.equal(cmd.name, 'send');
         assert.equal(member(), 'data_text');
       });
@@ -139,21 +139,21 @@ describe('environment', function() {
     it('delete variable', function() {
       var env = new Environment(defaultProps);
 
-      env.circuitElementDisposal = sinon.spy();
+      env.circuitModuleDisposal = sinon.spy();
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':delete x');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'delete');
         assert.equal(env.variableTable.variables().length, 0);
-        assert(env.circuitElementDisposal.calledOnce);
+        assert(env.circuitModuleDisposal.calledOnce);
       });
     });
 
     it('reset', function() {
       var env = new Environment(defaultProps);
 
-      env.circuitElementDisposal = sinon.spy();
+      env.circuitModuleDisposal = sinon.spy();
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
@@ -162,7 +162,7 @@ describe('environment', function() {
       }).then(function(cmd) {
         assert.equal(cmd.name, 'reset');
         assert.equal(env.variableTable.variables().length, 0);
-        assert(env.circuitElementDisposal.calledTwice);
+        assert(env.circuitModuleDisposal.calledTwice);
       });
     });
 

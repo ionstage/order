@@ -15,7 +15,7 @@
 
   Wrapper.KEY = {};
 
-  var CircuitElementMember = function(props) {
+  var CircuitModuleMember = function(props) {
     var name = props.name;
     var arg = props.arg;
     var type = props.type;
@@ -24,7 +24,7 @@
       type = (name.indexOf('on') === 0) ? 'event' : 'prop';
 
     var callee = circuit[type](arg);
-    var caller = CircuitElementMember.prototype.call.bind(this);
+    var caller = CircuitModuleMember.prototype.call.bind(this);
 
     this.name = name;
     this.callee = callee;
@@ -33,11 +33,11 @@
     this.targets = [];
   };
 
-  CircuitElementMember.prototype.call = function() {
+  CircuitModuleMember.prototype.call = function() {
     return this.callee.apply(this, arguments);
   };
 
-  var CircuitElement = function(members) {
+  var CircuitModule = function(members) {
     var memberTable = {};
     var names = [];
 
@@ -47,7 +47,7 @@
       if (name in memberTable)
         return;
 
-      memberTable[name] = new CircuitElementMember(props);
+      memberTable[name] = new CircuitModuleMember(props);
       names.unshift(name);
     });
 
@@ -55,7 +55,7 @@
     this.names = names;
   };
 
-  CircuitElement.prototype.get = function(name) {
+  CircuitModule.prototype.get = function(name) {
     var member = this.memberTable[name];
 
     if (!member)
@@ -64,17 +64,17 @@
     return member.wrapper;
   };
 
-  CircuitElement.prototype.getAll = function() {
+  CircuitModule.prototype.getAll = function() {
     return this.names.map(function(name) {
       return this.memberTable[name].wrapper;
     }.bind(this));
   };
 
-  CircuitElement.empty = function() {
-    return new CircuitElement([]);
+  CircuitModule.empty = function() {
+    return new CircuitModule([]);
   };
 
-  CircuitElement.bind = function(sourceWrapper, targetWrapper) {
+  CircuitModule.bind = function(sourceWrapper, targetWrapper) {
     var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
     var targetMember = targetWrapper.unwrap(Wrapper.KEY);
 
@@ -84,7 +84,7 @@
     targetMember.sources.push(sourceMember);
   };
 
-  CircuitElement.unbind = function(sourceWrapper, targetWrapper) {
+  CircuitModule.unbind = function(sourceWrapper, targetWrapper) {
     var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
     var targetMember = targetWrapper.unwrap(Wrapper.KEY);
 
@@ -97,20 +97,20 @@
     targetMemberSources.splice(targetMemberSources.indexOf(sourceMember), 1);
   };
 
-  CircuitElement.unbindAll = function(wrapper) {
+  CircuitModule.unbindAll = function(wrapper) {
     var member = wrapper.unwrap(Wrapper.KEY);
 
     member.sources.forEach(function(source) {
-      CircuitElement.unbind(source.wrapper, member.wrapper);
+      CircuitModule.unbind(source.wrapper, member.wrapper);
     });
 
     member.targets.forEach(function(target) {
-      CircuitElement.unbind(member.wrapper, target.wrapper);
+      CircuitModule.unbind(member.wrapper, target.wrapper);
     });
   };
 
   if (typeof module !== 'undefined' && module.exports)
-    module.exports = CircuitElement;
+    module.exports = CircuitModule;
   else
-    app.CircuitElement = CircuitElement;
+    app.CircuitModule = CircuitModule;
 })(this.app || (this.app = {}));
