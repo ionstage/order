@@ -2,13 +2,12 @@
   'use strict';
 
   var jCore = require('jcore');
-  var helper = app.helper || require('../helper.js');
   var dom = app.dom || require('../dom.js');
-  var CircuitModule = app.CircuitModule || require('../models/circuit-module.js');
 
   var Variable = jCore.Component.inherits(function(props) {
     this.name = this.prop(props.name);
     this.moduleName = this.prop(props.moduleName);
+    this.content = new Variable.Content({ element: this.findElement('.variable-content') });
   });
 
   Variable.prototype.nameElement = function() {
@@ -24,9 +23,7 @@
   };
 
   Variable.prototype.circuitModule = function() {
-    var contentElement = dom.child(this.element(), 1);
-    var circuitModule = helper.dig(dom.contentWindow(contentElement), 'order', 'exports');
-    return circuitModule || CircuitModule.empty();
+    return this.content.circuitModule();
   };
 
   Variable.prototype.render = function() {
@@ -39,20 +36,7 @@
   };
 
   Variable.prototype.load = function() {
-    var contentElement = this.findElement('.variable-content');
-    return new Promise(function(resolve, reject) {
-      var timeoutID = setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
-      dom.once(contentElement, 'load', function() {
-        clearTimeout(timeoutID);
-        resolve(this.circuitModule());
-      }.bind(this));
-      dom.attr(contentElement, { src: this.contentUrl() });
-    }.bind(this)).then(function(circuitModule) {
-      if (!circuitModule) {
-        throw new Error('OrderScript runtime error: Invalid circuit module');
-      }
-      dom.css(contentElement, { height: dom.contentHeight(contentElement) + 'px' });
-    });
+    return this.content.load(this.contentUrl());
   };
 
   Variable.HTML_TEXT = [
@@ -64,6 +48,37 @@
       '<iframe class="variable-content"></iframe>',
     '</div>',
   ].join('');
+
+  Variable.Content = (function() {
+    var Content = jCore.Component.inherits();
+
+    Content.prototype.contentWindow = function() {
+      return dom.contentWindow(this.element());
+    };
+
+    Content.prototype.circuitModule = function() {
+      var order = this.contentWindow().order;
+      return (order && order.exports);
+    };
+
+    Content.prototype.load = function(url) {
+      return new Promise(function(resolve, reject) {
+        var timeoutID = setTimeout(reject, 30 * 1000, new Error('OrderScript runtime error: Load timeout for content'));
+        dom.once(this.element(), 'load', function() {
+          clearTimeout(timeoutID);
+          resolve(this.circuitModule());
+        }.bind(this));
+        dom.attr(this.element(), { src: url });
+      }.bind(this)).then(function(circuitModule) {
+        if (!circuitModule) {
+          throw new Error('OrderScript runtime error: Invalid circuit module');
+        }
+        dom.css(this.element(), { height: dom.contentHeight(this.element()) + 'px' });
+      }.bind(this));
+    };
+
+    return Content;
+  })();
 
   if (typeof module !== 'undefined' && module.exports)
     module.exports = Variable;
