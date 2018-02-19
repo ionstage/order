@@ -7,6 +7,11 @@
     return (typeof document === 'undefined');
   };
 
+  dom.export = function(key, value) {
+    var g = (typeof global !== 'undefined' ? global : window);
+    Object.defineProperty(g, key, { value: value });
+  };
+
   dom.el = function(selector) {
     if (selector.charAt(0) === '<') {
       selector = selector.match(/<(.+)>/)[1];
