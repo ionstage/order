@@ -5,7 +5,7 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitModuleFactory: function() { return CircuitModule.empty(); },
+    circuitModuleFactory: function() { return new CircuitModule([]); },
     circuitModuleDisposal: function() { /* do nothing */ },
     scriptLoader: function() { /* do nothing */ },
     scriptSaver: function() { /* do nothing */ }

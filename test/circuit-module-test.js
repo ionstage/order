@@ -16,11 +16,6 @@ describe('CircuitModule', function() {
     });
   });
 
-  it('create empty element', function() {
-    var cel = CircuitModule.empty();
-    assert.equal(Object.keys(cel.memberTable).length, 0);
-  });
-
   it('has members with only name', function() {
     var cel = new CircuitModule([
       { name: 'prop' },

@@ -70,10 +70,6 @@
     }.bind(this));
   };
 
-  CircuitModule.empty = function() {
-    return new CircuitModule([]);
-  };
-
   CircuitModule.bind = function(sourceWrapper, targetWrapper) {
     var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
     var targetMember = targetWrapper.unwrap(Wrapper.KEY);
