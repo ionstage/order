@@ -19,10 +19,6 @@
     var name = props.name;
     var arg = props.arg;
     var type = props.type;
-
-    if (typeof type === 'undefined' || (type !== 'prop' && type !== 'event'))
-      type = (name.indexOf('on') === 0) ? 'event' : 'prop';
-
     var callee = circuit[type](arg);
     var caller = CircuitModuleMember.prototype.call.bind(this);
 
