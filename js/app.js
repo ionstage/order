@@ -6,5 +6,5 @@
   var Main = app.Main || require('./components/main.js');
 
   dom.export('CircuitModule', CircuitModule);
-  app.main = new Main();
+  app.main = new Main({ element: dom.body() });
 })(this.app || (this.app = {}));

@@ -12,6 +12,10 @@
     Object.defineProperty(g, key, { value: value });
   };
 
+  dom.body = function() {
+    return document.body;
+  };
+
   dom.el = function(selector) {
     if (selector.charAt(0) === '<') {
       selector = selector.match(/<(.+)>/)[1];
