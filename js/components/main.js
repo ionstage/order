@@ -15,18 +15,18 @@
       circuitModuleFactory: this.circuitModuleFactory,
       circuitModuleDisposal: this.circuitModuleDisposal,
       scriptLoader: this.scriptLoader,
-      scriptSaver: this.scriptSaver
+      scriptSaver: this.scriptSaver,
     });
 
     this.commandInput = new CommandInput({
       element: dom.el('.command-input'),
       executor: this.executor,
       historyLoader: this.historyLoader,
-      historySaver: this.historySaver
+      historySaver: this.historySaver,
     });
 
     this.content = new Content({
-      element: dom.el('.content')
+      element: dom.el('.content'),
     });
   });
 
@@ -41,12 +41,13 @@
   };
 
   Main.prototype.scriptLoader = function(filePath) {
-    if (!filePath)
+    if (!filePath) {
       throw new Error('OrderScript runtime error: Invalid script file path');
+    }
 
     return dom.ajax({
       type: 'GET',
-      url: 'order_scripts/' + filePath
+      url: 'order_scripts/' + filePath,
     });
   };
 

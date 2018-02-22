@@ -47,7 +47,7 @@ describe('command', function() {
 
       [' :noop ', ' :noop '],
       [':send x.member0 ">>y.member1"', ':send x.member0 ">>y.member1"'],
-      [':send x.member0 "<<"', ':send x.member0 "<<"']
+      [':send x.member0 "<<"', ':send x.member0 "<<"'],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.equal(command.expandAbbreviation(p[0]), p[1]);
@@ -134,7 +134,7 @@ describe('command', function() {
         { name: 'save', filePath: '' }],
 
       [':save /path/to/script',
-        { name: 'save', filePath: '/path/to/script' }]
+        { name: 'save', filePath: '/path/to/script' }],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(command.parseStatement(p[0]), p[1]);
@@ -146,7 +146,7 @@ describe('command', function() {
     [
       '',
       ' ',
-      ' \t '
+      ' \t ',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.equal(command.parseStatement(p).name, 'noop');
@@ -160,7 +160,7 @@ describe('command', function() {
       '# comment',
       ' # comment ',
       '# x:Module',
-      ' :noop # comment'
+      ' :noop # comment',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.equal(command.parseStatement(p).name, 'noop');
@@ -203,7 +203,7 @@ describe('command', function() {
       ':delete x.y',
       ':reset x',
       ':load x y',
-      ':save x y'
+      ':save x y',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {

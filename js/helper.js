@@ -10,8 +10,8 @@
         value: ctor,
         enumerable: false,
         writable: true,
-        configurable: true
-      }
+        configurable: true,
+      },
     });
 
     return ctor;
@@ -27,8 +27,9 @@
     };
 
     List.prototype.add = function(item) {
-      if (!this.contains(item))
+      if (!this.contains(item)) {
         this.data.push(item);
+      }
     };
 
     List.prototype.remove = function(item) {
@@ -78,8 +79,9 @@
     }
   };
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = helper;
-  else
+  } else {
     app.helper = helper;
+  }
 })(this.app || (this.app = {}));

@@ -29,15 +29,16 @@
         text: function(value) {
           value = value || '';
 
-          if (textInputElement.value !== value)
+          if (textInputElement.value !== value) {
             textInputElement.value = value;
+          }
 
           return value;
-        }
+        },
       };
 
       var cel = new order.Module([
-        { name: 'text', type: 'prop', arg: prop.text }
+        { name: 'text', type: 'prop', arg: prop.text },
       ]);
 
       textInputElement.addEventListener('input', function(event) {

@@ -8,31 +8,36 @@
   command.Noop = function() {};
 
   command.New = function() {
-    if (arguments.length !== 2)
+    if (arguments.length !== 2) {
       throw new TypeError('Type error');
+    }
 
     var variableName = arguments[0];
     var moduleName = arguments[1];
 
-    if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1)
+    if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1) {
       throw new TypeError('Type error');
+    }
 
-    if (!(/^[a-zA-Z]/.test(variableName)) || !(/^[a-zA-Z]/.test(moduleName)))
+    if (!(/^[a-zA-Z]/.test(variableName)) || !(/^[a-zA-Z]/.test(moduleName))) {
       throw new TypeError('Type error');
+    }
 
     this.variableName = variableName;
     this.moduleName = moduleName;
   };
 
   command.Bind = function() {
-    if (arguments.length !== 2)
+    if (arguments.length !== 2) {
       throw new TypeError('Type error');
+    }
 
     var args0 = arguments[0].split('.');
     var args1 = arguments[1].split('.');
 
-    if (args0.length !== 2 || args1.length !== 2)
+    if (args0.length !== 2 || args1.length !== 2) {
       throw new TypeError('Type error');
+    }
 
     this.sourceVariableName = args0[0];
     this.sourceMemberName = args0[1];
@@ -46,13 +51,15 @@
   };
 
   command.Send = function() {
-    if (arguments.length !== 1 && arguments.length !== 2)
+    if (arguments.length !== 1 && arguments.length !== 2) {
       throw new TypeError('Type error');
+    }
 
     var args0 = arguments[0].split('.');
 
-    if (args0.length !== 2)
+    if (args0.length !== 2) {
       throw new TypeError('Type error');
+    }
 
     this.variableName = args0[0];
     this.memberName = args0[1];
@@ -60,35 +67,41 @@
   };
 
   command.Delete = function() {
-    if (arguments.length !== 1)
+    if (arguments.length !== 1) {
       throw new TypeError('Type error');
+    }
 
     var variableName = arguments[0];
 
-    if (variableName.indexOf('.') !== -1)
+    if (variableName.indexOf('.') !== -1) {
       throw new TypeError('Type error');
+    }
 
-    if (!(/^[a-zA-Z]/.test(variableName)))
+    if (!(/^[a-zA-Z]/.test(variableName))) {
       throw new TypeError('Type error');
+    }
 
     this.variableName = variableName;
   };
 
   command.Reset = function() {
-    if (arguments.length)
+    if (arguments.length) {
       throw new TypeError('Type error');
+    }
   };
 
   command.Load = function() {
-    if (arguments.length !== 0 && arguments.length !== 1)
+    if (arguments.length !== 0 && arguments.length !== 1) {
       throw new TypeError('Type error');
+    }
 
     this.filePath = arguments[0] || '';
   };
 
   command.Save = function() {
-    if (arguments.length !== 0 && arguments.length !== 1)
+    if (arguments.length !== 0 && arguments.length !== 1) {
       throw new TypeError('Type error');
+    }
 
     this.filePath = arguments[0] || '';
   };
@@ -96,20 +109,23 @@
   command.expandAbbreviation = function(s) {
     var line = s.split('#')[0].trim();
 
-    if (!line || line.charAt(0) === ':')
+    if (!line || line.charAt(0) === ':') {
       return s;
+    }
 
     var m = line.match(/^([^:]+):([^:]+)$/);
-    if (m)
+    if (m) {
       return ':new ' + m[1].trim() + ' ' + m[2].trim();
+    }
 
     var substrings = line.split('>>');
     if (substrings.length === 2) {
       var args0 = substrings[0].trim().split('.');
       var args1 = substrings[1].trim().split('.');
 
-      if (args0.length === 2 && args1.length === 2)
+      if (args0.length === 2 && args1.length === 2) {
         return ':bind ' + args0.join('.') + ' ' + args1.join('.');
+      }
     }
 
     substrings = line.split('<<');
@@ -117,8 +133,9 @@
       var args0 = substrings[0].trim().split('.');
       var arg1 = substrings[1].trim();
 
-      if (args0.length === 2)
+      if (args0.length === 2) {
         return ':send ' + args0.join('.') + (arg1 ? ' ' + arg1 : '');
+      }
     }
 
     return s;
@@ -133,11 +150,13 @@
       return cmd;
     }
 
-    if (line === ':')
+    if (line === ':') {
       throw new SyntaxError('OrderScript parse error: Unexpected EOF');
+    }
 
-    if (line.charAt(0) !== ':')
+    if (line.charAt(0) !== ':') {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
+    }
 
     // split line string by space, but ignore space in quotes
     var args = line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {
@@ -149,8 +168,9 @@
         s = s.trim();
         var first = s.charAt(0);
         var last = s.slice(-1);
-        if (first === last && (first === '\'' || first === '"'))
+        if (first === last && (first === '\'' || first === '"')) {
           s = s.slice(1, -1).replace(/\\(.)/g, '$1');
+        }
         return s;
       }
     }).reduce(function(prev, curr) {
@@ -163,8 +183,9 @@
     var commandName = arg.toLowerCase();
     var commandType = command[helper.capitalize(commandName)];
 
-    if (!commandType)
+    if (!commandType) {
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
+    }
 
     args.unshift(null);
 
@@ -180,8 +201,9 @@
     return cmd;
   };
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = command;
-  else
+  } else {
     app.command = command;
+  }
 })(this.app || (this.app = {}));

@@ -8,7 +8,7 @@ describe('environment', function() {
     circuitModuleFactory: function() { return new CircuitModule([]); },
     circuitModuleDisposal: function() { /* do nothing */ },
     scriptLoader: function() { /* do nothing */ },
-    scriptSaver: function() { /* do nothing */ }
+    scriptSaver: function() { /* do nothing */ },
   };
 
   describe('#exec', function() {
@@ -26,7 +26,7 @@ describe('environment', function() {
           assert.equal(props.variableName, 'x');
           assert.equal(props.moduleName, 'Module');
           return Promise.resolve(dummy);
-        }
+        },
       });
 
       return env.exec(':new x Module').then(function(cmd) {
@@ -51,7 +51,7 @@ describe('environment', function() {
 
     it('should not set circuit module to null', function(done) {
       var env = new Environment({
-        circuitModuleFactory: function() { return null; }
+        circuitModuleFactory: function() { return null; },
       });
 
       return env.exec(':new x Module').catch(function(e) {
@@ -66,11 +66,11 @@ describe('environment', function() {
         circuitModuleFactory: function() {
           var cel = new CircuitModule([
             { name: 'member0' },
-            { name: 'member1' }
+            { name: 'member1' },
           ]);
           cels.push(cel);
           return cel;
-        }
+        },
       });
 
       CircuitModule.bind = sinon.spy();
@@ -94,11 +94,11 @@ describe('environment', function() {
         circuitModuleFactory: function() {
           var cel = new CircuitModule([
             { name: 'member0' },
-            { name: 'member1' }
+            { name: 'member1' },
           ]);
           cels.push(cel);
           return cel;
-        }
+        },
       });
 
       CircuitModule.unbind = sinon.spy();
@@ -122,9 +122,9 @@ describe('environment', function() {
       var env = new Environment({
         circuitModuleFactory: function() {
           return new CircuitModule([
-            { name: 'prop' }
+            { name: 'prop' },
           ]);
-        }
+        },
       });
 
       return env.exec(':new x Module').then(function() {

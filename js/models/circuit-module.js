@@ -9,8 +9,9 @@
   };
 
   Wrapper.unwrap = function(key) {
-    if (key === Wrapper.KEY)
+    if (key === Wrapper.KEY) {
       return this;
+    }
   };
 
   Wrapper.KEY = {};
@@ -40,8 +41,9 @@
     members.slice().reverse().forEach(function(props) {
       var name = props.name;
 
-      if (name in memberTable)
+      if (name in memberTable) {
         return;
+      }
 
       memberTable[name] = new CircuitModuleMember(props);
       names.unshift(name);
@@ -54,8 +56,9 @@
   CircuitModule.prototype.get = function(name) {
     var member = this.memberTable[name];
 
-    if (!member)
+    if (!member) {
       return null;
+    }
 
     return member.wrapper;
   };
@@ -101,8 +104,9 @@
     });
   };
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = CircuitModule;
-  else
+  } else {
     app.CircuitModule = CircuitModule;
+  }
 })(this.app || (this.app = {}));

@@ -32,15 +32,17 @@
   CommandInput.prototype.onkeydown = function(event) {
     var key = CommandInput.keyMap[event.which];
 
-    if (key)
+    if (key) {
       this['on' + key](event);
+    }
   };
 
   CommandInput.prototype.onenter = function() {
     var text = this.text();
 
-    if (!text)
+    if (!text) {
       return;
+    }
 
     Promise.resolve().then(function() {
       this.disabled(true);
@@ -87,7 +89,7 @@
   CommandInput.keyMap = {
     13: 'enter',
     38: 'up',
-    40: 'down'
+    40: 'down',
   };
 
   CommandInput.History = (function() {
@@ -129,8 +131,9 @@
     return History;
   })();
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = CommandInput;
-  else
+  } else {
     app.CommandInput = CommandInput;
+  }
 })(this.app || (this.app = {}));

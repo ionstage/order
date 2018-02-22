@@ -80,8 +80,9 @@
     return Content;
   })();
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = Variable;
-  else
+  } else {
     app.Variable = Variable;
+  }
 })(this.app || (this.app = {}));

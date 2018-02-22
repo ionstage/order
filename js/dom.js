@@ -73,8 +73,9 @@
   };
 
   dom.value = function(el, s) {
-    if (typeof s === 'undefined')
+    if (typeof s === 'undefined') {
       return el.value;
+    }
 
     el.value = s;
   };
@@ -154,10 +155,11 @@
       };
 
       req.onload = function() {
-        if (req.status >= 200 && req.status < 400)
+        if (req.status >= 200 && req.status < 400) {
           resolve(req.responseText);
-        else
+        } else {
           onfailed();
+        }
       };
 
       req.onerror = onfailed;
@@ -175,8 +177,9 @@
   dom.load = function(key, defaultValue) {
     var value = localStorage.getItem(key);
 
-    if (value === null && typeof defaultValue !== 'undefined')
+    if (value === null && typeof defaultValue !== 'undefined') {
       return defaultValue;
+    }
 
     return JSON.parse(value);
   };
@@ -185,8 +188,9 @@
     localStorage.setItem(key, JSON.stringify(value));
   };
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = dom;
-  else
+  } else {
     app.dom = dom;
+  }
 })(this.app || (this.app = {}));

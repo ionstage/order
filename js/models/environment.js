@@ -14,8 +14,9 @@
   Variable.prototype.fetchMember = function(name) {
     var member = this.circuitModule.get(name);
 
-    if (!member)
+    if (!member) {
       throw new Error('OrderScript runtime error: member "' + this.name + '.' + name + '" is not defined');
+    }
 
     return member;
   };
@@ -34,15 +35,17 @@
   };
 
   VariableTable.prototype.fetch = function(name) {
-    if (!this.has(name))
+    if (!this.has(name)) {
       throw new Error('OrderScript runtime error: variable "' + name + '" is not defined');
+    }
 
     return this.table[name];
   };
 
   VariableTable.prototype.store = function(name, variable) {
-    if (!this.has(name))
+    if (!this.has(name)) {
       this.names.push(name);
+    }
 
     this.table[name] = variable;
   };
@@ -50,8 +53,9 @@
   VariableTable.prototype.delete = function(name) {
     var index = this.names.indexOf(name);
 
-    if (index === -1)
+    if (index === -1) {
       return;
+    }
 
     delete this.table[name];
     this.names.splice(index, 1);
@@ -115,24 +119,26 @@
   Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
 
-    if (this.variableTable.has(variableName))
+    if (this.variableTable.has(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
+    }
 
     var moduleName = cmd.moduleName;
 
     return Promise.resolve().then(function() {
       return this.circuitModuleFactory({
         variableName: variableName,
-        moduleName: moduleName
+        moduleName: moduleName,
       });
     }.bind(this)).then(function(circuitModule) {
-      if (!circuitModule)
+      if (!circuitModule) {
         throw new Error('OrderScript runtime error: Invalid circuit module');
+      }
 
       this.variableTable.store(variableName, new Variable({
         name: variableName,
         moduleName: moduleName,
-        circuitModule: circuitModule
+        circuitModule: circuitModule,
       }));
 
       return cmd;
@@ -143,8 +149,9 @@
     var bindingList = this.bindingList;
     var binding = new Binding(cmd);
 
-    if (bindingList.contains(binding))
+    if (bindingList.contains(binding)) {
       throw new Error('OrderScript runtime error: Already bound');
+    }
 
     var variableTable = this.variableTable;
 
@@ -165,8 +172,9 @@
     var bindingList = this.bindingList;
     var binding = new Binding(cmd);
 
-    if (!bindingList.contains(binding))
+    if (!bindingList.contains(binding)) {
       throw new Error('OrderScript runtime error: Not bound');
+    }
 
     var variableTable = this.variableTable;
 
@@ -198,7 +206,7 @@
 
     return Promise.resolve().then(function() {
       return this.circuitModuleDisposal({
-        variableName: variableName
+        variableName: variableName,
       });
     }.bind(this)).then(function() {
       // unbind all bound members of circuit module
@@ -216,7 +224,7 @@
     return Promise.all(this.variableTable.names.map(function(variableName) {
       return Promise.resolve().then(function() {
         return this.circuitModuleDisposal({
-          variableName: variableName
+          variableName: variableName,
         });
       }.bind(this)).then(function() {
         var variableTable = this.variableTable;
@@ -293,8 +301,9 @@
     });
   };
 
-  if (typeof module !== 'undefined' && module.exports)
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = Environment;
-  else
+  } else {
     app.Environment = Environment;
+  }
 })(this.app || (this.app = {}));
