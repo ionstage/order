@@ -18,8 +18,8 @@ describe('CircuitModule', function() {
 
   it('has members with only name', function() {
     var cel = new CircuitModule([
-      { name: 'prop' },
-      { name: 'onevent' },
+      { name: 'prop', type: 'prop' },
+      { name: 'onevent', type: 'event' },
     ]);
 
     var prop = cel.get('prop');
@@ -32,7 +32,7 @@ describe('CircuitModule', function() {
 
   it('has prop members with name and value', function() {
     var cel = new CircuitModule([
-      { name: 'prop', arg: 1 },
+      { name: 'prop', type: 'prop', arg: 1 },
     ]);
 
     var prop = cel.get('prop');
@@ -45,7 +45,7 @@ describe('CircuitModule', function() {
   it('has event members with name and listener', function() {
     var listener = sinon.spy();
     var cel = new CircuitModule([
-      { name: 'onevent', arg: listener },
+      { name: 'onevent', type: 'event', arg: listener },
     ]);
 
     var onevent = cel.get('onevent');
@@ -70,10 +70,10 @@ describe('CircuitModule', function() {
     var listener0 = sinon.spy();
     var listener1 = sinon.spy();
     var cel = new CircuitModule([
-      { name: 'prop', arg: 1 },
-      { name: 'onevent', arg: listener0 },
-      { name: 'prop', arg: 2 },
-      { name: 'onevent', arg: listener1 },
+      { name: 'prop', type: 'prop', arg: 1 },
+      { name: 'onevent', type: 'event', arg: listener0 },
+      { name: 'prop', type: 'prop', arg: 2 },
+      { name: 'onevent', type: 'event', arg: listener1 },
     ]);
 
     var prop = cel.get('prop');
@@ -87,8 +87,8 @@ describe('CircuitModule', function() {
 
   it('get all members', function() {
     var cel = new CircuitModule([
-      { name: 'prop' },
-      { name: 'onevent' },
+      { name: 'prop', type: 'prop' },
+      { name: 'onevent', type: 'event' },
     ]);
 
     var members = cel.getAll();
@@ -99,10 +99,10 @@ describe('CircuitModule', function() {
 
   it('bind members', function() {
     var cel0 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
     var cel1 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
 
     var prop0 = cel0.get('prop');
@@ -118,10 +118,10 @@ describe('CircuitModule', function() {
 
   it('unbind members', function() {
     var cel0 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
     var cel1 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
 
     var prop0 = cel0.get('prop');
@@ -138,13 +138,13 @@ describe('CircuitModule', function() {
 
   it('unbind all members', function() {
     var cel0 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
     var cel1 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
     var cel2 = new CircuitModule([
-      { name: 'prop' },
+      { name: 'prop', type: 'prop' },
     ]);
 
     var prop0 = cel0.get('prop');

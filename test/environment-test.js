@@ -65,8 +65,8 @@ describe('environment', function() {
       var env = new Environment({
         circuitModuleFactory: function() {
           var cel = new CircuitModule([
-            { name: 'member0' },
-            { name: 'member1' },
+            { name: 'member0', type: 'prop' },
+            { name: 'member1', type: 'prop' },
           ]);
           cels.push(cel);
           return cel;
@@ -93,8 +93,8 @@ describe('environment', function() {
       var env = new Environment({
         circuitModuleFactory: function() {
           var cel = new CircuitModule([
-            { name: 'member0' },
-            { name: 'member1' },
+            { name: 'member0', type: 'prop' },
+            { name: 'member1', type: 'prop' },
           ]);
           cels.push(cel);
           return cel;
@@ -122,7 +122,7 @@ describe('environment', function() {
       var env = new Environment({
         circuitModuleFactory: function() {
           return new CircuitModule([
-            { name: 'prop' },
+            { name: 'prop', type: 'prop' },
           ]);
         },
       });
