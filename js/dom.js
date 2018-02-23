@@ -175,13 +175,7 @@
   };
 
   dom.load = function(key, defaultValue) {
-    var value = localStorage.getItem(key);
-
-    if (value === null && typeof defaultValue !== 'undefined') {
-      return defaultValue;
-    }
-
-    return JSON.parse(value);
+    return (JSON.parse(localStorage.getItem(key)) || defaultValue);
   };
 
   dom.save = function(key, value) {
