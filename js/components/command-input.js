@@ -6,14 +6,10 @@
 
   var CommandInput = jCore.Component.inherits(function(props) {
     this.executor = props.executor;
-    this.historyLoader = props.historyLoader;
-    this.historySaver = props.historySaver;
     this.history = new CommandInput.History();
 
-    this.loadHistory().then(function() {
-      this.focus();
-    }.bind(this));
-
+    this.history.load();
+    this.focus();
     dom.on(this.element(), 'keydown', CommandInput.prototype.onkeydown.bind(this));
   });
 
@@ -49,7 +45,7 @@
       return this.executor(text);
     }.bind(this)).then(function() {
       this.history.push(text);
-      this.saveHistory();
+      this.history.save();
       // clear input text
       this.text('');
       this.disabled(false);
@@ -71,21 +67,6 @@
     this.text(this.history.forward());
   };
 
-  CommandInput.prototype.loadHistory = function() {
-    this.disabled(true);
-
-    return this.historyLoader().then(function(data) {
-      this.history.set(data);
-      this.disabled(false);
-    }.bind(this)).catch(function() {
-      this.disabled(false);
-    }.bind(this));
-  };
-
-  CommandInput.prototype.saveHistory = function() {
-    this.historySaver(this.history.get());
-  };
-
   CommandInput.keyMap = {
     13: 'enter',
     38: 'up',
@@ -97,6 +78,7 @@
       this.data = [];
       this.index = 0;
       this.size = 100;
+      this.key = 'order/input-history';
     };
 
     History.prototype.back = function() {
@@ -119,13 +101,13 @@
       return this.data[this.index] || '';
     };
 
-    History.prototype.get = function() {
-      return this.data;
+    History.prototype.load = function() {
+      this.data = dom.load(this.key, []);
+      this.index = this.data.length;
     };
 
-    History.prototype.set = function(data) {
-      this.data = data.slice(-this.size);
-      this.index = this.data.length;
+    History.prototype.save = function() {
+      dom.save(this.key, this.data);
     };
 
     return History;

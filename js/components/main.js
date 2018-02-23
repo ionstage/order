@@ -21,8 +21,6 @@
     this.commandInput = new CommandInput({
       element: dom.el('.command-input'),
       executor: this.executor,
-      historyLoader: this.historyLoader,
-      historySaver: this.historySaver,
     });
 
     this.content = new Content({
@@ -60,20 +58,6 @@
   Main.prototype.executor = function(text) {
     return this.env.exec(text);
   };
-
-  Main.prototype.historyLoader = function() {
-    return Promise.resolve().then(function() {
-      return dom.load(Main.KEY_INPUT_HISTORY, []);
-    });
-  };
-
-  Main.prototype.historySaver = function(data) {
-    return Promise.resolve().then(function() {
-      dom.save(Main.KEY_INPUT_HISTORY, data);
-    });
-  };
-
-  Main.KEY_INPUT_HISTORY = 'order/input-history';
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = Main;
