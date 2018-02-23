@@ -2,19 +2,8 @@
   'use strict';
 
   var circuit = require('circuit');
-
-  var Wrapper = function(obj, self) {
-    obj.unwrap = Wrapper.unwrap.bind(self);
-    return obj;
-  };
-
-  Wrapper.unwrap = function(key) {
-    if (key === Wrapper.KEY) {
-      return this;
-    }
-  };
-
-  Wrapper.KEY = {};
+  var helper = app.helper || require('../helper.js');
+  var Wrapper = helper.wrapper();
 
   var CircuitModuleMember = function(props) {
     var name = props.name;
@@ -25,7 +14,7 @@
 
     this.name = name;
     this.callee = callee;
-    this.wrapper = new Wrapper(caller, this);
+    this.wrapper = new Wrapper(this, caller);
     this.sources = [];
     this.targets = [];
   };

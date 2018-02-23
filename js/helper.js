@@ -79,6 +79,20 @@
     }
   };
 
+  helper.wrapper = function() {
+    var Wrapper = function(self, wrapper) {
+      return Object.defineProperty(wrapper, 'unwrap', { value: Wrapper.unwrap.bind(self) });
+    };
+
+    Wrapper.unwrap = function(key) {
+      return (key === Wrapper.KEY ? this : null);
+    };
+
+    Wrapper.KEY = {};
+
+    return Wrapper;
+  };
+
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = helper;
   } else {
