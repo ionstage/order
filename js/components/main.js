@@ -19,12 +19,12 @@
     });
 
     this.commandInput = new CommandInput({
-      element: dom.el('.command-input'),
+      element: this.findElement('.command-input'),
       executor: this.executor,
     });
 
     this.content = new Content({
-      element: dom.el('.content'),
+      element: this.findElement('.content'),
     });
   });
 
