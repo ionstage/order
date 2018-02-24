@@ -175,7 +175,7 @@
   };
 
   dom.load = function(key, defaultValue) {
-    return (JSON.parse(localStorage.getItem(key)) || defaultValue);
+    return JSON.parse(localStorage.getItem(key)) || defaultValue;
   };
 
   dom.save = function(key, value) {

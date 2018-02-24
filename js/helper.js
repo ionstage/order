@@ -67,7 +67,7 @@
   helper.dig = function() {
     var args = Array.prototype.slice.call(arguments);
     return args.reduce(function(prev, curr) {
-      return (typeof prev === 'object') ? prev[curr] : null;
+      return (typeof prev === 'object' ? prev[curr] : null);
     });
   };
 
