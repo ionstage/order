@@ -92,8 +92,8 @@
     };
 
     History.prototype.push = function(text) {
-      this.data = this.data.slice(-this.size - 1);
       this.data.push(text);
+      this.data.splice(0, this.data.length - this.size);
       this.index = this.data.length;
     };
 
