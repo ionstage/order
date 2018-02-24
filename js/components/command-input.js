@@ -7,10 +7,6 @@
   var CommandInput = jCore.Component.inherits(function(props) {
     this.executor = props.executor;
     this.history = new CommandInput.History();
-
-    this.history.load();
-    this.focus();
-    dom.on(this.element(), 'keydown', CommandInput.prototype.onkeydown.bind(this));
   });
 
   CommandInput.prototype.text = function(s) {
@@ -23,6 +19,12 @@
 
   CommandInput.prototype.focus = function() {
     dom.focus(this.element());
+  };
+
+  CommandInput.prototype.oninit = function() {
+    this.history.load();
+    this.focus();
+    dom.on(this.element(), 'keydown', this.onkeydown.bind(this));
   };
 
   CommandInput.prototype.onkeydown = function(event) {
