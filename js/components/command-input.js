@@ -5,7 +5,6 @@
   var dom = app.dom || require('../dom.js');
 
   var CommandInput = jCore.Component.inherits(function(props) {
-    this.executor = props.executor;
     this.history = new CommandInput.History();
   });
 
@@ -19,6 +18,18 @@
 
   CommandInput.prototype.focus = function() {
     dom.focus(this.element());
+  };
+
+  CommandInput.prototype.done = function(error) {
+    if (!error) {
+      this.history.push(this.text());
+      this.history.save();
+
+      // clear input text
+      this.text('');
+    }
+    this.disabled(false);
+    this.focus();
   };
 
   CommandInput.prototype.oninit = function() {
@@ -37,26 +48,10 @@
 
   CommandInput.prototype.onenter = function() {
     var text = this.text();
-
-    if (!text) {
-      return;
-    }
-
-    Promise.resolve().then(function() {
+    if (text) {
       this.disabled(true);
-      return this.executor(text);
-    }.bind(this)).then(function() {
-      this.history.push(text);
-      this.history.save();
-      // clear input text
-      this.text('');
-      this.disabled(false);
-      this.focus();
-    }.bind(this)).catch(function(e) {
-      console.error(e);
-      this.disabled(false);
-      this.focus();
-    }.bind(this));
+      this.emit('exec', text, this.done.bind(this));
+    }
   };
 
   CommandInput.prototype.onup = function(event) {

@@ -20,7 +20,6 @@
 
     this.commandInput = new CommandInput({
       element: this.findElement('.command-input'),
-      executor: this.executor,
     });
 
     this.content = new Content({
@@ -55,8 +54,17 @@
     });
   };
 
-  Main.prototype.executor = function(text) {
-    return this.env.exec(text);
+  Main.prototype.oninit = function() {
+    this.commandInput.on('exec', this.onexec.bind(this));
+  };
+
+  Main.prototype.onexec = function(text, done) {
+    this.env.exec(text).then(function() {
+      done();
+    }).catch(function(e) {
+      console.error(e);
+      done(e);
+    });
   };
 
   if (typeof module !== 'undefined' && module.exports) {
