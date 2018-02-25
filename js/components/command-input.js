@@ -38,13 +38,19 @@
     dom.on(this.element(), 'keydown', this.onkeydown.bind(this));
   };
 
-  CommandInput.prototype.onkeydown = function(event) {
-    var key = CommandInput.keyMap[event.which];
-
-    if (key) {
-      this['on' + key](event);
-    }
-  };
+  CommandInput.prototype.onkeydown = (function() {
+    var map = {
+      13: 'enter',
+      38: 'up',
+      40: 'down',
+    };
+    return function(event) {
+      var key = map[event.which];
+      if (key) {
+        this['on' + key](event);
+      }
+    };
+  })();
 
   CommandInput.prototype.onenter = function() {
     var text = this.text();
@@ -62,12 +68,6 @@
   CommandInput.prototype.ondown = function(event) {
     dom.cancel(event);
     this.text(this.history.forward());
-  };
-
-  CommandInput.keyMap = {
-    13: 'enter',
-    38: 'up',
-    40: 'down',
   };
 
   CommandInput.History = (function() {
