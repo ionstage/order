@@ -55,12 +55,12 @@
   };
 
   CommandInput.prototype.onup = function(event) {
-    event.preventDefault();
+    dom.cancel(event);
     this.text(this.history.back());
   };
 
   CommandInput.prototype.ondown = function(event) {
-    event.preventDefault();
+    dom.cancel(event);
     this.text(this.history.forward());
   };
 

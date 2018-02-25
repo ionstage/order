@@ -143,6 +143,10 @@
     dom.on(el, type, wrapper);
   };
 
+  dom.cancel = function(event) {
+    event.preventDefault();
+  };
+
   dom.ajax = function(opt) {
     var type = opt.type;
     var url = opt.url;
