@@ -26,6 +26,17 @@
   width: 100%;
 }
 
+.command-input.error {
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 0 #f44336;
+}
+
+@media screen\0 {
+  .command-input.error {
+    color: #f44336;
+  }
+}
+
 .content {
   padding-top: 49px;
 }

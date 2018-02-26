@@ -20,6 +20,10 @@
     dom.focus(this.element());
   };
 
+  CommandInput.prototype.isError = function(value) {
+    dom.toggleClass(this.element(), 'error', value);
+  };
+
   CommandInput.prototype.done = function(error) {
     if (!error) {
       this.history.push(this.text());
@@ -27,6 +31,9 @@
 
       // clear input text
       this.text('');
+    } else {
+      this.isError(true);
+      dom.once(this.element(), 'input', this.oninput.bind(this));
     }
     this.disabled(false);
     this.focus();
@@ -47,6 +54,7 @@
     return function(event) {
       var key = map[event.which];
       if (key) {
+        this.isError(false);
         this['on' + key](event);
       }
     };
@@ -68,6 +76,10 @@
   CommandInput.prototype.ondown = function(event) {
     dom.cancel(event);
     this.text(this.history.forward());
+  };
+
+  CommandInput.prototype.oninput = function() {
+    this.isError(false);
   };
 
   CommandInput.History = (function() {
