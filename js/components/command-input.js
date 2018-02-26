@@ -28,8 +28,6 @@
     if (!error) {
       this.history.push(this.text());
       this.history.save();
-
-      // clear input text
       this.text('');
     } else {
       this.isError(true);
