@@ -16,12 +16,12 @@
     dom.disabled(this.element(), value);
   };
 
-  CommandInput.prototype.focus = function() {
-    dom.focus(this.element());
-  };
-
   CommandInput.prototype.isError = function(value) {
     dom.toggleClass(this.element(), 'error', value);
+  };
+
+  CommandInput.prototype.focus = function() {
+    dom.focus(this.element());
   };
 
   CommandInput.prototype.done = function(error) {
@@ -88,14 +88,8 @@
       this.key = 'order/input-history';
     };
 
-    History.prototype.back = function() {
-      this.index = Math.max(this.index - 1, 0);
-      return this.current();
-    };
-
-    History.prototype.forward = function() {
-      this.index = Math.min(this.index + 1, this.data.length);
-      return this.current();
+    History.prototype.current = function() {
+      return this.data[this.index] || '';
     };
 
     History.prototype.push = function(text) {
@@ -104,8 +98,14 @@
       this.index = this.data.length;
     };
 
-    History.prototype.current = function() {
-      return this.data[this.index] || '';
+    History.prototype.back = function() {
+      this.index = Math.max(this.index - 1, 0);
+      return this.current();
+    };
+
+    History.prototype.forward = function() {
+      this.index = Math.min(this.index + 1, this.data.length);
+      return this.current();
     };
 
     History.prototype.load = function() {
