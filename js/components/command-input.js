@@ -8,12 +8,12 @@
     this.history = new CommandInput.History();
   });
 
-  CommandInput.prototype.text = function(s) {
-    return dom.value(this.element(), s);
+  CommandInput.prototype.text = function(value) {
+    return dom.value(this.element(), value);
   };
 
-  CommandInput.prototype.disabled = function(disabled) {
-    dom.disabled(this.element(), disabled);
+  CommandInput.prototype.disabled = function(value) {
+    dom.disabled(this.element(), value);
   };
 
   CommandInput.prototype.focus = function() {
