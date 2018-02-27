@@ -9,13 +9,11 @@
   var Content = app.Content || require('./content.js');
 
   var Main = jCore.Component.inherits(function() {
-    helper.bindAll(this);
-
     this.env = new Environment({
-      circuitModuleFactory: this.circuitModuleFactory,
-      circuitModuleDisposal: this.circuitModuleDisposal,
-      scriptLoader: this.scriptLoader,
-      scriptSaver: this.scriptSaver,
+      circuitModuleFactory: this.circuitModuleFactory.bind(this),
+      circuitModuleDisposal: this.circuitModuleDisposal.bind(this),
+      scriptLoader: this.scriptLoader.bind(this),
+      scriptSaver: this.scriptSaver.bind(this),
     });
 
     this.commandInput = new CommandInput({
