@@ -2,7 +2,6 @@
   'use strict';
 
   var jCore = require('jcore');
-  var helper = app.helper || require('../helper.js');
   var dom = app.dom || require('../dom.js');
   var Environment = app.Environment || require('../models/environment.js');
   var CommandInput = app.CommandInput || require('./command-input.js');
