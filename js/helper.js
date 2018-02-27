@@ -17,10 +17,6 @@
     return ctor;
   };
 
-  helper.identity = function(value) {
-    return value;
-  };
-
   helper.List = (function() {
     var List = function() {
       this.data = [];
@@ -62,21 +58,6 @@
 
   helper.capitalize = function(s) {
     return s.charAt(0).toUpperCase() + s.slice(1);
-  };
-
-  helper.dig = function() {
-    var args = Array.prototype.slice.call(arguments);
-    return args.reduce(function(prev, curr) {
-      return (typeof prev === 'object' ? prev[curr] : null);
-    });
-  };
-
-  helper.bindAll = function(obj) {
-    var proto = Object.getPrototypeOf(obj);
-
-    for (var key in proto) {
-      obj[key] = proto[key].bind(obj);
-    }
   };
 
   helper.wrapper = function() {
