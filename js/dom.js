@@ -3,10 +3,6 @@
 
   var dom = {};
 
-  dom.unsupported = function() {
-    return (typeof document === 'undefined');
-  };
-
   dom.export = function(key, value) {
     var g = (typeof global !== 'undefined' ? global : window);
     Object.defineProperty(g, key, { value: value });
@@ -16,31 +12,10 @@
     return document.body;
   };
 
-  dom.el = function(selector) {
-    if (selector.charAt(0) === '<') {
-      selector = selector.match(/<(.+)>/)[1];
-      return document.createElement(selector);
-    }
-
-    return document.querySelector(selector);
-  };
-
   dom.render = function(s) {
     var el = document.createRange().createContextualFragment(s).firstChild;
     el.parentNode.removeChild(el);
     return el;
-  };
-
-  dom.append = function(parent, el) {
-    parent.appendChild(el);
-  };
-
-  dom.remove = function(el) {
-    el.parentNode.removeChild(el);
-  };
-
-  dom.child = function(el, index) {
-    return el.childNodes[index];
   };
 
   dom.attr = function(el, props) {
@@ -56,10 +31,6 @@
     });
   };
 
-  dom.addClass = function(el, className) {
-    el.classList.add(className);
-  };
-
   dom.toggleClass = function(el, className, force) {
     if (force) {
       el.classList.add(className);
@@ -68,16 +39,8 @@
     }
   };
 
-  dom.name = function(el, s) {
-    el.name = s;
-  };
-
   dom.text = function(el, s) {
     el.textContent = s;
-  };
-
-  dom.html = function(el, s) {
-    el.innerHTML = s;
   };
 
   dom.value = function(el, s) {
@@ -98,13 +61,6 @@
 
   dom.contentWindow = function(iframe) {
     return iframe.contentWindow;
-  };
-
-  dom.writeContent = function(iframe, s) {
-    var doc = iframe.contentDocument;
-    doc.open();
-    doc.write(s);
-    doc.close();
   };
 
   dom.contentHeight = function(iframe) {
@@ -129,10 +85,6 @@
         reject();
       }
     });
-  };
-
-  dom.animate = function(callback) {
-    return window.requestAnimationFrame(callback);
   };
 
   dom.on = function(el, type, listener) {
@@ -180,10 +132,6 @@
       req.open(type, url, true);
       req.send();
     });
-  };
-
-  dom.origin = function() {
-    return location.protocol + '//' + location.host;
   };
 
   dom.load = function(key, defaultValue) {
