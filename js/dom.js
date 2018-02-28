@@ -67,26 +67,6 @@
     return iframe.contentDocument.documentElement.scrollHeight;
   };
 
-  dom.openWindow = function(title, content) {
-    return new Promise(function(resolve, reject) {
-      var win = window.open();
-
-      if (win) {
-        var doc = win.document;
-
-        doc.open();
-        doc.write(content);
-        doc.close();
-
-        doc.title = title;
-
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  };
-
   dom.on = function(el, type, listener) {
     el.addEventListener(type, listener);
   };

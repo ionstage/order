@@ -1,6 +1,7 @@
 (function(app) {
   'use strict';
 
+  var FileSaver = require('file-saver');
   var jCore = require('jcore');
   var dom = app.dom || require('../dom.js');
   var Environment = app.Environment || require('../models/environment.js');
@@ -45,9 +46,9 @@
     });
   };
 
-  Main.prototype.scriptSaver = function(filePath, scriptText) {
-    return dom.openWindow(filePath, '<pre>' + scriptText + '</pre>').catch(function() {
-      throw new Error('OrderScript runtime error: Failed to save script');
+  Main.prototype.scriptSaver = function(path, text) {
+    return Promise.resolve().then(function() {
+      FileSaver.saveAs(new Blob([text], { type: 'plain/text' }), path);
     });
   };
 
