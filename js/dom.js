@@ -68,11 +68,11 @@
   };
 
   dom.on = function(el, type, listener) {
-    el.addEventListener(type, listener);
+    el.addEventListener(type, listener, false);
   };
 
   dom.off = function(el, type, listener) {
-    el.removeEventListener(type, listener);
+    el.removeEventListener(type, listener, false);
   };
 
   dom.once = function(el, type, listener) {
