@@ -47,7 +47,6 @@
     if (typeof s === 'undefined') {
       return el.value;
     }
-
     el.value = s;
   };
 
