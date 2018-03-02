@@ -97,8 +97,8 @@
   };
 
   var Environment = function(props) {
-    this.circuitModuleFactory = props.circuitModuleFactory;
-    this.circuitModuleDisposal = props.circuitModuleDisposal;
+    this.circuitModuleLoader = props.circuitModuleLoader;
+    this.circuitModuleUnloader = props.circuitModuleUnloader;
     this.scriptLoader = props.scriptLoader;
     this.scriptSaver = props.scriptSaver;
     this.variableTable = new VariableTable();
@@ -126,7 +126,7 @@
     var moduleName = cmd.moduleName;
 
     return Promise.resolve().then(function() {
-      return this.circuitModuleFactory({
+      return this.circuitModuleLoader({
         variableName: variableName,
         moduleName: moduleName,
       });
@@ -205,7 +205,7 @@
     var variable = this.variableTable.fetch(variableName);
 
     return Promise.resolve().then(function() {
-      return this.circuitModuleDisposal({
+      return this.circuitModuleUnloader({
         variableName: variableName,
       });
     }.bind(this)).then(function() {
@@ -223,7 +223,7 @@
   Environment.prototype.execReset = function(cmd) {
     return Promise.all(this.variableTable.names.map(function(variableName) {
       return Promise.resolve().then(function() {
-        return this.circuitModuleDisposal({
+        return this.circuitModuleUnloader({
           variableName: variableName,
         });
       }.bind(this)).then(function() {

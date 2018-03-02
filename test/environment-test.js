@@ -5,8 +5,8 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitModuleFactory: function() { return new CircuitModule([]); },
-    circuitModuleDisposal: function() { /* do nothing */ },
+    circuitModuleLoader: function() { return new CircuitModule([]); },
+    circuitModuleUnloader: function() { /* do nothing */ },
     scriptLoader: function() { /* do nothing */ },
     scriptSaver: function() { /* do nothing */ },
   };
@@ -22,7 +22,7 @@ describe('environment', function() {
     it('create new variable', function() {
       var dummy = {};
       var env = new Environment({
-        circuitModuleFactory: function(props) {
+        circuitModuleLoader: function(props) {
           assert.equal(props.variableName, 'x');
           assert.equal(props.moduleName, 'Module');
           return Promise.resolve(dummy);
@@ -51,7 +51,7 @@ describe('environment', function() {
 
     it('should not set circuit module to null', function(done) {
       var env = new Environment({
-        circuitModuleFactory: function() { return null; },
+        circuitModuleLoader: function() { return null; },
       });
 
       return env.exec(':new x Module').catch(function(e) {
@@ -63,7 +63,7 @@ describe('environment', function() {
     it('bind circuit module members', function() {
       var cels = [];
       var env = new Environment({
-        circuitModuleFactory: function() {
+        circuitModuleLoader: function() {
           var cel = new CircuitModule([
             { name: 'member0', type: 'prop' },
             { name: 'member1', type: 'prop' },
@@ -91,7 +91,7 @@ describe('environment', function() {
     it('unbind circuit module members', function() {
       var cels = [];
       var env = new Environment({
-        circuitModuleFactory: function() {
+        circuitModuleLoader: function() {
           var cel = new CircuitModule([
             { name: 'member0', type: 'prop' },
             { name: 'member1', type: 'prop' },
@@ -120,7 +120,7 @@ describe('environment', function() {
 
     it('send data to a member of circuit module', function() {
       var env = new Environment({
-        circuitModuleFactory: function() {
+        circuitModuleLoader: function() {
           return new CircuitModule([
             { name: 'prop', type: 'prop' },
           ]);
@@ -139,21 +139,21 @@ describe('environment', function() {
     it('delete variable', function() {
       var env = new Environment(defaultProps);
 
-      env.circuitModuleDisposal = sinon.spy();
+      env.circuitModuleUnloader = sinon.spy();
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':delete x');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'delete');
         assert.equal(env.variableTable.variables().length, 0);
-        assert(env.circuitModuleDisposal.calledOnce);
+        assert(env.circuitModuleUnloader.calledOnce);
       });
     });
 
     it('reset', function() {
       var env = new Environment(defaultProps);
 
-      env.circuitModuleDisposal = sinon.spy();
+      env.circuitModuleUnloader = sinon.spy();
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
@@ -162,7 +162,7 @@ describe('environment', function() {
       }).then(function(cmd) {
         assert.equal(cmd.name, 'reset');
         assert.equal(env.variableTable.variables().length, 0);
-        assert(env.circuitModuleDisposal.calledTwice);
+        assert(env.circuitModuleUnloader.calledTwice);
       });
     });
 

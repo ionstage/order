@@ -10,8 +10,8 @@
 
   var Main = jCore.Component.inherits(function() {
     this.env = new Environment({
-      circuitModuleFactory: this.circuitModuleFactory.bind(this),
-      circuitModuleDisposal: this.circuitModuleDisposal.bind(this),
+      circuitModuleLoader: this.circuitModuleLoader.bind(this),
+      circuitModuleUnloader: this.circuitModuleUnloader.bind(this),
       scriptLoader: this.scriptLoader.bind(this),
       scriptSaver: this.scriptSaver.bind(this),
     });
@@ -25,13 +25,13 @@
     });
   });
 
-  Main.prototype.circuitModuleFactory = function(props) {
+  Main.prototype.circuitModuleLoader = function(props) {
     return this.content.loadVariable(props.variableName, props.moduleName).then(function(variable) {
       return variable.circuitModule();
     });
   };
 
-  Main.prototype.circuitModuleDisposal = function(props) {
+  Main.prototype.circuitModuleUnloader = function(props) {
     this.content.deleteVariable(props.variableName);
   };
 
