@@ -35,14 +35,13 @@
     this.content.deleteVariable(props.variableName);
   };
 
-  Main.prototype.scriptLoader = function(filePath) {
-    if (!filePath) {
-      throw new Error('OrderScript runtime error: Invalid script file path');
+  Main.prototype.scriptLoader = function(path) {
+    if (!path) {
+      return Promise.reject('OrderScript runtime error: Invalid script file path');
     }
-
     return dom.ajax({
       type: 'GET',
-      url: 'order_scripts/' + filePath,
+      url: 'order_scripts/' + path,
     });
   };
 
