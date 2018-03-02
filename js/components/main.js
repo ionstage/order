@@ -47,8 +47,9 @@
   };
 
   Main.prototype.scriptSaver = function(path, text) {
-    return Promise.resolve().then(function() {
+    return new Promise(function(resolve) {
       FileSaver.saveAs(new Blob([text], { type: 'plain/text' }), path);
+      resolve();
     });
   };
 
