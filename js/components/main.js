@@ -16,13 +16,8 @@
       scriptSaver: this.scriptSaver.bind(this),
     });
 
-    this.commandInput = new CommandInput({
-      element: this.findElement('.command-input'),
-    });
-
-    this.content = new Content({
-      element: this.findElement('.content'),
-    });
+    this.commandInput = new CommandInput({ element: this.findElement('.command-input') });
+    this.content = new Content({ element: this.findElement('.content') });
   });
 
   Main.prototype.circuitModuleLoader = function(variableName, moduleName) {
