@@ -199,11 +199,7 @@
     var variableName = cmd.variableName;
     var variable = this.variableTable.fetch(variableName);
 
-    return Promise.resolve().then(function() {
-      return this.circuitModuleUnloader({
-        variableName: variableName,
-      });
-    }.bind(this)).then(function() {
+    return this.circuitModuleUnloader(variableName).then(function() {
       // unbind all bound members of circuit module
       variable.members().forEach(CircuitModule.unbindAll);
 
@@ -217,11 +213,7 @@
 
   Environment.prototype.execReset = function(cmd) {
     return Promise.all(this.variableTable.names.map(function(variableName) {
-      return Promise.resolve().then(function() {
-        return this.circuitModuleUnloader({
-          variableName: variableName,
-        });
-      }.bind(this)).then(function() {
+      return this.circuitModuleUnloader(variableName).then(function() {
         var variableTable = this.variableTable;
         var variable = variableTable.fetch(variableName);
 

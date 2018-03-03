@@ -31,8 +31,11 @@
     });
   };
 
-  Main.prototype.circuitModuleUnloader = function(props) {
-    this.content.deleteVariable(props.variableName);
+  Main.prototype.circuitModuleUnloader = function(variableName) {
+    return new Promise(function(resolve) {
+      this.content.deleteVariable(variableName);
+      resolve();
+    });
   };
 
   Main.prototype.scriptLoader = function(path) {

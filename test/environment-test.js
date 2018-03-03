@@ -6,7 +6,7 @@ var Environment = require('../js/models/environment.js');
 describe('environment', function() {
   var defaultProps = {
     circuitModuleLoader: function() { return Promise.resolve(new CircuitModule([])); },
-    circuitModuleUnloader: function() { /* do nothing */ },
+    circuitModuleUnloader: function() { return Promise.resolve(); },
     scriptLoader: function() { /* do nothing */ },
     scriptSaver: function() { /* do nothing */ },
   };
@@ -139,7 +139,7 @@ describe('environment', function() {
     it('delete variable', function() {
       var env = new Environment(defaultProps);
 
-      env.circuitModuleUnloader = sinon.spy();
+      env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':delete x');
@@ -153,7 +153,7 @@ describe('environment', function() {
     it('reset', function() {
       var env = new Environment(defaultProps);
 
-      env.circuitModuleUnloader = sinon.spy();
+      env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
 
       return env.exec(':new x Module').then(function() {
         return env.exec(':new y Module');
