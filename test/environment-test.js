@@ -5,7 +5,7 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitModuleLoader: function() { return new CircuitModule([]); },
+    circuitModuleLoader: function() { return Promise.resolve(new CircuitModule([])); },
     circuitModuleUnloader: function() { /* do nothing */ },
     scriptLoader: function() { /* do nothing */ },
     scriptSaver: function() { /* do nothing */ },
@@ -22,9 +22,9 @@ describe('environment', function() {
     it('create new variable', function() {
       var dummy = {};
       var env = new Environment({
-        circuitModuleLoader: function(props) {
-          assert.equal(props.variableName, 'x');
-          assert.equal(props.moduleName, 'Module');
+        circuitModuleLoader: function(variableName, moduleName) {
+          assert.equal(variableName, 'x');
+          assert.equal(moduleName, 'Module');
           return Promise.resolve(dummy);
         },
       });
@@ -69,7 +69,7 @@ describe('environment', function() {
             { name: 'member1', type: 'prop' },
           ]);
           cels.push(cel);
-          return cel;
+          return Promise.resolve(cel);
         },
       });
 
@@ -97,7 +97,7 @@ describe('environment', function() {
             { name: 'member1', type: 'prop' },
           ]);
           cels.push(cel);
-          return cel;
+          return Promise.resolve(cel);
         },
       });
 
@@ -121,9 +121,9 @@ describe('environment', function() {
     it('send data to a member of circuit module', function() {
       var env = new Environment({
         circuitModuleLoader: function() {
-          return new CircuitModule([
+          return Promise.resolve(new CircuitModule([
             { name: 'prop', type: 'prop' },
-          ]);
+          ]));
         },
       });
 

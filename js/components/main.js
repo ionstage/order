@@ -25,8 +25,8 @@
     });
   });
 
-  Main.prototype.circuitModuleLoader = function(props) {
-    return this.content.loadVariable(props.variableName, props.moduleName).then(function(variable) {
+  Main.prototype.circuitModuleLoader = function(variableName, moduleName) {
+    return this.content.loadVariable(variableName, moduleName).then(function(variable) {
       return variable.circuitModule();
     });
   };

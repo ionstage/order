@@ -125,12 +125,7 @@
 
     var moduleName = cmd.moduleName;
 
-    return Promise.resolve().then(function() {
-      return this.circuitModuleLoader({
-        variableName: variableName,
-        moduleName: moduleName,
-      });
-    }.bind(this)).then(function(circuitModule) {
+    return this.circuitModuleLoader(variableName, moduleName).then(function(circuitModule) {
       if (!circuitModule) {
         throw new Error('OrderScript runtime error: Invalid circuit module');
       }
