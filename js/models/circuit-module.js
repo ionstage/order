@@ -5,24 +5,6 @@
   var helper = app.helper || require('../helper.js');
   var Wrapper = helper.wrapper();
 
-  var CircuitModuleMember = function(props) {
-    var name = props.name;
-    var arg = props.arg;
-    var type = props.type;
-    var callee = circuit[type](arg);
-    var caller = CircuitModuleMember.prototype.call.bind(this);
-
-    this.name = name;
-    this.callee = callee;
-    this.wrapper = new Wrapper(this, caller);
-    this.sources = [];
-    this.targets = [];
-  };
-
-  CircuitModuleMember.prototype.call = function() {
-    return this.callee.apply(this, arguments);
-  };
-
   var CircuitModule = function(members) {
     var memberTable = {};
     var names = [];
@@ -34,7 +16,7 @@
         return;
       }
 
-      memberTable[name] = new CircuitModuleMember(props);
+      memberTable[name] = new CircuitModule.Member(props);
       names.unshift(name);
     });
 
@@ -92,6 +74,28 @@
       CircuitModule.unbind(member.wrapper, target.wrapper);
     });
   };
+
+  CircuitModule.Member = (function() {
+    var Member = function(props) {
+      var name = props.name;
+      var arg = props.arg;
+      var type = props.type;
+      var callee = circuit[type](arg);
+      var caller = Member.prototype.call.bind(this);
+
+      this.name = name;
+      this.callee = callee;
+      this.wrapper = new Wrapper(this, caller);
+      this.sources = [];
+      this.targets = [];
+    };
+
+    Member.prototype.call = function() {
+      return this.callee.apply(this, arguments);
+    };
+
+    return Member;
+  })();
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = CircuitModule;
