@@ -4,7 +4,7 @@
   var jCore = require('jcore');
   var dom = app.dom || require('../dom.js');
 
-  var CommandInput = jCore.Component.inherits(function(props) {
+  var CommandInput = jCore.Component.inherits(function() {
     this.history = new CommandInput.History();
   });
 
