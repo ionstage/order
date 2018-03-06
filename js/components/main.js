@@ -35,7 +35,7 @@
 
   Main.prototype.scriptLoader = function(path) {
     if (!path) {
-      return Promise.reject('OrderScript runtime error: Invalid script file path');
+      return Promise.reject(new Error('OrderScript runtime error: Invalid script file path'));
     }
     return dom.ajax({
       type: 'GET',
