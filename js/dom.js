@@ -70,20 +70,20 @@
     return iframe.contentDocument.documentElement.scrollHeight;
   };
 
-  dom.on = function(el, type, listener) {
-    el.addEventListener(type, listener, false);
+  dom.on = function(el, type, listener, useCapture) {
+    el.addEventListener(type, listener, !!useCapture);
   };
 
-  dom.off = function(el, type, listener) {
-    el.removeEventListener(type, listener, false);
+  dom.off = function(el, type, listener, useCapture) {
+    el.removeEventListener(type, listener, !!useCapture);
   };
 
-  dom.once = function(el, type, listener) {
+  dom.once = function(el, type, listener, useCapture) {
     var wrapper = function() {
-      dom.off(el, type, wrapper);
+      dom.off(el, type, wrapper, useCapture);
       listener.apply(null, arguments);
     };
-    dom.on(el, type, wrapper);
+    dom.on(el, type, wrapper, useCapture);
   };
 
   dom.click = function(el) {
