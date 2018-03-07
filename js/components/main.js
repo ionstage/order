@@ -32,7 +32,7 @@
     return new Promise(function(resolve) {
       this.content.deleteVariable(variableName);
       resolve();
-    });
+    }.bind(this));
   };
 
   Main.prototype.scriptLoader = function(path) {
