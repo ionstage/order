@@ -58,6 +58,10 @@
     el.focus();
   };
 
+  dom.blur = function(el) {
+    el.blur();
+  };
+
   dom.file = function(el) {
     return el.files[0];
   };

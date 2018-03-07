@@ -24,6 +24,10 @@
     dom.focus(this.element());
   };
 
+  CommandInput.prototype.blur = function() {
+    dom.blur(this.element());
+  };
+
   CommandInput.prototype.done = function(error) {
     if (!error) {
       this.history.push(this.text());
