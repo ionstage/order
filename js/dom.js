@@ -58,6 +58,10 @@
     el.focus();
   };
 
+  dom.file = function(el) {
+    return el.files[0];
+  };
+
   dom.contentWindow = function(iframe) {
     return iframe.contentWindow;
   };
@@ -82,8 +86,35 @@
     dom.on(el, type, wrapper);
   };
 
+  dom.click = function(el) {
+    el.click();
+  };
+
+  dom.target = function(event) {
+    return event.target;
+  };
+
   dom.cancel = function(event) {
     event.preventDefault();
+  };
+
+  dom.readFile = function(file) {
+    return new Promise(function(resolve, reject) {
+      var reader = new FileReader();
+
+      var onfailed = function() {
+        reject(new Error('Failed to read file: ' + file.name));
+      };
+
+      reader.onload = function(event) {
+        resolve(event.target.result);
+      };
+
+      reader.onerror = onfailed;
+      reader.onabort = onfailed;
+
+      reader.readAsText(file);
+    });
   };
 
   dom.ajax = function(opt) {

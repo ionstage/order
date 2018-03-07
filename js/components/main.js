@@ -7,6 +7,7 @@
   var Environment = app.Environment || require('../models/environment.js');
   var CommandInput = app.CommandInput || require('./command-input.js');
   var Content = app.Content || require('./content.js');
+  var FileInput = app.FileInput || require('./file-input.js');
 
   var Main = jCore.Component.inherits(function() {
     this.env = new Environment({
@@ -17,6 +18,7 @@
     });
 
     this.commandInput = new CommandInput({ element: this.findElement('.command-input') });
+    this.fileInput = new FileInput({ element: this.findElement('.file-input') });
     this.content = new Content({ element: this.findElement('.content') });
   });
 
@@ -35,7 +37,7 @@
 
   Main.prototype.scriptLoader = function(path) {
     if (!path) {
-      return Promise.reject(new Error('OrderScript runtime error: Invalid script file path'));
+      return this.fileInput.load();
     }
     return dom.ajax({
       type: 'GET',
