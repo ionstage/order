@@ -37,6 +37,7 @@
 
   Main.prototype.scriptLoader = function(path) {
     if (!path) {
+      this.commandInput.disabled(false);
       return this.fileInput.load();
     }
     return dom.ajax({
