@@ -4,9 +4,9 @@
   var FileSaver = require('file-saver');
   var jCore = require('jcore');
   var dom = app.dom || require('../dom.js');
-  var Environment = app.Environment || require('../models/environment.js');
   var CommandInput = app.CommandInput || require('./command-input.js');
   var Content = app.Content || require('./content.js');
+  var Environment = app.Environment || require('../models/environment.js');
   var FileInput = app.FileInput || require('./file-input.js');
 
   var Main = jCore.Component.inherits(function() {
