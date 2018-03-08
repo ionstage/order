@@ -77,15 +77,9 @@
 
   CircuitModule.Member = (function() {
     var Member = function(props) {
-      var name = props.name;
-      var arg = props.arg;
-      var type = props.type;
-      var callee = circuit[type](arg);
-      var caller = Member.prototype.call.bind(this);
-
-      this.name = name;
-      this.callee = callee;
-      this.wrapper = new Wrapper(this, caller);
+      this.name = props.name;
+      this.callee = circuit[props.type](props.arg);
+      this.wrapper = new Wrapper(this, this.call.bind(this));
       this.sources = [];
       this.targets = [];
     };
