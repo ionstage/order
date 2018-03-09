@@ -135,31 +135,4 @@ describe('CircuitModule', function() {
 
     assert(circuit.unbind.calledWith(callee0, callee1));
   });
-
-  it('unbind all members', function() {
-    var cel0 = new CircuitModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-    var cel1 = new CircuitModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-    var cel2 = new CircuitModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-
-    var prop0 = cel0.get('prop');
-    var prop1 = cel1.get('prop');
-    var prop2 = cel2.get('prop');
-
-    CircuitModule.bind(prop1, prop0);
-    CircuitModule.bind(prop0, prop2);
-    CircuitModule.unbindAll(prop0);
-
-    var callee0 = cel0.memberTable['prop'].callee;
-    var callee1 = cel1.memberTable['prop'].callee;
-    var callee2 = cel2.memberTable['prop'].callee;
-
-    assert(circuit.unbind.firstCall.calledWith(callee1, callee0));
-    assert(circuit.unbind.secondCall.calledWith(callee0, callee2));
-  });
 });

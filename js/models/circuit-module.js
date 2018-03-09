@@ -63,18 +63,6 @@
     targetMemberSources.splice(targetMemberSources.indexOf(sourceMember), 1);
   };
 
-  CircuitModule.unbindAll = function(wrapper) {
-    var member = wrapper.unwrap(Wrapper.KEY);
-
-    member.sources.forEach(function(source) {
-      CircuitModule.unbind(source.wrapper, member.wrapper);
-    });
-
-    member.targets.forEach(function(target) {
-      CircuitModule.unbind(member.wrapper, target.wrapper);
-    });
-  };
-
   CircuitModule.Member = (function() {
     var Member = function(props) {
       this.name = props.name;
