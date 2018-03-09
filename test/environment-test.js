@@ -193,4 +193,58 @@ describe('environment', function() {
       });
     });
   });
+
+  it('#unbind all circuit module members on deleting variable', function(done) {
+    var env = new Environment({
+      circuitModuleLoader: function(variableName, moduleName) {
+        switch (variableName) {
+          case 'x':
+            return Promise.resolve(new CircuitModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
+          case 'y':
+            return Promise.resolve(new CircuitModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
+          case 'z':
+            return Promise.resolve(new CircuitModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
+        }
+      },
+      circuitModuleUnloader: function() { return Promise.resolve(); },
+    });
+
+    var x, y, z;
+    CircuitModule.unbind = sinon.spy();
+
+    Promise.all([
+      env.exec(':new x Module'),
+      env.exec(':new y Module'),
+      env.exec(':new z Module'),
+    ]).then(function() {
+      return Promise.all([
+        env.exec(':bind x.a y.a'),
+        env.exec(':bind x.b y.a'),
+        env.exec(':bind y.a z.a'),
+        env.exec(':bind y.a z.b'),
+        env.exec(':bind x.b y.b'),
+        env.exec(':bind y.b z.b'),
+      ]);
+    }).then(function() {
+      x = env.variableTable.fetch('x');
+      y = env.variableTable.fetch('y');
+      z = env.variableTable.fetch('z');
+      return env.exec(':delete y');
+    }).then(function() {
+      var args = CircuitModule.unbind.args;
+      assert.equal(args[0][0], x.circuitModule.get('a'));
+      assert.equal(args[0][1], y.circuitModule.get('a'));
+      assert.equal(args[1][0], x.circuitModule.get('b'));
+      assert.equal(args[1][1], y.circuitModule.get('a'));
+      assert.equal(args[2][0], y.circuitModule.get('a'));
+      assert.equal(args[2][1], z.circuitModule.get('a'));
+      assert.equal(args[3][0], y.circuitModule.get('a'));
+      assert.equal(args[3][1], z.circuitModule.get('b'));
+      assert.equal(args[4][0], x.circuitModule.get('b'));
+      assert.equal(args[4][1], y.circuitModule.get('b'));
+      assert.equal(args[5][0], y.circuitModule.get('b'));
+      assert.equal(args[5][1], z.circuitModule.get('b'));
+      done();
+    });
+  });
 });
