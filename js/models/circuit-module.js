@@ -43,24 +43,13 @@
   CircuitModule.bind = function(sourceWrapper, targetWrapper) {
     var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
     var targetMember = targetWrapper.unwrap(Wrapper.KEY);
-
     circuit.bind(sourceMember.callee, targetMember.callee);
-
-    sourceMember.targets.push(targetMember);
-    targetMember.sources.push(sourceMember);
   };
 
   CircuitModule.unbind = function(sourceWrapper, targetWrapper) {
     var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
     var targetMember = targetWrapper.unwrap(Wrapper.KEY);
-
     circuit.unbind(sourceMember.callee, targetMember.callee);
-
-    var sourceMemberTargets = sourceMember.targets;
-    var targetMemberSources = targetMember.sources;
-
-    sourceMemberTargets.splice(sourceMemberTargets.indexOf(targetMember), 1);
-    targetMemberSources.splice(targetMemberSources.indexOf(sourceMember), 1);
   };
 
   CircuitModule.Member = (function() {
@@ -68,8 +57,6 @@
       this.name = props.name;
       this.callee = circuit[props.type](props.arg);
       this.wrapper = new Wrapper(this, this.call.bind(this));
-      this.sources = [];
-      this.targets = [];
     };
 
     Member.prototype.call = function() {
