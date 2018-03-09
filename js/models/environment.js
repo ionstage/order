@@ -105,6 +105,16 @@
     this.bindingList = new BindingList();
   };
 
+  Environment.prototype.unbindAll = function(variableName) {
+    this.bindingList.toArray().filter(function(binding) {
+      return (binding.sourceVariableName === variableName || binding.targetVariableName === variableName);
+    }).forEach(function(binding) {
+      var source = this.variableTable.fetch(binding.sourceVariableName).circuitModule.get(binding.sourceMemberName);
+      var target = this.variableTable.fetch(binding.targetVariableName).circuitModule.get(binding.targetMemberName);
+      CircuitModule.unbind(source, target);
+    }.bind(this));
+  };
+
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
       var cmd = command.parseStatement(command.expandAbbreviation(s));
@@ -200,8 +210,7 @@
     var variable = this.variableTable.fetch(variableName);
 
     return this.circuitModuleUnloader(variableName).then(function() {
-      // unbind all bound members of circuit module
-      variable.members().forEach(CircuitModule.unbindAll);
+      this.unbindAll(variableName);
 
       this.bindingList.removeVariable(variableName);
 
@@ -217,8 +226,7 @@
         var variableTable = this.variableTable;
         var variable = variableTable.fetch(variableName);
 
-        // unbind all bound members of circuit module
-        variable.members().forEach(CircuitModule.unbindAll);
+        this.unbindAll(variableName);
 
         this.bindingList.removeVariable(variableName);
 
