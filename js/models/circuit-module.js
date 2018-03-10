@@ -31,32 +31,32 @@
       return null;
     }
 
-    return member.wrapper;
+    return member;
   };
 
   CircuitModule.prototype.getAll = function() {
     return this.names.map(function(name) {
-      return this.memberTable[name].wrapper;
+      return this.memberTable[name];
     }.bind(this));
   };
 
-  CircuitModule.bind = function(sourceWrapper, targetWrapper) {
-    var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
-    var targetMember = targetWrapper.unwrap(Wrapper.KEY);
-    circuit.bind(sourceMember.callee, targetMember.callee);
+  CircuitModule.bind = function(sourceMember, targetMember) {
+    var source = sourceMember.unwrap(Wrapper.KEY).callee;
+    var target = targetMember.unwrap(Wrapper.KEY).callee;
+    circuit.bind(source, target);
   };
 
-  CircuitModule.unbind = function(sourceWrapper, targetWrapper) {
-    var sourceMember = sourceWrapper.unwrap(Wrapper.KEY);
-    var targetMember = targetWrapper.unwrap(Wrapper.KEY);
-    circuit.unbind(sourceMember.callee, targetMember.callee);
+  CircuitModule.unbind = function(sourceMember, targetMember) {
+    var source = sourceMember.unwrap(Wrapper.KEY).callee;
+    var target = targetMember.unwrap(Wrapper.KEY).callee;
+    circuit.unbind(source, target);
   };
 
   CircuitModule.Member = (function() {
     var Member = function(props) {
       this.name = props.name;
       this.callee = circuit[props.type](props.arg);
-      this.wrapper = new Wrapper(this, this.call.bind(this));
+      return new Wrapper(this, this.call.bind(this));
     };
 
     Member.prototype.call = function() {
