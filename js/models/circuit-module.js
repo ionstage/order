@@ -6,22 +6,10 @@
   var Wrapper = helper.wrapper();
 
   var CircuitModule = function(members) {
-    var memberTable = {};
-    var names = [];
-
-    members.slice().reverse().forEach(function(props) {
-      var name = props.name;
-
-      if (name in memberTable) {
-        return;
-      }
-
-      memberTable[name] = new CircuitModule.Member(props);
-      names.unshift(name);
-    });
-
-    this.memberTable = memberTable;
-    this.names = names;
+    this.memberTable = members.reduce(function(ret, member) {
+      ret[member.name] = new CircuitModule.Member(member);
+      return ret;
+    }, {});
   };
 
   CircuitModule.prototype.get = function(name) {
