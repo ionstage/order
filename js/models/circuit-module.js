@@ -28,12 +28,6 @@
     return this.memberTable[name] || null;
   };
 
-  CircuitModule.prototype.getAll = function() {
-    return this.names.map(function(name) {
-      return this.memberTable[name];
-    }.bind(this));
-  };
-
   CircuitModule.bind = function(sourceMember, targetMember) {
     var source = sourceMember.unwrap(Wrapper.KEY).callee;
     var target = targetMember.unwrap(Wrapper.KEY).callee;

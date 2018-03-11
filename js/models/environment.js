@@ -21,10 +21,6 @@
     return member;
   };
 
-  Variable.prototype.members = function() {
-    return this.circuitModule.getAll();
-  };
-
   var VariableTable = function() {
     this.table = {};
     this.names = [];
