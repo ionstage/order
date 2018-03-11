@@ -25,13 +25,7 @@
   };
 
   CircuitModule.prototype.get = function(name) {
-    var member = this.memberTable[name];
-
-    if (!member) {
-      return null;
-    }
-
-    return member;
+    return this.memberTable[name] || null;
   };
 
   CircuitModule.prototype.getAll = function() {
