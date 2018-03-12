@@ -30,7 +30,6 @@
 
   CircuitModule.Member = (function() {
     var Member = function(props) {
-      this.name = props.name;
       this.callee = circuit[props.type](props.arg);
       return new Wrapper(this, this.call.bind(this));
     };
