@@ -5,6 +5,6 @@
   var CircuitModule = app.CircuitModule || require('./models/circuit-module.js');
   var Main = app.Main || require('./components/main.js');
 
-  dom.export('CircuitModule', CircuitModule);
+  dom.export('OrderModule', CircuitModule.OrderModule);
   app.main = new Main({ element: dom.body() });
 })(this.app || (this.app = {}));

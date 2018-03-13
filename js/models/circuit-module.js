@@ -5,11 +5,8 @@
   var helper = app.helper || require('../helper.js');
   var Wrapper = helper.wrapper();
 
-  var CircuitModule = function(members) {
-    this.memberTable = members.reduce(function(ret, member) {
-      ret[member.name] = new CircuitModule.Member(member);
-      return ret;
-    }, {});
+  var CircuitModule = function(memberTable) {
+    this.memberTable = memberTable;
   };
 
   CircuitModule.prototype.get = function(name) {
@@ -40,6 +37,13 @@
 
     return Member;
   })();
+
+  CircuitModule.OrderModule = function(members) {
+    return new CircuitModule(members.reduce(function(ret, member) {
+      ret[member.name] = new CircuitModule.Member(member);
+      return ret;
+    }, {}));
+  };
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = CircuitModule;

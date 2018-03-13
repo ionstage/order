@@ -3,7 +3,7 @@ var circuit = require('circuit');
 var sinon = require('sinon');
 var CircuitModule = require('../js/models/circuit-module.js');
 
-describe('CircuitModule', function() {
+describe('CircuitModule.OrderModule', function() {
   beforeEach(function() {
     Object.keys(circuit).forEach(function(key) {
       sinon.spy(circuit, key);
@@ -17,7 +17,7 @@ describe('CircuitModule', function() {
   });
 
   it('has members with only name', function() {
-    var cel = new CircuitModule([
+    var cel = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop' },
       { name: 'onevent', type: 'event' },
     ]);
@@ -31,7 +31,7 @@ describe('CircuitModule', function() {
   });
 
   it('has prop members with name and value', function() {
-    var cel = new CircuitModule([
+    var cel = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop', arg: 1 },
     ]);
 
@@ -44,7 +44,7 @@ describe('CircuitModule', function() {
 
   it('has event members with name and listener', function() {
     var listener = sinon.spy();
-    var cel = new CircuitModule([
+    var cel = new CircuitModule.OrderModule([
       { name: 'onevent', type: 'event', arg: listener },
     ]);
 
@@ -57,7 +57,7 @@ describe('CircuitModule', function() {
   it('has members with type setting', function() {
     var arg = {};
     var listener = function() {};
-    var cel = new CircuitModule([
+    var cel = new CircuitModule.OrderModule([
       { name: 'onprop', arg: arg, type: 'prop' },
       { name: 'event', arg: listener, type: 'event' },
     ]);
@@ -69,7 +69,7 @@ describe('CircuitModule', function() {
   it('should make the latter member definition a priority', function() {
     var listener0 = sinon.spy();
     var listener1 = sinon.spy();
-    var cel = new CircuitModule([
+    var cel = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop', arg: 1 },
       { name: 'onevent', type: 'event', arg: listener0 },
       { name: 'prop', type: 'prop', arg: 2 },
@@ -86,10 +86,10 @@ describe('CircuitModule', function() {
   });
 
   it('bind members', function() {
-    var cel0 = new CircuitModule([
+    var cel0 = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop' },
     ]);
-    var cel1 = new CircuitModule([
+    var cel1 = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop' },
     ]);
 
@@ -102,10 +102,10 @@ describe('CircuitModule', function() {
   });
 
   it('unbind members', function() {
-    var cel0 = new CircuitModule([
+    var cel0 = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop' },
     ]);
-    var cel1 = new CircuitModule([
+    var cel1 = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop' },
     ]);
 

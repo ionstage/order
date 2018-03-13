@@ -5,7 +5,7 @@ var Environment = require('../js/models/environment.js');
 
 describe('environment', function() {
   var defaultProps = {
-    circuitModuleLoader: function() { return Promise.resolve(new CircuitModule([])); },
+    circuitModuleLoader: function() { return Promise.resolve(new CircuitModule.OrderModule([])); },
     circuitModuleUnloader: function() { return Promise.resolve(); },
     scriptLoader: function() { /* do nothing */ },
     scriptSaver: function() { /* do nothing */ },
@@ -64,7 +64,7 @@ describe('environment', function() {
       var cels = [];
       var env = new Environment({
         circuitModuleLoader: function() {
-          var cel = new CircuitModule([
+          var cel = new CircuitModule.OrderModule([
             { name: 'member0', type: 'prop' },
             { name: 'member1', type: 'prop' },
           ]);
@@ -92,7 +92,7 @@ describe('environment', function() {
       var cels = [];
       var env = new Environment({
         circuitModuleLoader: function() {
-          var cel = new CircuitModule([
+          var cel = new CircuitModule.OrderModule([
             { name: 'member0', type: 'prop' },
             { name: 'member1', type: 'prop' },
           ]);
@@ -121,7 +121,7 @@ describe('environment', function() {
     it('send data to a member of circuit module', function() {
       var env = new Environment({
         circuitModuleLoader: function() {
-          return Promise.resolve(new CircuitModule([
+          return Promise.resolve(new CircuitModule.OrderModule([
             { name: 'prop', type: 'prop' },
           ]));
         },
@@ -199,11 +199,11 @@ describe('environment', function() {
       circuitModuleLoader: function(variableName, moduleName) {
         switch (variableName) {
           case 'x':
-            return Promise.resolve(new CircuitModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
+            return Promise.resolve(new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
           case 'y':
-            return Promise.resolve(new CircuitModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
+            return Promise.resolve(new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
           case 'z':
-            return Promise.resolve(new CircuitModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
+            return Promise.resolve(new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
         }
       },
       circuitModuleUnloader: function() { return Promise.resolve(); },
