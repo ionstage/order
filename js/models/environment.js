@@ -236,9 +236,7 @@
   Environment.prototype.execLoad = function(cmd) {
     var filePath = cmd.filePath;
 
-    return Promise.resolve().then(function() {
-      return this.scriptLoader(filePath);
-    }.bind(this)).then(function(text) {
+    return this.scriptLoader(filePath).then(function(text) {
       return new Promise(function(resolve, reject) {
         var lines = text.split(/\r\n|\r|\n/g);
 

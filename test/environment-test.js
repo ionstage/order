@@ -170,7 +170,7 @@ describe('environment', function() {
       var env = new Environment(defaultProps);
 
       env.scriptLoader = sinon.spy(function() {
-        return ':new x Module';
+        return Promise.resolve(':new x Module');
       });
 
       return env.exec(':load /path/to/script').then(function(cmd) {
