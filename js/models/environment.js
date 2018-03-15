@@ -101,12 +101,16 @@
     this.bindingList = new BindingList();
   };
 
+  Environment.prototype.fetch = function(variableName, moduleName) {
+    return this.variableTable.fetch(variableName).fetchMember(moduleName);
+  };
+
   Environment.prototype.unbindAll = function(variableName) {
     this.bindingList.toArray().filter(function(binding) {
       return (binding.sourceVariableName === variableName || binding.targetVariableName === variableName);
     }).forEach(function(binding) {
-      var source = this.variableTable.fetch(binding.sourceVariableName).circuitModule.get(binding.sourceMemberName);
-      var target = this.variableTable.fetch(binding.targetVariableName).circuitModule.get(binding.targetMemberName);
+      var source = this.fetch(binding.sourceVariableName, binding.sourceMemberName);
+      var target = this.fetch(binding.targetVariableName, binding.targetMemberName);
       CircuitModule.unbind(source, target);
     }.bind(this));
   };
@@ -154,13 +158,8 @@
       throw new Error('OrderScript runtime error: Already bound');
     }
 
-    var variableTable = this.variableTable;
-
-    var sourceVariable = variableTable.fetch(cmd.sourceVariableName);
-    var targetVariable = variableTable.fetch(cmd.targetVariableName);
-
-    var sourceMember = sourceVariable.fetchMember(cmd.sourceMemberName);
-    var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
+    var sourceMember = this.fetch(cmd.sourceVariableName, cmd.sourceMemberName);
+    var targetMember = this.fetch(cmd.targetVariableName, cmd.targetMemberName);
 
     CircuitModule.bind(sourceMember, targetMember);
 
@@ -177,13 +176,8 @@
       throw new Error('OrderScript runtime error: Not bound');
     }
 
-    var variableTable = this.variableTable;
-
-    var sourceVariable = variableTable.fetch(cmd.sourceVariableName);
-    var targetVariable = variableTable.fetch(cmd.targetVariableName);
-
-    var sourceMember = sourceVariable.fetchMember(cmd.sourceMemberName);
-    var targetMember = targetVariable.fetchMember(cmd.targetMemberName);
+    var sourceMember = this.fetch(cmd.sourceVariableName, cmd.sourceMemberName);
+    var targetMember = this.fetch(cmd.targetVariableName, cmd.targetMemberName);
 
     CircuitModule.unbind(sourceMember, targetMember);
 
@@ -193,8 +187,7 @@
   };
 
   Environment.prototype.execSend = function(cmd) {
-    var variable = this.variableTable.fetch(cmd.variableName);
-    var member = variable.fetchMember(cmd.memberName);
+    var member = this.fetch(cmd.variableName, cmd.memberName);
 
     member(cmd.dataText);
 
