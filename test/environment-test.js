@@ -30,7 +30,7 @@ describe('environment', function() {
       });
 
       return env.exec(':new x Module').then(function(cmd) {
-        var v = env.variableTable.fetch(cmd.variableName);
+        var v = env.variableTable[cmd.variableName];
         assert.equal(cmd.name, 'new');
         assert.equal(v.name, cmd.variableName);
         assert.equal(v.moduleName, cmd.moduleName);
@@ -130,7 +130,7 @@ describe('environment', function() {
       return env.exec(':new x Module').then(function() {
         return env.exec(':send x.prop data_text');
       }).then(function(cmd) {
-        var member = env.variableTable.fetch(cmd.variableName).circuitModule.get(cmd.memberName);
+        var member = env.variableTable[cmd.variableName].circuitModule.get(cmd.memberName);
         assert.equal(cmd.name, 'send');
         assert.equal(member(), 'data_text');
       });
@@ -145,7 +145,7 @@ describe('environment', function() {
         return env.exec(':delete x');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'delete');
-        assert.equal(env.variableTable.variables().length, 0);
+        assert.equal(Object.keys(env.variableTable).length, 0);
         assert(env.circuitModuleUnloader.calledOnce);
       });
     });
@@ -161,7 +161,7 @@ describe('environment', function() {
         return env.exec(':reset');
       }).then(function(cmd) {
         assert.equal(cmd.name, 'reset');
-        assert.equal(env.variableTable.variables().length, 0);
+        assert.equal(Object.keys(env.variableTable).length, 0);
         assert(env.circuitModuleUnloader.calledTwice);
       });
     });
@@ -176,7 +176,7 @@ describe('environment', function() {
       return env.exec(':load /path/to/script').then(function(cmd) {
         assert.equal(cmd.name, 'load');
         assert(env.scriptLoader.calledWith(cmd.filePath));
-        assert(env.variableTable.has('x'));
+        assert(env.variableTable.hasOwnProperty('x'));
       });
     });
 
@@ -226,9 +226,9 @@ describe('environment', function() {
         env.exec(':bind y.b z.b'),
       ]);
     }).then(function() {
-      x = env.variableTable.fetch('x');
-      y = env.variableTable.fetch('y');
-      z = env.variableTable.fetch('z');
+      x = env.variableTable['x'];
+      y = env.variableTable['y'];
+      z = env.variableTable['z'];
       return env.exec(':delete y');
     }).then(function() {
       var args = CircuitModule.unbind.args;

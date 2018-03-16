@@ -11,58 +11,6 @@
     this.circuitModule = props.circuitModule;
   };
 
-  Variable.prototype.fetchMember = function(name) {
-    var member = this.circuitModule.get(name);
-
-    if (!member) {
-      throw new Error('OrderScript runtime error: member "' + this.name + '.' + name + '" is not defined');
-    }
-
-    return member;
-  };
-
-  var VariableTable = function() {
-    this.table = {};
-    this.names = [];
-  };
-
-  VariableTable.prototype.has = function(name) {
-    return (this.names.indexOf(name) !== -1);
-  };
-
-  VariableTable.prototype.fetch = function(name) {
-    if (!this.has(name)) {
-      throw new Error('OrderScript runtime error: variable "' + name + '" is not defined');
-    }
-
-    return this.table[name];
-  };
-
-  VariableTable.prototype.store = function(name, variable) {
-    if (!this.has(name)) {
-      this.names.push(name);
-    }
-
-    this.table[name] = variable;
-  };
-
-  VariableTable.prototype.delete = function(name) {
-    var index = this.names.indexOf(name);
-
-    if (index === -1) {
-      return;
-    }
-
-    delete this.table[name];
-    this.names.splice(index, 1);
-  };
-
-  VariableTable.prototype.variables = function() {
-    return this.names.map(function(name) {
-      return this.table[name];
-    }.bind(this));
-  };
-
   var Binding = function(props) {
     this.sourceVariableName = props.sourceVariableName;
     this.sourceMemberName = props.sourceMemberName;
@@ -97,12 +45,19 @@
     this.circuitModuleUnloader = props.circuitModuleUnloader;
     this.scriptLoader = props.scriptLoader;
     this.scriptSaver = props.scriptSaver;
-    this.variableTable = new VariableTable();
+    this.variableTable = {};
     this.bindingList = new BindingList();
   };
 
   Environment.prototype.fetch = function(variableName, moduleName) {
-    return this.variableTable.fetch(variableName).fetchMember(moduleName);
+    if (!this.variableTable.hasOwnProperty(variableName)) {
+      throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
+    }
+    var member = this.variableTable[variableName].circuitModule.get(moduleName);
+    if (!member) {
+      throw new Error('OrderScript runtime error: member "' + variableName + '.' + moduleName + '" is not defined');
+    }
+    return member;
   };
 
   Environment.prototype.unbindAll = function(variableName) {
@@ -129,7 +84,7 @@
   Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
 
-    if (this.variableTable.has(variableName)) {
+    if (this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
     }
 
@@ -140,11 +95,11 @@
         throw new Error('OrderScript runtime error: Invalid circuit module');
       }
 
-      this.variableTable.store(variableName, new Variable({
+      this.variableTable[variableName] = new Variable({
         name: variableName,
         moduleName: moduleName,
         circuitModule: circuitModule,
-      }));
+      });
 
       return cmd;
     }.bind(this));
@@ -196,30 +151,32 @@
 
   Environment.prototype.execDelete = function(cmd) {
     var variableName = cmd.variableName;
-    var variable = this.variableTable.fetch(variableName);
-
+    if (!this.variableTable.hasOwnProperty(variableName)) {
+      throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
+    }
     return this.circuitModuleUnloader(variableName).then(function() {
       this.unbindAll(variableName);
 
       this.bindingList.removeVariable(variableName);
 
-      this.variableTable.delete(variableName);
+      delete this.variableTable[variableName];
 
       return cmd;
     }.bind(this));
   };
 
   Environment.prototype.execReset = function(cmd) {
-    return Promise.all(this.variableTable.names.map(function(variableName) {
+    return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
       return this.circuitModuleUnloader(variableName).then(function() {
-        var variableTable = this.variableTable;
-        var variable = variableTable.fetch(variableName);
+        if (!this.variableTable.hasOwnProperty(variableName)) {
+          throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
+        }
 
         this.unbindAll(variableName);
 
         this.bindingList.removeVariable(variableName);
 
-        variableTable.delete(variableName);
+        delete this.variableTable[variableName];
       }.bind(this));
     }.bind(this))).then(function() {
       return cmd;
@@ -261,7 +218,9 @@
     var filePath = cmd.filePath;
 
     return Promise.resolve().then(function() {
-      var variables = this.variableTable.variables();
+      var variables = Object.keys(this.variableTable).map(function(name) {
+        return this.variableTable[name];
+      }.bind(this));
       var bindings = this.bindingList.toArray();
 
       var newCommandText = variables.map(function(variable) {
