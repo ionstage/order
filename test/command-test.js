@@ -58,83 +58,94 @@ describe('command', function() {
   describe('#parseStatement', function() {
     [
       [':noop',
-        { name: 'noop' }],
+        { name: 'noop', args: [] }],
 
       [':new x Module',
-        { name: 'new', variableName: 'x', moduleName: 'Module' }],
+        { name: 'new', variableName: 'x', moduleName: 'Module', args: ['x', 'Module'] }],
 
       [':new  x \t Module',
-        { name: 'new', variableName: 'x', moduleName: 'Module' }],
+        { name: 'new', variableName: 'x', moduleName: 'Module', args: ['x', 'Module'] }],
 
       [':New x Module',
-        { name: 'new', variableName: 'x', moduleName: 'Module' }],
+        { name: 'new', variableName: 'x', moduleName: 'Module', args: ['x', 'Module'] }],
 
       [':NEW x Module',
-        { name: 'new', variableName: 'x', moduleName: 'Module' }],
+        { name: 'new', variableName: 'x', moduleName: 'Module', args: ['x', 'Module'] }],
 
       [':bind x.member0 y.member1',
         { name: 'bind',
           sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }],
+          targetVariableName: 'y', targetMemberName: 'member1',
+          args: ['x', 'member0', 'y', 'member1'] }],
 
       [':unbind x.member0 y.member1',
         { name: 'unbind',
           sourceVariableName: 'x', sourceMemberName: 'member0',
-          targetVariableName: 'y', targetMemberName: 'member1' }],
+          targetVariableName: 'y', targetMemberName: 'member1',
+          args: ['x', 'member0', 'y', 'member1'] }],
 
       [':send x.member0',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: '' }],
+          variableName: 'x', memberName: 'member0', dataText: '',
+          args: ['x', 'member0', ''] }],
 
       [':send x.member0 data_text',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
+          variableName: 'x', memberName: 'member0', dataText: 'data_text',
+          args: ['x', 'member0', 'data_text'] }],
 
       [':send x.member0 \'data text\'',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: 'data text' }],
+          variableName: 'x', memberName: 'member0', dataText: 'data text',
+          args: ['x', 'member0', 'data text'] }],
 
       [':send x.member0 "data text"',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: 'data text' }],
+          variableName: 'x', memberName: 'member0', dataText: 'data text',
+          args: ['x', 'member0', 'data text'] }],
 
       [':send x.member0 "data_text"',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: 'data_text' }],
+          variableName: 'x', memberName: 'member0', dataText: 'data_text',
+          args: ['x', 'member0', 'data_text'] }],
 
       [':send x.member0 \\"data_text"',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: '"data_text"' }],
+          variableName: 'x', memberName: 'member0', dataText: '"data_text"',
+          args: ['x', 'member0', '"data_text"'] }],
 
       [':send x.member0 "data_text\'',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: '"data_text\'' }],
+          variableName: 'x', memberName: 'member0', dataText: '"data_text\'',
+          args: ['x', 'member0', '"data_text\''] }],
 
       [':send x.member0 \'data \\\' text\'',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: 'data \' text' }],
+          variableName: 'x', memberName: 'member0', dataText: 'data \' text',
+          args: ['x', 'member0', 'data \' text'] }],
 
       [':send x.member0 \'data \\\\ text\'',
         { name: 'send',
-          variableName: 'x', memberName: 'member0', dataText: 'data \\ text' }],
+          variableName: 'x', memberName: 'member0', dataText: 'data \\ text',
+          args: ['x', 'member0', 'data \\ text'] }],
 
       [':delete x',
-        { name: 'delete', variableName: 'x' }],
+        { name: 'delete', variableName: 'x', args: ['x'] }],
 
       [':reset',
-        { name: 'reset' }],
+        { name: 'reset', args: [] }],
 
       [':load',
-        { name: 'load', filePath: '' }],
+        { name: 'load', filePath: '', args: [''] }],
 
       [':load /path/to/script',
-        { name: 'load', filePath: '/path/to/script' }],
+        { name: 'load', filePath: '/path/to/script', args: ['/path/to/script'] }],
 
       [':save',
-        { name: 'save', filePath: '' }],
+        { name: 'save', filePath: '', args: [''] }],
 
       [':save /path/to/script',
-        { name: 'save', filePath: '/path/to/script' }],
+        { name: 'save', filePath: '/path/to/script', args: ['/path/to/script'] }],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(command.parseStatement(p[0]), p[1]);

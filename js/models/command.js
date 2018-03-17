@@ -5,7 +5,9 @@
 
   var command = {};
 
-  command.Noop = function() {};
+  command.Noop = function() {
+    this.args = [];
+  };
 
   command.New = function() {
     if (arguments.length !== 2) {
@@ -25,6 +27,7 @@
 
     this.variableName = variableName;
     this.moduleName = moduleName;
+    this.args = [variableName, moduleName];
   };
 
   command.Bind = function() {
@@ -43,6 +46,7 @@
     this.sourceMemberName = args0[1];
     this.targetVariableName = args1[0];
     this.targetMemberName = args1[1];
+    this.args = [args0[0], args0[1], args1[0], args1[1]];
   };
 
   command.Unbind = function() {
@@ -64,6 +68,7 @@
     this.variableName = args0[0];
     this.memberName = args0[1];
     this.dataText = arguments[1] || '';
+    this.args = [args0[0], args0[1], (arguments[1] || '')];
   };
 
   command.Delete = function() {
@@ -82,12 +87,14 @@
     }
 
     this.variableName = variableName;
+    this.args = [variableName];
   };
 
   command.Reset = function() {
     if (arguments.length) {
       throw new TypeError('Type error');
     }
+    this.args = [];
   };
 
   command.Load = function() {
@@ -96,6 +103,7 @@
     }
 
     this.filePath = arguments[0] || '';
+    this.args = [(arguments[0] || '')];
   };
 
   command.Save = function() {
@@ -104,6 +112,7 @@
     }
 
     this.filePath = arguments[0] || '';
+    this.args = [(arguments[0] || '')];
   };
 
   command.expandAbbreviation = function(s) {
