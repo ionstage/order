@@ -77,9 +77,7 @@
     }.bind(this));
   };
 
-  Environment.prototype.execNoop = function(cmd) {
-    return cmd;
-  };
+  Environment.prototype.execNoop = function() {};
 
   Environment.prototype.execNew = function(cmd) {
     var variableName = cmd.variableName;
@@ -100,8 +98,6 @@
         moduleName: moduleName,
         circuitModule: circuitModule,
       });
-
-      return cmd;
     }.bind(this));
   };
 
@@ -119,8 +115,6 @@
     CircuitModule.bind(sourceMember, targetMember);
 
     bindingList.add(binding);
-
-    return cmd;
   };
 
   Environment.prototype.execUnbind = function(cmd) {
@@ -137,16 +131,11 @@
     CircuitModule.unbind(sourceMember, targetMember);
 
     bindingList.remove(binding);
-
-    return cmd;
   };
 
   Environment.prototype.execSend = function(cmd) {
     var member = this.fetch(cmd.variableName, cmd.memberName);
-
     member(cmd.dataText);
-
-    return cmd;
   };
 
   Environment.prototype.execDelete = function(cmd) {
@@ -160,8 +149,6 @@
       this.bindingList.removeVariable(variableName);
 
       delete this.variableTable[variableName];
-
-      return cmd;
     }.bind(this));
   };
 
@@ -178,9 +165,7 @@
 
         delete this.variableTable[variableName];
       }.bind(this));
-    }.bind(this))).then(function() {
-      return cmd;
-    });
+    }.bind(this)));
   };
 
   Environment.prototype.execLoad = function(cmd) {
@@ -209,9 +194,7 @@
 
         execLine(0);
       }.bind(this));
-    }.bind(this)).then(function() {
-      return cmd;
-    });
+    }.bind(this));
   };
 
   Environment.prototype.execSave = function(cmd) {
@@ -237,9 +220,7 @@
       }).join('\n') + '\n';
 
       return this.scriptSaver(filePath, scriptText);
-    }.bind(this)).then(function() {
-      return cmd;
-    });
+    }.bind(this));
   };
 
   if (typeof module !== 'undefined' && module.exports) {
