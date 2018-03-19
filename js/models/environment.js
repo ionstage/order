@@ -73,20 +73,16 @@
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
       var cmd = command.parseStatement(command.expandAbbreviation(s));
-      return this['exec' + helper.capitalize(cmd.name)](cmd);
+      return this['exec' + helper.capitalize(cmd.name)].apply(this, cmd.args);
     }.bind(this));
   };
 
   Environment.prototype.execNoop = function() {};
 
-  Environment.prototype.execNew = function(cmd) {
-    var variableName = cmd.variableName;
-
+  Environment.prototype.execNew = function(variableName, moduleName) {
     if (this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
     }
-
-    var moduleName = cmd.moduleName;
 
     return this.circuitModuleLoader(variableName, moduleName).then(function(circuitModule) {
       if (!circuitModule) {
@@ -101,45 +97,54 @@
     }.bind(this));
   };
 
-  Environment.prototype.execBind = function(cmd) {
+  Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
     var bindingList = this.bindingList;
-    var binding = new Binding(cmd);
+    var binding = new Binding({
+      sourceVariableName: sourceVariableName,
+      sourceMemberName: sourceMemberName,
+      targetVariableName: targetVariableName,
+      targetMemberName: targetMemberName,
+    });
 
     if (bindingList.contains(binding)) {
       throw new Error('OrderScript runtime error: Already bound');
     }
 
-    var sourceMember = this.fetch(cmd.sourceVariableName, cmd.sourceMemberName);
-    var targetMember = this.fetch(cmd.targetVariableName, cmd.targetMemberName);
+    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
+    var targetMember = this.fetch(targetVariableName, targetMemberName);
 
     CircuitModule.bind(sourceMember, targetMember);
 
     bindingList.add(binding);
   };
 
-  Environment.prototype.execUnbind = function(cmd) {
+  Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
     var bindingList = this.bindingList;
-    var binding = new Binding(cmd);
+    var binding = new Binding({
+      sourceVariableName: sourceVariableName,
+      sourceMemberName: sourceMemberName,
+      targetVariableName: targetVariableName,
+      targetMemberName: targetMemberName,
+    });
 
     if (!bindingList.contains(binding)) {
       throw new Error('OrderScript runtime error: Not bound');
     }
 
-    var sourceMember = this.fetch(cmd.sourceVariableName, cmd.sourceMemberName);
-    var targetMember = this.fetch(cmd.targetVariableName, cmd.targetMemberName);
+    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
+    var targetMember = this.fetch(targetVariableName, targetMemberName);
 
     CircuitModule.unbind(sourceMember, targetMember);
 
     bindingList.remove(binding);
   };
 
-  Environment.prototype.execSend = function(cmd) {
-    var member = this.fetch(cmd.variableName, cmd.memberName);
-    member(cmd.dataText);
+  Environment.prototype.execSend = function(variableName, memberName, dataText) {
+    var member = this.fetch(variableName, memberName);
+    member(dataText);
   };
 
-  Environment.prototype.execDelete = function(cmd) {
-    var variableName = cmd.variableName;
+  Environment.prototype.execDelete = function(variableName) {
     if (!this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
     }
@@ -152,7 +157,7 @@
     }.bind(this));
   };
 
-  Environment.prototype.execReset = function(cmd) {
+  Environment.prototype.execReset = function() {
     return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
       return this.circuitModuleUnloader(variableName).then(function() {
         if (!this.variableTable.hasOwnProperty(variableName)) {
@@ -168,9 +173,7 @@
     }.bind(this)));
   };
 
-  Environment.prototype.execLoad = function(cmd) {
-    var filePath = cmd.filePath;
-
+  Environment.prototype.execLoad = function(filePath) {
     return this.scriptLoader(filePath).then(function(text) {
       return new Promise(function(resolve, reject) {
         var lines = text.split(/\r\n|\r|\n/g);
@@ -197,9 +200,7 @@
     }.bind(this));
   };
 
-  Environment.prototype.execSave = function(cmd) {
-    var filePath = cmd.filePath;
-
+  Environment.prototype.execSave = function(filePath) {
     return Promise.resolve().then(function() {
       var variables = Object.keys(this.variableTable).map(function(name) {
         return this.variableTable[name];
