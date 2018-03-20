@@ -160,10 +160,6 @@
   Environment.prototype.execReset = function() {
     return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
       return this.circuitModuleUnloader(variableName).then(function() {
-        if (!this.variableTable.hasOwnProperty(variableName)) {
-          throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
-        }
-
         this.unbindAll(variableName);
 
         this.bindingList.removeVariable(variableName);
