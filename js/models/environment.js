@@ -60,6 +60,12 @@
     return member;
   };
 
+  Environment.prototype.delete = function(variableName) {
+    this.unbindAll(variableName);
+    this.bindingList.removeVariable(variableName);
+    delete this.variableTable[variableName];
+  };
+
   Environment.prototype.unbindAll = function(variableName) {
     this.bindingList.toArray().filter(function(binding) {
       return (binding.sourceVariableName === variableName || binding.targetVariableName === variableName);
@@ -149,22 +155,14 @@
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
     }
     return this.circuitModuleUnloader(variableName).then(function() {
-      this.unbindAll(variableName);
-
-      this.bindingList.removeVariable(variableName);
-
-      delete this.variableTable[variableName];
+      this.delete(variableName);
     }.bind(this));
   };
 
   Environment.prototype.execReset = function() {
     return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
       return this.circuitModuleUnloader(variableName).then(function() {
-        this.unbindAll(variableName);
-
-        this.bindingList.removeVariable(variableName);
-
-        delete this.variableTable[variableName];
+        this.delete(variableName);
       }.bind(this));
     }.bind(this)));
   };
