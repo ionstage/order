@@ -196,9 +196,7 @@
 
   Environment.prototype.execSave = function(filePath) {
     return Promise.resolve().then(function() {
-      var variables = Object.keys(this.variableTable).map(function(name) {
-        return this.variableTable[name];
-      }.bind(this));
+      var variables = helper.values(this.variableTable);
       var bindings = this.bindingList.toArray();
 
       var newCommandText = variables.map(function(variable) {

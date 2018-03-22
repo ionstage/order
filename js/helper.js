@@ -17,6 +17,12 @@
     return ctor;
   };
 
+  helper.values = function(obj) {
+    return Object.keys(obj).map(function(key) {
+      return obj[key];
+    });
+  };
+
   helper.List = (function() {
     var List = function() {
       this.data = [];
