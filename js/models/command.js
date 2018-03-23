@@ -25,8 +25,6 @@
       throw new TypeError('Type error');
     }
 
-    this.variableName = variableName;
-    this.moduleName = moduleName;
     this.args = [variableName, moduleName];
   };
 
@@ -42,10 +40,6 @@
       throw new TypeError('Type error');
     }
 
-    this.sourceVariableName = args0[0];
-    this.sourceMemberName = args0[1];
-    this.targetVariableName = args1[0];
-    this.targetMemberName = args1[1];
     this.args = [args0[0], args0[1], args1[0], args1[1]];
   };
 
@@ -65,9 +59,6 @@
       throw new TypeError('Type error');
     }
 
-    this.variableName = args0[0];
-    this.memberName = args0[1];
-    this.dataText = arguments[1] || '';
     this.args = [args0[0], args0[1], (arguments[1] || '')];
   };
 
@@ -86,7 +77,6 @@
       throw new TypeError('Type error');
     }
 
-    this.variableName = variableName;
     this.args = [variableName];
   };
 
@@ -102,7 +92,6 @@
       throw new TypeError('Type error');
     }
 
-    this.filePath = arguments[0] || '';
     this.args = [(arguments[0] || '')];
   };
 
@@ -111,7 +100,6 @@
       throw new TypeError('Type error');
     }
 
-    this.filePath = arguments[0] || '';
     this.args = [(arguments[0] || '')];
   };
 
