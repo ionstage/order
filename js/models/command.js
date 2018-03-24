@@ -3,13 +3,13 @@
 
   var helper = app.helper || require('../helper.js');
 
-  var command = {};
+  var Command = {};
 
-  command.Noop = function() {
+  Command.Noop = function() {
     this.args = [];
   };
 
-  command.New = function() {
+  Command.New = function() {
     if (arguments.length !== 2) {
       throw new TypeError('Type error');
     }
@@ -28,7 +28,7 @@
     this.args = [variableName, moduleName];
   };
 
-  command.Bind = function() {
+  Command.Bind = function() {
     if (arguments.length !== 2) {
       throw new TypeError('Type error');
     }
@@ -43,12 +43,12 @@
     this.args = [args0[0], args0[1], args1[0], args1[1]];
   };
 
-  command.Unbind = function() {
-    // share the implementation of command.Bind
-    command.Bind.apply(this, arguments);
+  Command.Unbind = function() {
+    // share the implementation of Command.Bind
+    Command.Bind.apply(this, arguments);
   };
 
-  command.Send = function() {
+  Command.Send = function() {
     if (arguments.length !== 1 && arguments.length !== 2) {
       throw new TypeError('Type error');
     }
@@ -62,7 +62,7 @@
     this.args = [args0[0], args0[1], (arguments[1] || '')];
   };
 
-  command.Delete = function() {
+  Command.Delete = function() {
     if (arguments.length !== 1) {
       throw new TypeError('Type error');
     }
@@ -80,14 +80,14 @@
     this.args = [variableName];
   };
 
-  command.Reset = function() {
+  Command.Reset = function() {
     if (arguments.length) {
       throw new TypeError('Type error');
     }
     this.args = [];
   };
 
-  command.Load = function() {
+  Command.Load = function() {
     if (arguments.length !== 0 && arguments.length !== 1) {
       throw new TypeError('Type error');
     }
@@ -95,7 +95,7 @@
     this.args = [(arguments[0] || '')];
   };
 
-  command.Save = function() {
+  Command.Save = function() {
     if (arguments.length !== 0 && arguments.length !== 1) {
       throw new TypeError('Type error');
     }
@@ -103,7 +103,7 @@
     this.args = [(arguments[0] || '')];
   };
 
-  command.expandAbbreviation = function(s) {
+  Command.expandAbbreviation = function(s) {
     var line = s.split('#')[0].trim();
 
     if (!line || line.charAt(0) === ':') {
@@ -138,11 +138,11 @@
     return s;
   };
 
-  command.parseStatement = function(s) {
+  Command.parseStatement = function(s) {
     var line = s.split('#')[0].trim();
 
     if (!line) {
-      var cmd = new command.Noop();
+      var cmd = new Command.Noop();
       cmd.name = 'noop';
       return cmd;
     }
@@ -178,7 +178,7 @@
 
     var arg = args.shift();
     var commandName = arg.toLowerCase();
-    var commandType = command[helper.capitalize(commandName)];
+    var commandType = Command[helper.capitalize(commandName)];
 
     if (!commandType) {
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
@@ -199,8 +199,8 @@
   };
 
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = command;
+    module.exports = Command;
   } else {
-    app.command = command;
+    app.Command = Command;
   }
 })(this.app || (this.app = {}));

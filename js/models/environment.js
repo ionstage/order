@@ -2,7 +2,7 @@
   'use strict';
 
   var helper = app.helper || require('../helper.js');
-  var command = app.command || require('./command.js');
+  var Command = app.Command || require('./command.js');
   var CircuitModule = app.CircuitModule || require('./circuit-module.js');
 
   var Variable = function(props) {
@@ -67,7 +67,7 @@
 
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
-      var cmd = command.parseStatement(command.expandAbbreviation(s));
+      var cmd = Command.parseStatement(Command.expandAbbreviation(s));
       return this['exec' + helper.capitalize(cmd.name)].apply(this, cmd.args);
     }.bind(this));
   };

@@ -1,7 +1,7 @@
 var assert = require('assert');
-var command = require('../js/models/command.js');
+var Command = require('../js/models/command.js');
 
-describe('command', function() {
+describe('Command', function() {
   describe('#expandAbbreviation', function() {
     [
       ['x:Module', ':new x Module'],
@@ -50,7 +50,7 @@ describe('command', function() {
       [':send x.member0 "<<"', ':send x.member0 "<<"'],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
-        assert.equal(command.expandAbbreviation(p[0]), p[1]);
+        assert.equal(Command.expandAbbreviation(p[0]), p[1]);
       });
     });
   });
@@ -124,7 +124,7 @@ describe('command', function() {
         { name: 'save', args: ['/path/to/script'] }],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
-        assert.deepEqual(command.parseStatement(p[0]), p[1]);
+        assert.deepEqual(Command.parseStatement(p[0]), p[1]);
       });
     });
   });
@@ -136,7 +136,7 @@ describe('command', function() {
       ' \t ',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert.equal(command.parseStatement(p).name, 'noop');
+        assert.equal(Command.parseStatement(p).name, 'noop');
       });
     });
   });
@@ -150,7 +150,7 @@ describe('command', function() {
       ' :noop # comment',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert.equal(command.parseStatement(p).name, 'noop');
+        assert.equal(Command.parseStatement(p).name, 'noop');
       });
     });
   });
@@ -194,7 +194,7 @@ describe('command', function() {
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
-          command.parseStatement(p);
+          Command.parseStatement(p);
         }, SyntaxError);
       });
     });
