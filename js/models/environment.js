@@ -5,19 +5,6 @@
   var Command = app.Command || require('./command.js');
   var CircuitModule = app.CircuitModule || require('./circuit-module.js');
 
-  var Variable = function(props) {
-    this.name = props.name;
-    this.moduleName = props.moduleName;
-    this.circuitModule = props.circuitModule;
-  };
-
-  var Binding = function(props) {
-    this.sourceVariableName = props.sourceVariableName;
-    this.sourceMemberName = props.sourceMemberName;
-    this.targetVariableName = props.targetVariableName;
-    this.targetMemberName = props.targetMemberName;
-  };
-
   var Environment = function(props) {
     this.circuitModuleLoader = props.circuitModuleLoader;
     this.circuitModuleUnloader = props.circuitModuleUnloader;
@@ -84,7 +71,7 @@
         throw new Error('OrderScript runtime error: Invalid circuit module');
       }
 
-      this.variableTable[variableName] = new Variable({
+      this.variableTable[variableName] = new Environment.Variable({
         name: variableName,
         moduleName: moduleName,
         circuitModule: circuitModule,
@@ -103,7 +90,7 @@
 
     CircuitModule.bind(sourceMember, targetMember);
 
-    this.bindings.push(new Binding({
+    this.bindings.push(new Environment.Binding({
       sourceVariableName: sourceVariableName,
       sourceMemberName: sourceMemberName,
       targetVariableName: targetVariableName,
@@ -193,6 +180,19 @@
 
       return this.scriptSaver(filePath, scriptText);
     }.bind(this));
+  };
+
+  Environment.Variable = function(props) {
+    this.name = props.name;
+    this.moduleName = props.moduleName;
+    this.circuitModule = props.circuitModule;
+  };
+
+  Environment.Binding = function(props) {
+    this.sourceVariableName = props.sourceVariableName;
+    this.sourceMemberName = props.sourceMemberName;
+    this.targetVariableName = props.targetVariableName;
+    this.targetMemberName = props.targetMemberName;
   };
 
   if (typeof module !== 'undefined' && module.exports) {
