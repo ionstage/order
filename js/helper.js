@@ -3,20 +3,6 @@
 
   var helper = {};
 
-  helper.inherits = function(ctor, superCtor) {
-    ctor.super_ = superCtor;
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      },
-    });
-
-    return ctor;
-  };
-
   helper.values = function(obj) {
     return Object.keys(obj).map(function(key) {
       return obj[key];
@@ -38,45 +24,6 @@
     }
     return null;
   };
-
-  helper.List = (function() {
-    var List = function() {
-      this.data = [];
-    };
-
-    List.prototype.add = function(item) {
-      if (!this.contains(item)) {
-        this.data.push(item);
-      }
-    };
-
-    List.prototype.remove = function(item) {
-      var data = this.data;
-
-      for (var i = data.length - 1; i >= 0; i--) {
-        if (this.equal(data[i], item)) {
-          data.splice(i, 1);
-          break;
-        }
-      }
-    };
-
-    List.prototype.contains = function(item) {
-      return this.data.some(function(dataItem) {
-        return this.equal(dataItem, item);
-      }.bind(this));
-    };
-
-    List.prototype.equal = function(a, b) {
-      return a === b;
-    };
-
-    List.prototype.toArray = function() {
-      return this.data.slice();
-    };
-
-    return List;
-  })();
 
   helper.capitalize = function(s) {
     return s.charAt(0).toUpperCase() + s.slice(1);
