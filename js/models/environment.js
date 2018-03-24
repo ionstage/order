@@ -18,35 +18,22 @@
     this.targetMemberName = props.targetMemberName;
   };
 
-  var BindingList = helper.inherits(function() {
-    BindingList.super_.call(this);
-  }, helper.List);
-
-  BindingList.prototype.equal = function(a, b) {
-    return a.sourceVariableName === b.sourceVariableName &&
-           a.sourceMemberName === b.sourceMemberName &&
-           a.targetVariableName === b.targetVariableName &&
-           a.targetMemberName === b.targetMemberName;
-  };
-
-  BindingList.prototype.removeVariable = function(name) {
-    var data = this.data;
-
-    for (var i = data.length - 1; i >= 0; i--) {
-      var item = data[i];
-      if (item.sourceVariableName === name || item.targetVariableName === name) {
-        data.splice(i, 1);
-      }
-    }
-  };
-
   var Environment = function(props) {
     this.circuitModuleLoader = props.circuitModuleLoader;
     this.circuitModuleUnloader = props.circuitModuleUnloader;
     this.scriptLoader = props.scriptLoader;
     this.scriptSaver = props.scriptSaver;
     this.variableTable = {};
-    this.bindingList = new BindingList();
+    this.bindings = [];
+  };
+
+  Environment.prototype.binding = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
+    return helper.find(this.bindings, function(binding) {
+      return (binding.sourceVariableName === sourceVariableName &&
+              binding.sourceMemberName === sourceMemberName &&
+              binding.targetVariableName === targetVariableName &&
+              binding.targetMemberName === targetMemberName);
+    });
   };
 
   Environment.prototype.fetch = function(variableName, moduleName) {
@@ -62,12 +49,14 @@
 
   Environment.prototype.delete = function(variableName) {
     this.unbindAll(variableName);
-    this.bindingList.removeVariable(variableName);
+    helper.remove(this.bindings, helper.find(this.bindings, function(binding) {
+      return (binding.sourceVariableName === variableName && binding.sourceVariableName === variableName);
+    }));
     delete this.variableTable[variableName];
   };
 
   Environment.prototype.unbindAll = function(variableName) {
-    this.bindingList.toArray().filter(function(binding) {
+    this.bindings.filter(function(binding) {
       return (binding.sourceVariableName === variableName || binding.targetVariableName === variableName);
     }).forEach(function(binding) {
       var source = this.fetch(binding.sourceVariableName, binding.sourceMemberName);
@@ -104,15 +93,8 @@
   };
 
   Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var bindingList = this.bindingList;
-    var binding = new Binding({
-      sourceVariableName: sourceVariableName,
-      sourceMemberName: sourceMemberName,
-      targetVariableName: targetVariableName,
-      targetMemberName: targetMemberName,
-    });
-
-    if (bindingList.contains(binding)) {
+    var binding = this.binding(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName);
+    if (binding) {
       throw new Error('OrderScript runtime error: Already bound');
     }
 
@@ -121,19 +103,17 @@
 
     CircuitModule.bind(sourceMember, targetMember);
 
-    bindingList.add(binding);
-  };
-
-  Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var bindingList = this.bindingList;
-    var binding = new Binding({
+    this.bindings.push(new Binding({
       sourceVariableName: sourceVariableName,
       sourceMemberName: sourceMemberName,
       targetVariableName: targetVariableName,
       targetMemberName: targetMemberName,
-    });
+    }));
+  };
 
-    if (!bindingList.contains(binding)) {
+  Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
+    var binding = this.binding(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName);
+    if (!binding) {
       throw new Error('OrderScript runtime error: Not bound');
     }
 
@@ -142,7 +122,7 @@
 
     CircuitModule.unbind(sourceMember, targetMember);
 
-    bindingList.remove(binding);
+    helper.remove(this.bindings, binding);
   };
 
   Environment.prototype.execSend = function(variableName, memberName, dataText) {
@@ -197,13 +177,12 @@
   Environment.prototype.execSave = function(filePath) {
     return Promise.resolve().then(function() {
       var variables = helper.values(this.variableTable);
-      var bindings = this.bindingList.toArray();
 
       var newCommandText = variables.map(function(variable) {
         return variable.name + ':' + variable.moduleName;
       }).join('\n');
 
-      var bindCommandText = bindings.map(function(binding) {
+      var bindCommandText = this.bindings.map(function(binding) {
         return (binding.sourceVariableName + '.' + binding.sourceMemberName + ' >> ' +
                 binding.targetVariableName + '.' + binding.targetMemberName);
       }).join('\n');

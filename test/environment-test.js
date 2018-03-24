@@ -80,7 +80,7 @@ describe('environment', function() {
         var member0 = cels[0].get('member0');
         var member1 = cels[1].get('member1');
         assert(CircuitModule.bind.calledWith(member0, member1));
-        assert.equal(env.bindingList.data.length, 1);
+        assert.equal(env.bindings.length, 1);
       });
     });
 
@@ -109,7 +109,7 @@ describe('environment', function() {
         var member0 = cels[0].get('member0');
         var member1 = cels[1].get('member1');
         assert(CircuitModule.unbind.calledWith(member0, member1));
-        assert.equal(env.bindingList.data.length, 0);
+        assert.equal(env.bindings.length, 0);
       });
     });
 
