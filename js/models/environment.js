@@ -52,6 +52,17 @@
     }.bind(this));
   };
 
+  Environment.prototype.generateScript = function() {
+    var variableScript = helper.values(this.variableTable).map(function(variable) {
+      return variable.name + ':' + variable.moduleName;
+    }).join('\n');
+    var bindingScript = this.bindings.map(function(binding) {
+      return (binding.sourceVariableName + '.' + binding.sourceMemberName + ' >> ' +
+              binding.targetVariableName + '.' + binding.targetMemberName);
+    }).join('\n');
+    return (variableScript + '\n' + bindingScript).trim() + '\n';
+  };
+
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
       var cmd = Command.parseStatement(Command.expandAbbreviation(s));
@@ -162,24 +173,7 @@
   };
 
   Environment.prototype.execSave = function(filePath) {
-    return Promise.resolve().then(function() {
-      var variables = helper.values(this.variableTable);
-
-      var newCommandText = variables.map(function(variable) {
-        return variable.name + ':' + variable.moduleName;
-      }).join('\n');
-
-      var bindCommandText = this.bindings.map(function(binding) {
-        return (binding.sourceVariableName + '.' + binding.sourceMemberName + ' >> ' +
-                binding.targetVariableName + '.' + binding.targetMemberName);
-      }).join('\n');
-
-      var scriptText = [newCommandText, bindCommandText].filter(function(text) {
-        return text;
-      }).join('\n') + '\n';
-
-      return this.scriptSaver(filePath, scriptText);
-    }.bind(this));
+    return this.scriptSaver(filePath, this.generateScript());
   };
 
   Environment.Variable = function(props) {
