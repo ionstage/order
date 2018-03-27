@@ -147,28 +147,16 @@
 
   Environment.prototype.execLoad = function(filePath) {
     return this.scriptLoader(filePath).then(function(text) {
-      return new Promise(function(resolve, reject) {
-        var lines = text.split(/\r\n|\r|\n/g);
-
-        var execLine = function(i) {
-          if (i >= lines.length) {
-            resolve();
-            return;
-          }
-
-          this.exec(lines[i]).then(function() {
-            execLine(i + 1);
-          }).catch(function(e) {
+      return text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
+        return p.then(function() {
+          return this.exec(line).catch(function(e) {
             var fileName = filePath.split('/').pop();
             var lineNumber = i + 1;
             var message = fileName + ':' + lineNumber + ': ' + e.message;
-
-            reject(new SyntaxError(message, fileName, lineNumber));
+            throw new SyntaxError(message, fileName, lineNumber);
           });
-        }.bind(this);
-
-        execLine(0);
-      }.bind(this));
+        }.bind(this));
+      }.bind(this), Promise.resolve());
     }.bind(this));
   };
 
