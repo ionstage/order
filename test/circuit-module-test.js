@@ -54,18 +54,6 @@ describe('CircuitModule.OrderModule', function() {
     assert(listener.calledOnce);
   });
 
-  it('has members with type setting', function() {
-    var arg = {};
-    var listener = function() {};
-    var cel = new CircuitModule.OrderModule([
-      { name: 'onprop', arg: arg, type: 'prop' },
-      { name: 'event', arg: listener, type: 'event' },
-    ]);
-
-    assert(circuit.prop.calledWith(arg));
-    assert(circuit.event.calledWith(listener));
-  });
-
   it('should make the latter member definition a priority', function() {
     var listener0 = sinon.spy();
     var listener1 = sinon.spy();
