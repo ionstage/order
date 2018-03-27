@@ -1,21 +1,8 @@
 var assert = require('assert');
-var circuit = require('circuit');
 var sinon = require('sinon');
 var CircuitModule = require('../js/models/circuit-module.js');
 
 describe('CircuitModule.OrderModule', function() {
-  beforeEach(function() {
-    Object.keys(circuit).forEach(function(key) {
-      sinon.spy(circuit, key);
-    });
-  });
-
-  afterEach(function() {
-    Object.keys(circuit).forEach(function(key) {
-      circuit[key].restore();
-    });
-  });
-
   it('has members with only name', function() {
     var cel = new CircuitModule.OrderModule([
       { name: 'prop', type: 'prop' },
