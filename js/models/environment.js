@@ -146,11 +146,11 @@
   };
 
   Environment.prototype.execLoad = function(filePath) {
-    return this.scriptLoader(filePath).then(function(text) {
-      return text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
+    return this.scriptLoader(filePath).then(function(result) {
+      return result.text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
         return p.then(function() {
           return this.exec(line).catch(function(e) {
-            var fileName = filePath.split('/').pop();
+            var fileName = result.fileName;
             var lineNumber = i + 1;
             var message = fileName + ':' + lineNumber + ': ' + e.message;
             throw new SyntaxError(message, fileName, lineNumber);

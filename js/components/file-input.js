@@ -17,8 +17,14 @@
       }.bind(this), true);
       dom.click(this.element());
     }.bind(this)).then(function(file) {
+      var fileName = dom.fileName(file);
       dom.value(this.element(), '');
-      return dom.readFile(file);
+      return dom.readFile(file).then(function(text) {
+        return {
+          text: text,
+          fileName: fileName,
+        };
+      });
     }.bind(this));
   };
 

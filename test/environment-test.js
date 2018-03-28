@@ -162,7 +162,7 @@ describe('environment', function() {
       var env = new Environment(defaultProps);
 
       env.scriptLoader = sinon.spy(function() {
-        return Promise.resolve(':new x Module');
+        return Promise.resolve({ text: ':new x Module', fileName: 'test.os' });
       });
 
       return env.exec(':load /path/to/script').then(function() {

@@ -121,6 +121,10 @@
     });
   };
 
+  dom.fileName = function(file) {
+    return file.name;
+  };
+
   dom.ajax = function(opt) {
     var type = opt.type;
     var url = opt.url;
