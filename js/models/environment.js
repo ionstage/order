@@ -52,6 +52,16 @@
     }.bind(this));
   };
 
+  Environment.prototype.loadScript = function(text, fileName) {
+    return text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
+      return p.then(function() {
+        return this.exec(line).catch(function(e) {
+          throw new SyntaxError(e.message, fileName, i + 1);
+        });
+      }.bind(this));
+    }.bind(this), Promise.resolve());
+  };
+
   Environment.prototype.generateScript = function() {
     var variableScript = helper.values(this.variableTable).map(function(variable) {
       return variable.name + ':' + variable.moduleName;
@@ -147,13 +157,7 @@
 
   Environment.prototype.execLoad = function(filePath) {
     return this.scriptLoader(filePath).then(function(result) {
-      return result.text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
-        return p.then(function() {
-          return this.exec(line).catch(function(e) {
-            throw new SyntaxError(e.message, result.fileName, i + 1);
-          });
-        }.bind(this));
-      }.bind(this), Promise.resolve());
+      return this.loadScript(result.text, result.fileName);
     }.bind(this));
   };
 
