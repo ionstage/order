@@ -34,22 +34,18 @@
     return member;
   };
 
-  Environment.prototype.delete = function(variableName) {
-    this.unbindAll(variableName);
-    helper.remove(this.bindings, helper.find(this.bindings, function(binding) {
-      return (binding.sourceVariableName === variableName && binding.sourceVariableName === variableName);
-    }));
-    delete this.variableTable[variableName];
-  };
-
-  Environment.prototype.unbindAll = function(variableName) {
+  Environment.prototype.deleteVariable = function(name) {
     this.bindings.filter(function(binding) {
-      return (binding.sourceVariableName === variableName || binding.targetVariableName === variableName);
+      return (binding.sourceVariableName === name || binding.targetVariableName === name);
     }).forEach(function(binding) {
       var source = this.fetch(binding.sourceVariableName, binding.sourceMemberName);
       var target = this.fetch(binding.targetVariableName, binding.targetMemberName);
       CircuitModule.unbind(source, target);
     }.bind(this));
+    helper.remove(this.bindings, helper.find(this.bindings, function(binding) {
+      return (binding.sourceVariableName === name && binding.sourceVariableName === name);
+    }));
+    delete this.variableTable[name];
   };
 
   Environment.prototype.loadScript = function(text, fileName) {
@@ -143,14 +139,14 @@
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
     }
     return this.circuitModuleUnloader(variableName).then(function() {
-      this.delete(variableName);
+      this.deleteVariable(variableName);
     }.bind(this));
   };
 
   Environment.prototype.execReset = function() {
     return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
       return this.circuitModuleUnloader(variableName).then(function() {
-        this.delete(variableName);
+        this.deleteVariable(variableName);
       }.bind(this));
     }.bind(this)));
   };
