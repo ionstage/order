@@ -41,10 +41,8 @@
       var source = this.fetch(binding.sourceVariableName, binding.sourceMemberName);
       var target = this.fetch(binding.targetVariableName, binding.targetMemberName);
       CircuitModule.unbind(source, target);
+      helper.remove(this.bindings, binding);
     }.bind(this));
-    helper.remove(this.bindings, helper.find(this.bindings, function(binding) {
-      return (binding.sourceVariableName === name && binding.sourceVariableName === name);
-    }));
     delete this.variableTable[name];
   };
 
