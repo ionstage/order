@@ -47,6 +47,12 @@
     }.bind(this));
   };
 
+  Environment.prototype.unloadVariable = function(name) {
+    return this.circuitModuleUnloader(name).then(function() {
+      this.deleteVariable(name);
+    }.bind(this));
+  };
+
   Environment.prototype.deleteVariable = function(name) {
     this.bindings.filter(function(binding) {
       return (binding.sourceVariableName === name || binding.targetVariableName === name);
@@ -138,16 +144,12 @@
     if (!this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
     }
-    return this.circuitModuleUnloader(variableName).then(function() {
-      this.deleteVariable(variableName);
-    }.bind(this));
+    return this.unloadVariable(variableName);
   };
 
   Environment.prototype.execReset = function() {
     return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
-      return this.circuitModuleUnloader(variableName).then(function() {
-        this.deleteVariable(variableName);
-      }.bind(this));
+      return this.unloadVariable(variableName);
     }.bind(this)));
   };
 
