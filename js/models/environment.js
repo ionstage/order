@@ -34,6 +34,19 @@
     return member;
   };
 
+  Environment.prototype.loadVariable = function(name, moduleName) {
+    return this.circuitModuleLoader(name, moduleName).then(function(circuitModule) {
+      if (!circuitModule) {
+        throw new Error('OrderScript runtime error: Invalid circuit module');
+      }
+      this.variableTable[name] = new Environment.Variable({
+        name: name,
+        moduleName: moduleName,
+        circuitModule: circuitModule,
+      });
+    }.bind(this));
+  };
+
   Environment.prototype.deleteVariable = function(name) {
     this.bindings.filter(function(binding) {
       return (binding.sourceVariableName === name || binding.targetVariableName === name);
@@ -80,18 +93,7 @@
     if (this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
     }
-
-    return this.circuitModuleLoader(variableName, moduleName).then(function(circuitModule) {
-      if (!circuitModule) {
-        throw new Error('OrderScript runtime error: Invalid circuit module');
-      }
-
-      this.variableTable[variableName] = new Environment.Variable({
-        name: variableName,
-        moduleName: moduleName,
-        circuitModule: circuitModule,
-      });
-    }.bind(this));
+    return this.loadVariable(variableName, moduleName);
   };
 
   Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
