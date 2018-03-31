@@ -23,13 +23,13 @@
     });
   };
 
-  Environment.prototype.fetch = function(variableName, moduleName) {
+  Environment.prototype.fetch = function(variableName, memberName) {
     if (!this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
     }
-    var member = this.variableTable[variableName].circuitModule.get(moduleName);
+    var member = this.variableTable[variableName].circuitModule.get(memberName);
     if (!member) {
-      throw new Error('OrderScript runtime error: member "' + variableName + '.' + moduleName + '" is not defined');
+      throw new Error('OrderScript runtime error: member "' + variableName + '.' + memberName + '" is not defined');
     }
     return member;
   };
