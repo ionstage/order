@@ -3,94 +3,69 @@ var sinon = require('sinon');
 var CircuitModule = require('../js/models/circuit-module.js');
 
 describe('CircuitModule.OrderModule', function() {
-  it('has members with only name', function() {
-    var cel = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop' },
-      { name: 'onevent', type: 'event' },
+  it('has members without value', function() {
+    var m = new CircuitModule.OrderModule([
+      { name: 'a', type: 'prop' },
+      { name: 'b', type: 'event' },
     ]);
-
-    var prop = cel.get('prop');
-    var onevent = cel.get('onevent');
-
-    assert.equal(typeof prop(), 'undefined');
-    assert.equal(typeof onevent(), 'undefined');
-    assert.strictEqual(cel.get('event'), null);
+    var a = m.get('a');
+    var b = m.get('b');
+    assert(typeof a() === 'undefined');
+    assert(typeof b() === 'undefined');
   });
 
   it('has prop members with name and value', function() {
-    var cel = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop', arg: 1 },
-    ]);
-
-    var prop = cel.get('prop');
-
-    assert.equal(prop(), 1);
-    prop(2);
-    assert.equal(prop(), 2);
+    var m = new CircuitModule.OrderModule([{ name: 'a', type: 'prop', arg: 1 }]);
+    var a = m.get('a');
+    assert.equal(a(), 1);
+    a(2);
+    assert.equal(a(), 2);
   });
 
   it('has event members with name and listener', function() {
-    var listener = sinon.spy();
-    var cel = new CircuitModule.OrderModule([
-      { name: 'onevent', type: 'event', arg: listener },
-    ]);
-
-    var onevent = cel.get('onevent');
-
-    onevent();
-    assert(listener.calledOnce);
+    var l = sinon.spy();
+    var m = new CircuitModule.OrderModule([{ name: 'a', type: 'event', arg: l }]);
+    var a = m.get('a');
+    a();
+    assert(l.calledOnce);
   });
 
   it('should make the latter member definition a priority', function() {
-    var listener0 = sinon.spy();
-    var listener1 = sinon.spy();
-    var cel = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop', arg: 1 },
-      { name: 'onevent', type: 'event', arg: listener0 },
-      { name: 'prop', type: 'prop', arg: 2 },
-      { name: 'onevent', type: 'event', arg: listener1 },
+    var l0 = sinon.spy();
+    var l1 = sinon.spy();
+    var m = new CircuitModule.OrderModule([
+      { name: 'a', type: 'prop', arg: 1 },
+      { name: 'b', type: 'event', arg: l0 },
+      { name: 'a', type: 'prop', arg: 2 },
+      { name: 'b', type: 'event', arg: l1 },
     ]);
-
-    var prop = cel.get('prop');
-    var onevent = cel.get('onevent');
-
-    assert.equal(prop(), 2);
-    onevent();
-    assert(listener0.notCalled);
-    assert(listener1.calledOnce);
+    var a = m.get('a');
+    var b = m.get('b');
+    assert.equal(a(), 2);
+    b();
+    assert(l0.notCalled);
+    assert(l1.calledOnce);
   });
 
   it('bind members', function() {
-    var cel0 = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-    var cel1 = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-
-    var prop0 = cel0.get('prop');
-    var prop1 = cel1.get('prop');
-
-    CircuitModule.bind(prop0, prop1);
-    prop0(0);
-    assert.equal(prop1(), 0);
+    var m0 = new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }]);
+    var m1 = new CircuitModule.OrderModule([{ name: 'b', type: 'prop' }]);
+    var a = m0.get('a');
+    var b = m1.get('b');
+    CircuitModule.bind(a, b);
+    a(0);
+    assert.equal(b(), 0);
   });
 
   it('unbind members', function() {
-    var cel0 = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-    var cel1 = new CircuitModule.OrderModule([
-      { name: 'prop', type: 'prop' },
-    ]);
-
-    var prop0 = cel0.get('prop');
-    var prop1 = cel1.get('prop');
-
-    CircuitModule.bind(prop0, prop1);
-    prop0(0);
-    CircuitModule.unbind(prop0, prop1);
-    prop0(1);
-    assert.equal(prop1(), 0);
+    var m0 = new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }]);
+    var m1 = new CircuitModule.OrderModule([{ name: 'b', type: 'prop' }]);
+    var a = m0.get('a');
+    var b = m1.get('b');
+    CircuitModule.bind(a, b);
+    a(0);
+    CircuitModule.unbind(a, b);
+    a(1);
+    assert.equal(b(), 0);
   });
 });
