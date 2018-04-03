@@ -136,8 +136,7 @@
   };
 
   Environment.prototype.execSend = function(variableName, memberName, dataText) {
-    var member = this.fetch(variableName, memberName);
-    member(dataText);
+    this.fetch(variableName, memberName)(dataText);
   };
 
   Environment.prototype.execDelete = function(variableName) {
