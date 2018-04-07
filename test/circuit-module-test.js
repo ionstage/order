@@ -10,6 +10,8 @@ describe('CircuitModule.OrderModule', function() {
     ]);
     var a = m.get('a');
     var b = m.get('b');
+    assert.equal(a.name, 'a');
+    assert.equal(b.name, 'b');
     assert(typeof a() === 'undefined');
     assert(typeof b() === 'undefined');
   });

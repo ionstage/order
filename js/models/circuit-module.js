@@ -28,11 +28,16 @@
   CircuitModule.Member = (function() {
     var Member = function(props) {
       this.callee = circuit[props.type](props.arg);
-      return new Wrapper(this, this.call.bind(this));
+      return this.wrapper(props.name);
     };
 
     Member.prototype.call = function() {
       return this.callee.apply(this, arguments);
+    };
+
+    Member.prototype.wrapper = function(name) {
+      var wrapper = new Wrapper(this, this.call.bind(this));
+      return Object.defineProperty(wrapper, 'name', { value: name });
     };
 
     return Member;
