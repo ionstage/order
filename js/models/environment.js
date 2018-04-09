@@ -34,6 +34,12 @@
     return member;
   };
 
+  Environment.prototype.findVariable = function(member) {
+    return helper.find(helper.values(this.variableTable), function(variable) {
+      return (variable.circuitModule.get(member.name) === member);
+    });
+  };
+
   Environment.prototype.loadVariable = function(name, moduleName) {
     return this.circuitModuleLoader(name, moduleName).then(function(circuitModule) {
       if (!circuitModule) {
