@@ -14,12 +14,9 @@
     this.bindings = [];
   };
 
-  Environment.prototype.binding = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
+  Environment.prototype.binding = function(sourceMember, targetMember) {
     return helper.find(this.bindings, function(binding) {
-      return (binding.sourceVariableName === sourceVariableName &&
-              binding.sourceMemberName === sourceMemberName &&
-              binding.targetVariableName === targetVariableName &&
-              binding.targetMemberName === targetMemberName);
+      return (binding.sourceMember === sourceMember && binding.targetMember === targetMember);
     });
   };
 
@@ -60,12 +57,11 @@
   };
 
   Environment.prototype.deleteVariable = function(name) {
+    var variable = this.variableTable[name];
     this.bindings.filter(function(binding) {
-      return (binding.sourceVariableName === name || binding.targetVariableName === name);
-    }).forEach(function(binding) {
-      var source = this.fetch(binding.sourceVariableName, binding.sourceMemberName);
-      var target = this.fetch(binding.targetVariableName, binding.targetMemberName);
-      CircuitModule.unbind(source, target);
+      return (this.findVariable(binding.sourceMember) === variable || this.findVariable(binding.targetMember) === variable);
+    }.bind(this)).forEach(function(binding) {
+      CircuitModule.unbind(binding.sourceMember, binding.targetMember);
       helper.remove(this.bindings, binding);
     }.bind(this));
     delete this.variableTable[name];
@@ -86,9 +82,9 @@
       return variable.name + ':' + variable.moduleName;
     }).join('\n');
     var bindingScript = this.bindings.map(function(binding) {
-      return (binding.sourceVariableName + '.' + binding.sourceMemberName + ' >> ' +
-              binding.targetVariableName + '.' + binding.targetMemberName);
-    }).join('\n');
+      return (this.findVariable(binding.sourceMember).name + '.' + binding.sourceMember.name + ' >> ' +
+              this.findVariable(binding.targetMember).name + '.' + binding.targetMember.name);
+    }.bind(this)).join('\n');
     return (variableScript + '\n' + bindingScript).trim() + '\n';
   };
 
@@ -109,32 +105,30 @@
   };
 
   Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var binding = this.binding(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName);
+    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
+    var targetMember = this.fetch(targetVariableName, targetMemberName);
+    var binding = this.binding(sourceMember, targetMember);
+
     if (binding) {
       throw new Error('OrderScript runtime error: Already bound');
     }
 
-    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
-    var targetMember = this.fetch(targetVariableName, targetMemberName);
-
     CircuitModule.bind(sourceMember, targetMember);
 
     this.bindings.push(new Environment.Binding({
-      sourceVariableName: sourceVariableName,
-      sourceMemberName: sourceMemberName,
-      targetVariableName: targetVariableName,
-      targetMemberName: targetMemberName,
+      sourceMember: sourceMember,
+      targetMember: targetMember,
     }));
   };
 
   Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var binding = this.binding(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName);
+    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
+    var targetMember = this.fetch(targetVariableName, targetMemberName);
+    var binding = this.binding(sourceMember, targetMember);
+
     if (!binding) {
       throw new Error('OrderScript runtime error: Not bound');
     }
-
-    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
-    var targetMember = this.fetch(targetVariableName, targetMemberName);
 
     CircuitModule.unbind(sourceMember, targetMember);
 
@@ -175,10 +169,8 @@
   };
 
   Environment.Binding = function(props) {
-    this.sourceVariableName = props.sourceVariableName;
-    this.sourceMemberName = props.sourceMemberName;
-    this.targetVariableName = props.targetVariableName;
-    this.targetMemberName = props.targetMemberName;
+    this.sourceMember = props.sourceMember;
+    this.targetMember = props.targetMember;
   };
 
   if (typeof module !== 'undefined' && module.exports) {
