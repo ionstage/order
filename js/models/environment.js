@@ -14,12 +14,6 @@
     this.bindings = [];
   };
 
-  Environment.prototype.binding = function(sourceMember, targetMember) {
-    return helper.find(this.bindings, function(binding) {
-      return (binding.sourceMember === sourceMember && binding.targetMember === targetMember);
-    });
-  };
-
   Environment.prototype.fetch = function(variableName, memberName) {
     if (!this.variableTable.hasOwnProperty(variableName)) {
       throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
@@ -34,6 +28,12 @@
   Environment.prototype.findVariable = function(member) {
     return helper.find(helper.values(this.variableTable), function(variable) {
       return (variable.circuitModule.get(member.name) === member);
+    });
+  };
+
+  Environment.prototype.findBinding = function(sourceMember, targetMember) {
+    return helper.find(this.bindings, function(binding) {
+      return (binding.sourceMember === sourceMember && binding.targetMember === targetMember);
     });
   };
 
@@ -107,7 +107,7 @@
   Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
     var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
     var targetMember = this.fetch(targetVariableName, targetMemberName);
-    var binding = this.binding(sourceMember, targetMember);
+    var binding = this.findBinding(sourceMember, targetMember);
 
     if (binding) {
       throw new Error('OrderScript runtime error: Already bound');
@@ -124,7 +124,7 @@
   Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
     var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
     var targetMember = this.fetch(targetVariableName, targetMemberName);
-    var binding = this.binding(sourceMember, targetMember);
+    var binding = this.findBinding(sourceMember, targetMember);
 
     if (!binding) {
       throw new Error('OrderScript runtime error: Not bound');
