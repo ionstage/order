@@ -184,7 +184,7 @@ describe('environment', function() {
     });
   });
 
-  it('#unbind all circuit module members on deleting variable', function(done) {
+  it('#unbind all circuit module members on deleting variable', function() {
     var env = new Environment({
       circuitModuleLoader: function(variableName, moduleName) {
         switch (variableName) {
@@ -202,7 +202,7 @@ describe('environment', function() {
     var x, y, z;
     CircuitModule.unbind = sinon.spy();
 
-    Promise.all([
+    return Promise.all([
       env.exec(':new x Module'),
       env.exec(':new y Module'),
       env.exec(':new z Module'),
@@ -234,7 +234,6 @@ describe('environment', function() {
       assert.equal(args[4][1], y.circuitModule.get('b'));
       assert.equal(args[5][0], y.circuitModule.get('b'));
       assert.equal(args[5][1], z.circuitModule.get('b'));
-      done();
     });
   });
 });
