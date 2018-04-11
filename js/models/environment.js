@@ -14,17 +14,6 @@
     this.bindings = [];
   };
 
-  Environment.prototype.fetch = function(variableName, memberName) {
-    if (!this.variableTable.hasOwnProperty(variableName)) {
-      throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
-    }
-    var member = this.variableTable[variableName].circuitModule.get(memberName);
-    if (!member) {
-      throw new Error('OrderScript runtime error: member "' + variableName + '.' + memberName + '" is not defined');
-    }
-    return member;
-  };
-
   Environment.prototype.findVariable = function(member) {
     return helper.find(helper.values(this.variableTable), function(variable) {
       return (variable.circuitModule.get(member.name) === member);
@@ -35,6 +24,17 @@
     return helper.find(this.bindings, function(binding) {
       return (binding.sourceMember === sourceMember && binding.targetMember === targetMember);
     });
+  };
+
+  Environment.prototype.fetchMember = function(variableName, memberName) {
+    if (!this.variableTable.hasOwnProperty(variableName)) {
+      throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
+    }
+    var member = this.variableTable[variableName].circuitModule.get(memberName);
+    if (!member) {
+      throw new Error('OrderScript runtime error: member "' + variableName + '.' + memberName + '" is not defined');
+    }
+    return member;
   };
 
   Environment.prototype.loadVariable = function(name, moduleName) {
@@ -105,8 +105,8 @@
   };
 
   Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
-    var targetMember = this.fetch(targetVariableName, targetMemberName);
+    var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
+    var targetMember = this.fetchMember(targetVariableName, targetMemberName);
     var binding = this.findBinding(sourceMember, targetMember);
 
     if (binding) {
@@ -122,8 +122,8 @@
   };
 
   Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var sourceMember = this.fetch(sourceVariableName, sourceMemberName);
-    var targetMember = this.fetch(targetVariableName, targetMemberName);
+    var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
+    var targetMember = this.fetchMember(targetVariableName, targetMemberName);
     var binding = this.findBinding(sourceMember, targetMember);
 
     if (!binding) {
@@ -136,7 +136,7 @@
   };
 
   Environment.prototype.execSend = function(variableName, memberName, dataText) {
-    this.fetch(variableName, memberName)(dataText);
+    this.fetchMember(variableName, memberName)(dataText);
   };
 
   Environment.prototype.execDelete = function(variableName) {
