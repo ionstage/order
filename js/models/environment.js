@@ -67,6 +67,17 @@
     delete this.variableTable[name];
   };
 
+  Environment.prototype.bind = function(sourceMember, targetMember) {
+    if (this.findBinding(sourceMember, targetMember)) {
+      throw new Error('OrderScript runtime error: Already bound');
+    }
+    CircuitModule.bind(sourceMember, targetMember);
+    this.bindings.push(new Environment.Binding({
+      sourceMember: sourceMember,
+      targetMember: targetMember,
+    }));
+  };
+
   Environment.prototype.loadScript = function(text, fileName) {
     return text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
       return p.then(function() {
@@ -107,18 +118,7 @@
   Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
     var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
     var targetMember = this.fetchMember(targetVariableName, targetMemberName);
-    var binding = this.findBinding(sourceMember, targetMember);
-
-    if (binding) {
-      throw new Error('OrderScript runtime error: Already bound');
-    }
-
-    CircuitModule.bind(sourceMember, targetMember);
-
-    this.bindings.push(new Environment.Binding({
-      sourceMember: sourceMember,
-      targetMember: targetMember,
-    }));
+    this.bind(sourceMember, targetMember);
   };
 
   Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
