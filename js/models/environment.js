@@ -78,6 +78,15 @@
     }));
   };
 
+  Environment.prototype.unbind = function(sourceMember, targetMember) {
+    var binding = this.findBinding(sourceMember, targetMember);
+    if (!binding) {
+      throw new Error('OrderScript runtime error: Not bound');
+    }
+    CircuitModule.unbind(sourceMember, targetMember);
+    helper.remove(this.bindings, binding);
+  };
+
   Environment.prototype.loadScript = function(text, fileName) {
     return text.split(/\r\n|\r|\n/g).reduce(function(p, line, i) {
       return p.then(function() {
@@ -124,15 +133,7 @@
   Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
     var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
     var targetMember = this.fetchMember(targetVariableName, targetMemberName);
-    var binding = this.findBinding(sourceMember, targetMember);
-
-    if (!binding) {
-      throw new Error('OrderScript runtime error: Not bound');
-    }
-
-    CircuitModule.unbind(sourceMember, targetMember);
-
-    helper.remove(this.bindings, binding);
+    this.unbind(sourceMember, targetMember);
   };
 
   Environment.prototype.execSend = function(variableName, memberName, dataText) {
