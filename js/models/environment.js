@@ -111,56 +111,50 @@
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
       var cmd = Command.parseStatement(Command.expandAbbreviation(s));
-      return this['exec' + helper.capitalize(cmd.name)].apply(this, cmd.args);
+      return Environment.EXEC_TABLE[cmd.name].apply(this, cmd.args);
     }.bind(this));
   };
 
-  Environment.prototype.execNoop = function() {};
-
-  Environment.prototype.execNew = function(variableName, moduleName) {
-    if (this.variableTable.hasOwnProperty(variableName)) {
-      throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
-    }
-    return this.loadVariable(variableName, moduleName);
-  };
-
-  Environment.prototype.execBind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
-    var targetMember = this.fetchMember(targetVariableName, targetMemberName);
-    this.bind(sourceMember, targetMember);
-  };
-
-  Environment.prototype.execUnbind = function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
-    var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
-    var targetMember = this.fetchMember(targetVariableName, targetMemberName);
-    this.unbind(sourceMember, targetMember);
-  };
-
-  Environment.prototype.execSend = function(variableName, memberName, dataText) {
-    this.fetchMember(variableName, memberName)(dataText);
-  };
-
-  Environment.prototype.execDelete = function(variableName) {
-    if (!this.variableTable.hasOwnProperty(variableName)) {
-      throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
-    }
-    return this.unloadVariable(variableName);
-  };
-
-  Environment.prototype.execReset = function() {
-    return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
+  Environment.EXEC_TABLE = {
+    noop: function() {},
+    new: function(variableName, moduleName) {
+      if (this.variableTable.hasOwnProperty(variableName)) {
+        throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');
+      }
+      return this.loadVariable(variableName, moduleName);
+    },
+    bind: function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
+      var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
+      var targetMember = this.fetchMember(targetVariableName, targetMemberName);
+      this.bind(sourceMember, targetMember);
+    },
+    unbind: function(sourceVariableName, sourceMemberName, targetVariableName, targetMemberName) {
+      var sourceMember = this.fetchMember(sourceVariableName, sourceMemberName);
+      var targetMember = this.fetchMember(targetVariableName, targetMemberName);
+      this.unbind(sourceMember, targetMember);
+    },
+    send: function(variableName, memberName, dataText) {
+      this.fetchMember(variableName, memberName)(dataText);
+    },
+    delete: function(variableName) {
+      if (!this.variableTable.hasOwnProperty(variableName)) {
+        throw new Error('OrderScript runtime error: variable "' + variableName + '" is not defined');
+      }
       return this.unloadVariable(variableName);
-    }.bind(this)));
-  };
-
-  Environment.prototype.execLoad = function(filePath) {
-    return this.scriptLoader(filePath).then(function(result) {
-      return this.loadScript(result.text, result.fileName);
-    }.bind(this));
-  };
-
-  Environment.prototype.execSave = function(filePath) {
-    return this.scriptSaver(filePath, this.generateScript());
+    },
+    reset: function() {
+      return Promise.all(Object.keys(this.variableTable).map(function(variableName) {
+        return this.unloadVariable(variableName);
+      }.bind(this)));
+    },
+    load: function(filePath) {
+      return this.scriptLoader(filePath).then(function(result) {
+        return this.loadScript(result.text, result.fileName);
+      }.bind(this));
+    },
+    save: function(filePath) {
+      return this.scriptSaver(filePath, this.generateScript());
+    },
   };
 
   Environment.Variable = function(props) {
