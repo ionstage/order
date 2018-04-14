@@ -7,8 +7,8 @@ describe('environment', function() {
   var defaultProps = {
     circuitModuleLoader: function() { return Promise.resolve(new CircuitModule.OrderModule([])); },
     circuitModuleUnloader: function() { return Promise.resolve(); },
-    scriptLoader: function() { /* do nothing */ },
-    scriptSaver: function() { /* do nothing */ },
+    scriptLoader: function() { return Promise.resolve(); },
+    scriptSaver: function() { return Promise.resolve(); },
   };
 
   describe('#exec', function() {
