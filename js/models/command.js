@@ -6,7 +6,7 @@
   var Command = {};
 
   Command.Noop = function() {
-    this.args = [];
+    return [];
   };
 
   Command.New = function() {
@@ -25,7 +25,7 @@
       throw new TypeError('Type error');
     }
 
-    this.args = [variableName, moduleName];
+    return [variableName, moduleName];
   };
 
   Command.Bind = function() {
@@ -40,12 +40,12 @@
       throw new TypeError('Type error');
     }
 
-    this.args = [args0[0], args0[1], args1[0], args1[1]];
+    return [args0[0], args0[1], args1[0], args1[1]];
   };
 
   Command.Unbind = function() {
     // share the implementation of Command.Bind
-    Command.Bind.apply(this, arguments);
+    return Command.Bind.apply(null, arguments);
   };
 
   Command.Send = function() {
@@ -59,7 +59,7 @@
       throw new TypeError('Type error');
     }
 
-    this.args = [args0[0], args0[1], (arguments[1] || '')];
+    return [args0[0], args0[1], (arguments[1] || '')];
   };
 
   Command.Delete = function() {
@@ -77,14 +77,14 @@
       throw new TypeError('Type error');
     }
 
-    this.args = [variableName];
+    return [variableName];
   };
 
   Command.Reset = function() {
     if (arguments.length) {
       throw new TypeError('Type error');
     }
-    this.args = [];
+    return [];
   };
 
   Command.Load = function() {
@@ -92,7 +92,7 @@
       throw new TypeError('Type error');
     }
 
-    this.args = [(arguments[0] || '')];
+    return [(arguments[0] || '')];
   };
 
   Command.Save = function() {
@@ -100,7 +100,7 @@
       throw new TypeError('Type error');
     }
 
-    this.args = [(arguments[0] || '')];
+    return [(arguments[0] || '')];
   };
 
   Command.expandAbbreviation = function(s) {
@@ -178,22 +178,18 @@
 
     var arg = args.shift();
     var commandName = arg.toLowerCase();
-    var commandType = Command[helper.capitalize(commandName)];
+    var commandFunc = Command[helper.capitalize(commandName)];
 
-    if (!commandType) {
+    if (!commandFunc) {
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
     }
 
-    args.unshift(null);
-
-    var cmd;
+    var cmd = { name: commandName };
     try {
-      cmd = new (Function.prototype.bind.apply(commandType, args));
+      cmd.args = commandFunc.apply(null, args);
     } catch (e) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
-
-    cmd.name = commandName;
 
     return cmd;
   };
