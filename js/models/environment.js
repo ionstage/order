@@ -110,8 +110,9 @@
 
   Environment.prototype.exec = function(s) {
     return Promise.resolve().then(function() {
-      var cmd = Command.parseStatement(Command.expandAbbreviation(s));
-      return Environment.EXEC_TABLE[cmd.name].apply(this, cmd.args);
+      var args = Command.parseStatement(Command.expandAbbreviation(s));
+      var name = args.shift();
+      return Environment.EXEC_TABLE[name].apply(this, args);
     }.bind(this));
   };
 

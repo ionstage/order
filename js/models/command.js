@@ -142,9 +142,7 @@
     var line = s.split('#')[0].trim();
 
     if (!line) {
-      var cmd = new Command.Noop();
-      cmd.name = 'noop';
-      return cmd;
+      return ['noop'];
     }
 
     if (line === ':') {
@@ -184,14 +182,11 @@
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
     }
 
-    var cmd = { name: commandName };
     try {
-      cmd.args = commandFunc.apply(null, args);
+      return [commandName].concat(commandFunc.apply(null, args));
     } catch (e) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
-
-    return cmd;
   };
 
   if (typeof module !== 'undefined' && module.exports) {

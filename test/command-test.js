@@ -57,71 +57,28 @@ describe('Command', function() {
 
   describe('#parseStatement', function() {
     [
-      [':noop',
-        { name: 'noop', args: [] }],
-
-      [':new x Module',
-        { name: 'new', args: ['x', 'Module'] }],
-
-      [':new  x \t Module',
-        { name: 'new', args: ['x', 'Module'] }],
-
-      [':New x Module',
-        { name: 'new', args: ['x', 'Module'] }],
-
-      [':NEW x Module',
-        { name: 'new', args: ['x', 'Module'] }],
-
-      [':bind x.member0 y.member1',
-        { name: 'bind', args: ['x', 'member0', 'y', 'member1'] }],
-
-      [':unbind x.member0 y.member1',
-        { name: 'unbind', args: ['x', 'member0', 'y', 'member1'] }],
-
-      [':send x.member0',
-        { name: 'send', args: ['x', 'member0', ''] }],
-
-      [':send x.member0 data_text',
-        { name: 'send', args: ['x', 'member0', 'data_text'] }],
-
-      [':send x.member0 \'data text\'',
-        { name: 'send', args: ['x', 'member0', 'data text'] }],
-
-      [':send x.member0 "data text"',
-        { name: 'send', args: ['x', 'member0', 'data text'] }],
-
-      [':send x.member0 "data_text"',
-        { name: 'send', args: ['x', 'member0', 'data_text'] }],
-
-      [':send x.member0 \\"data_text"',
-        { name: 'send', args: ['x', 'member0', '"data_text"'] }],
-
-      [':send x.member0 "data_text\'',
-        { name: 'send', args: ['x', 'member0', '"data_text\''] }],
-
-      [':send x.member0 \'data \\\' text\'',
-        { name: 'send', args: ['x', 'member0', 'data \' text'] }],
-
-      [':send x.member0 \'data \\\\ text\'',
-        { name: 'send', args: ['x', 'member0', 'data \\ text'] }],
-
-      [':delete x',
-        { name: 'delete', args: ['x'] }],
-
-      [':reset',
-        { name: 'reset', args: [] }],
-
-      [':load',
-        { name: 'load', args: [''] }],
-
-      [':load /path/to/script',
-        { name: 'load', args: ['/path/to/script'] }],
-
-      [':save',
-        { name: 'save', args: [''] }],
-
-      [':save /path/to/script',
-        { name: 'save', args: ['/path/to/script'] }],
+      [':noop', ['noop']],
+      [':new x Module', ['new', 'x', 'Module']],
+      [':new  x \t Module', ['new', 'x', 'Module']],
+      [':New x Module', ['new', 'x', 'Module']],
+      [':NEW x Module', ['new', 'x', 'Module']],
+      [':bind x.member0 y.member1', ['bind', 'x', 'member0', 'y', 'member1']],
+      [':unbind x.member0 y.member1', ['unbind', 'x', 'member0', 'y', 'member1']],
+      [':send x.member0', ['send', 'x', 'member0', '']],
+      [':send x.member0 data_text', ['send', 'x', 'member0', 'data_text']],
+      [':send x.member0 \'data text\'', ['send', 'x', 'member0', 'data text']],
+      [':send x.member0 "data text"', ['send', 'x', 'member0', 'data text']],
+      [':send x.member0 "data_text"', ['send', 'x', 'member0', 'data_text']],
+      [':send x.member0 \\"data_text"', ['send', 'x', 'member0', '"data_text"']],
+      [':send x.member0 "data_text\'', ['send', 'x', 'member0', '"data_text\'']],
+      [':send x.member0 \'data \\\' text\'', ['send', 'x', 'member0', 'data \' text']],
+      [':send x.member0 \'data \\\\ text\'', ['send', 'x', 'member0', 'data \\ text']],
+      [':delete x', ['delete', 'x']],
+      [':reset', ['reset']],
+      [':load', ['load', '']],
+      [':load /path/to/script', ['load', '/path/to/script']],
+      [':save', ['save', '']],
+      [':save /path/to/script', ['save', '/path/to/script']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.parseStatement(p[0]), p[1]);
@@ -136,7 +93,7 @@ describe('Command', function() {
       ' \t ',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert.equal(Command.parseStatement(p).name, 'noop');
+        assert.deepEqual(Command.parseStatement(p), ['noop']);
       });
     });
   });
@@ -150,7 +107,7 @@ describe('Command', function() {
       ' :noop # comment',
     ].forEach(function(p) {
       it('"' + p + '"', function() {
-        assert.equal(Command.parseStatement(p).name, 'noop');
+        assert.deepEqual(Command.parseStatement(p), ['noop']);
       });
     });
   });
