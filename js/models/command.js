@@ -9,13 +9,10 @@
     return [];
   };
 
-  Command.New = function() {
+  Command.New = function(variableName, moduleName) {
     if (arguments.length !== 2) {
       throw new TypeError('Type error');
     }
-
-    var variableName = arguments[0];
-    var moduleName = arguments[1];
 
     if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1) {
       throw new TypeError('Type error');
@@ -28,13 +25,13 @@
     return [variableName, moduleName];
   };
 
-  Command.Bind = function() {
+  Command.Bind = function(source, target) {
     if (arguments.length !== 2) {
       throw new TypeError('Type error');
     }
 
-    var args0 = arguments[0].split('.');
-    var args1 = arguments[1].split('.');
+    var args0 = source.split('.');
+    var args1 = target.split('.');
 
     if (args0.length !== 2 || args1.length !== 2) {
       throw new TypeError('Type error');
@@ -48,26 +45,24 @@
     return Command.Bind.apply(null, arguments);
   };
 
-  Command.Send = function() {
+  Command.Send = function(receiver, dataText) {
     if (arguments.length !== 1 && arguments.length !== 2) {
       throw new TypeError('Type error');
     }
 
-    var args0 = arguments[0].split('.');
+    var args0 = receiver.split('.');
 
     if (args0.length !== 2) {
       throw new TypeError('Type error');
     }
 
-    return [args0[0], args0[1], (arguments[1] || '')];
+    return [args0[0], args0[1], (dataText || '')];
   };
 
-  Command.Delete = function() {
+  Command.Delete = function(variableName) {
     if (arguments.length !== 1) {
       throw new TypeError('Type error');
     }
-
-    var variableName = arguments[0];
 
     if (variableName.indexOf('.') !== -1) {
       throw new TypeError('Type error');
@@ -87,20 +82,20 @@
     return [];
   };
 
-  Command.Load = function() {
+  Command.Load = function(filePath) {
     if (arguments.length !== 0 && arguments.length !== 1) {
       throw new TypeError('Type error');
     }
 
-    return [(arguments[0] || '')];
+    return [(filePath || '')];
   };
 
-  Command.Save = function() {
+  Command.Save = function(filePath) {
     if (arguments.length !== 0 && arguments.length !== 1) {
       throw new TypeError('Type error');
     }
 
-    return [(arguments[0] || '')];
+    return [(filePath || '')];
   };
 
   Command.expandAbbreviation = function(s) {
