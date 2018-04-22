@@ -5,99 +5,6 @@
 
   var Command = {};
 
-  Command.Noop = function() {
-    return [];
-  };
-
-  Command.New = function(variableName, moduleName) {
-    if (arguments.length !== 2) {
-      throw new TypeError('Type error');
-    }
-
-    if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1) {
-      throw new TypeError('Type error');
-    }
-
-    if (!(/^[a-zA-Z]/.test(variableName)) || !(/^[a-zA-Z]/.test(moduleName))) {
-      throw new TypeError('Type error');
-    }
-
-    return [variableName, moduleName];
-  };
-
-  Command.Bind = function(source, target) {
-    if (arguments.length !== 2) {
-      throw new TypeError('Type error');
-    }
-
-    var args0 = source.split('.');
-    var args1 = target.split('.');
-
-    if (args0.length !== 2 || args1.length !== 2) {
-      throw new TypeError('Type error');
-    }
-
-    return [args0[0], args0[1], args1[0], args1[1]];
-  };
-
-  Command.Unbind = function() {
-    // share the implementation of Command.Bind
-    return Command.Bind.apply(null, arguments);
-  };
-
-  Command.Send = function(receiver, dataText) {
-    if (arguments.length !== 1 && arguments.length !== 2) {
-      throw new TypeError('Type error');
-    }
-
-    var args0 = receiver.split('.');
-
-    if (args0.length !== 2) {
-      throw new TypeError('Type error');
-    }
-
-    return [args0[0], args0[1], (dataText || '')];
-  };
-
-  Command.Delete = function(variableName) {
-    if (arguments.length !== 1) {
-      throw new TypeError('Type error');
-    }
-
-    if (variableName.indexOf('.') !== -1) {
-      throw new TypeError('Type error');
-    }
-
-    if (!(/^[a-zA-Z]/.test(variableName))) {
-      throw new TypeError('Type error');
-    }
-
-    return [variableName];
-  };
-
-  Command.Reset = function() {
-    if (arguments.length) {
-      throw new TypeError('Type error');
-    }
-    return [];
-  };
-
-  Command.Load = function(filePath) {
-    if (arguments.length !== 0 && arguments.length !== 1) {
-      throw new TypeError('Type error');
-    }
-
-    return [(filePath || '')];
-  };
-
-  Command.Save = function(filePath) {
-    if (arguments.length !== 0 && arguments.length !== 1) {
-      throw new TypeError('Type error');
-    }
-
-    return [(filePath || '')];
-  };
-
   Command.expandAbbreviation = function(s) {
     var line = s.split('#')[0].trim();
 
@@ -171,7 +78,7 @@
 
     var arg = args.shift();
     var commandName = arg.toLowerCase();
-    var commandFunc = Command[helper.capitalize(commandName)];
+    var commandFunc = Command.PARSE_TABLE[commandName];
 
     if (!commandFunc) {
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
@@ -182,6 +89,86 @@
     } catch (e) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
+  };
+
+  Command.PARSE_TABLE = {
+    noop: function() {
+      return [];
+    },
+    new: function(variableName, moduleName) {
+      if (arguments.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1) {
+        throw new TypeError('Type error');
+      }
+      if (!(/^[a-zA-Z]/.test(variableName)) || !(/^[a-zA-Z]/.test(moduleName))) {
+        throw new TypeError('Type error');
+      }
+      return [variableName, moduleName];
+    },
+    bind: function(source, target) {
+      if (arguments.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      var args0 = source.split('.');
+      var args1 = target.split('.');
+      if (args0.length !== 2 || args1.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      return [args0[0], args0[1], args1[0], args1[1]];
+    },
+    unbind: function(source, target) {
+      if (arguments.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      var args0 = source.split('.');
+      var args1 = target.split('.');
+      if (args0.length !== 2 || args1.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      return [args0[0], args0[1], args1[0], args1[1]];
+    },
+    send: function(receiver, dataText) {
+      if (arguments.length !== 1 && arguments.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      var args0 = receiver.split('.');
+      if (args0.length !== 2) {
+        throw new TypeError('Type error');
+      }
+      return [args0[0], args0[1], (dataText || '')];
+    },
+    delete: function(variableName) {
+      if (arguments.length !== 1) {
+        throw new TypeError('Type error');
+      }
+      if (variableName.indexOf('.') !== -1) {
+        throw new TypeError('Type error');
+      }
+      if (!(/^[a-zA-Z]/.test(variableName))) {
+        throw new TypeError('Type error');
+      }
+      return [variableName];
+    },
+    reset: function() {
+      if (arguments.length) {
+        throw new TypeError('Type error');
+      }
+      return [];
+    },
+    load: function(filePath) {
+      if (arguments.length !== 0 && arguments.length !== 1) {
+        throw new TypeError('Type error');
+      }
+      return [(filePath || '')];
+    },
+    save: function(filePath) {
+      if (arguments.length !== 0 && arguments.length !== 1) {
+        throw new TypeError('Type error');
+      }
+      return [(filePath || '')];
+    },
   };
 
   if (typeof module !== 'undefined' && module.exports) {
