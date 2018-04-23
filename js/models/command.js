@@ -84,11 +84,13 @@
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  arg + '"');
     }
 
-    try {
-      return [commandName].concat(commandFunc.apply(null, args));
-    } catch (e) {
+    var commandArgs = commandFunc.apply(null, args);
+
+    if (!commandArgs) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
+
+    return [commandName].concat(commandArgs);
   };
 
   Command.PARSE_TABLE = {
@@ -97,75 +99,75 @@
     },
     new: function(variableName, moduleName) {
       if (arguments.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       if (variableName.indexOf('.') !== -1 || moduleName.indexOf('.') !== -1) {
-        throw new TypeError('Type error');
+        return null;
       }
       if (!(/^[a-zA-Z]/.test(variableName)) || !(/^[a-zA-Z]/.test(moduleName))) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [variableName, moduleName];
     },
     bind: function(source, target) {
       if (arguments.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       var args0 = source.split('.');
       var args1 = target.split('.');
       if (args0.length !== 2 || args1.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [args0[0], args0[1], args1[0], args1[1]];
     },
     unbind: function(source, target) {
       if (arguments.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       var args0 = source.split('.');
       var args1 = target.split('.');
       if (args0.length !== 2 || args1.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [args0[0], args0[1], args1[0], args1[1]];
     },
     send: function(receiver, dataText) {
       if (arguments.length !== 1 && arguments.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       var args0 = receiver.split('.');
       if (args0.length !== 2) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [args0[0], args0[1], (dataText || '')];
     },
     delete: function(variableName) {
       if (arguments.length !== 1) {
-        throw new TypeError('Type error');
+        return null;
       }
       if (variableName.indexOf('.') !== -1) {
-        throw new TypeError('Type error');
+        return null;
       }
       if (!(/^[a-zA-Z]/.test(variableName))) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [variableName];
     },
     reset: function() {
       if (arguments.length) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [];
     },
     load: function(filePath) {
       if (arguments.length !== 0 && arguments.length !== 1) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [(filePath || '')];
     },
     save: function(filePath) {
       if (arguments.length !== 0 && arguments.length !== 1) {
-        throw new TypeError('Type error');
+        return null;
       }
       return [(filePath || '')];
     },
