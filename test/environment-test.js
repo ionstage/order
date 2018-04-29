@@ -38,9 +38,10 @@ describe('environment', function() {
     it('should not create variables with the same name', function(done) {
       var env = new Environment(defaultProps);
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':new x Module');
-      }).catch(function(e) {
+      return env.exec([
+        ':new x Module',
+        ':new x Module',
+      ]).catch(function(e) {
         assert(e instanceof Error);
         done();
       });
@@ -72,11 +73,11 @@ describe('environment', function() {
 
       CircuitModule.bind = sinon.spy();
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':new y Module');
-      }).then(function() {
-        return env.exec(':bind x.member0 y.member1');
-      }).then(function() {
+      return env.exec([
+        ':new x Module',
+        ':new y Module',
+        ':bind x.member0 y.member1',
+      ]).then(function() {
         var member0 = cels[0].get('member0');
         var member1 = cels[1].get('member1');
         assert(CircuitModule.bind.calledWith(member0, member1));
@@ -99,13 +100,12 @@ describe('environment', function() {
 
       CircuitModule.unbind = sinon.spy();
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':new y Module');
-      }).then(function() {
-        return env.exec(':bind x.member0 y.member1');
-      }).then(function() {
-        return env.exec(':unbind x.member0 y.member1');
-      }).then(function() {
+      return env.exec([
+        ':new x Module',
+        ':new y Module',
+        ':bind x.member0 y.member1',
+        ':unbind x.member0 y.member1',
+      ]).then(function() {
         var member0 = cels[0].get('member0');
         var member1 = cels[1].get('member1');
         assert(CircuitModule.unbind.calledWith(member0, member1));
@@ -122,9 +122,10 @@ describe('environment', function() {
         },
       });
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':send x.prop data_text');
-      }).then(function() {
+      return env.exec([
+        ':new x Module',
+        ':send x.prop data_text',
+      ]).then(function() {
         var member = env.variableTable.x.circuitModule.get('prop');
         assert.equal(member(), 'data_text');
       });
@@ -135,9 +136,10 @@ describe('environment', function() {
 
       env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':delete x');
-      }).then(function() {
+      return env.exec([
+        ':new x Module',
+        ':delete x',
+      ]).then(function() {
         assert.equal(Object.keys(env.variableTable).length, 0);
         assert(env.circuitModuleUnloader.calledOnce);
       });
@@ -148,11 +150,11 @@ describe('environment', function() {
 
       env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':new y Module');
-      }).then(function() {
-        return env.exec(':reset');
-      }).then(function() {
+      return env.exec([
+        ':new x Module',
+        ':new y Module',
+        ':reset',
+      ]).then(function() {
         assert.equal(Object.keys(env.variableTable).length, 0);
         assert(env.circuitModuleUnloader.calledTwice);
       });
@@ -176,9 +178,10 @@ describe('environment', function() {
 
       env.scriptSaver = sinon.spy();
 
-      return env.exec(':new x Module').then(function() {
-        return env.exec(':save /path/to/script');
-      }).then(function() {
+      return env.exec([
+        ':new x Module',
+        ':save /path/to/script',
+      ]).then(function() {
         assert(env.scriptSaver.calledWith('/path/to/script', 'x:Module\n'));
       });
     });
@@ -202,20 +205,17 @@ describe('environment', function() {
     var x, y, z;
     CircuitModule.unbind = sinon.spy();
 
-    return Promise.all([
-      env.exec(':new x Module'),
-      env.exec(':new y Module'),
-      env.exec(':new z Module'),
+    return env.exec([
+      ':new x Module',
+      ':new y Module',
+      ':new z Module',
+      ':bind x.a y.a',
+      ':bind x.b y.a',
+      ':bind y.a z.a',
+      ':bind y.a z.b',
+      ':bind x.b y.b',
+      ':bind y.b z.b',
     ]).then(function() {
-      return Promise.all([
-        env.exec(':bind x.a y.a'),
-        env.exec(':bind x.b y.a'),
-        env.exec(':bind y.a z.a'),
-        env.exec(':bind y.a z.b'),
-        env.exec(':bind x.b y.b'),
-        env.exec(':bind y.b z.b'),
-      ]);
-    }).then(function() {
       x = env.variableTable['x'];
       y = env.variableTable['y'];
       z = env.variableTable['z'];

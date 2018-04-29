@@ -108,12 +108,17 @@
     return (variableScript + '\n' + bindingScript).trim() + '\n';
   };
 
-  Environment.prototype.exec = function(s) {
-    return Promise.resolve().then(function() {
-      var args = Command.parseStatement(Command.expandAbbreviation(s));
-      var name = args.shift();
-      return Environment.EXEC_TABLE[name].apply(this, args);
-    }.bind(this));
+  Environment.prototype.exec = function(list) {
+    if (typeof list === 'string') {
+      list = [list];
+    }
+    return list.reduce(function(p, s) {
+      return p.then(function() {
+        var args = Command.parseStatement(Command.expandAbbreviation(s));
+        var name = args.shift();
+        return Environment.EXEC_TABLE[name].apply(this, args);
+      }.bind(this));
+    }.bind(this), Promise.resolve());
   };
 
   Environment.EXEC_TABLE = {
