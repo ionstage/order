@@ -25,10 +25,6 @@
     return null;
   };
 
-  helper.capitalize = function(s) {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  };
-
   helper.wrapper = function() {
     var Wrapper = function(self, wrapper) {
       return Object.defineProperty(wrapper, 'unwrap', { value: Wrapper.unwrap.bind(self) });
