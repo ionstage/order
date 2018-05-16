@@ -5,7 +5,7 @@
 
   var Command = {};
 
-  Command.tokenize = function(line) {
+  Command.split = function(line) {
     return line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {
       if (i % 2 === 0) {
         return s.split(/[\s]+/).map(function(arg) {
@@ -77,7 +77,7 @@
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
     }
 
-    var args = Command.tokenize(line);
+    var args = Command.split(line);
     var arg = args.shift();
     var commandName = arg.toLowerCase();
     var commandFunc = Command.PARSE_TABLE[commandName];
