@@ -5,6 +5,10 @@
 
   var Command = {};
 
+  Command.tokenize = function(s) {
+    return s.match(/".*?[^\\]"|'.*?[^\\]'|\S+/g);
+  };
+
   Command.split = function(line) {
     return line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {
       if (i % 2 === 0) {

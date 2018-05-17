@@ -2,6 +2,37 @@ var assert = require('assert');
 var Command = require('../js/models/command.js');
 
 describe('Command', function() {
+  describe('#tokenize', function() {
+    [
+      [':noop', [':noop']],
+      [':new x Module', [':new', 'x', 'Module']],
+      [':new  x \t Module', [':new', 'x', 'Module']],
+      [':New x Module', [':New', 'x', 'Module']],
+      [':NEW x Module', [':NEW', 'x', 'Module']],
+      [':bind x.member0 y.member1', [':bind', 'x.member0', 'y.member1']],
+      [':unbind x.member0 y.member1', [':unbind', 'x.member0', 'y.member1']],
+      [':send x.member0', [':send', 'x.member0']],
+      [':send x.member0 data_text', [':send', 'x.member0', 'data_text']],
+      [':send x.member0 \'data text\'', [':send', 'x.member0', '\'data text\'']],
+      [':send x.member0 "data text"', [':send', 'x.member0', '"data text"']],
+      [':send x.member0 "data_text"', [':send', 'x.member0', '"data_text"']],
+      [':send x.member0 \\"data_text"', [':send', 'x.member0', '\\"data_text"']],
+      [':send x.member0 "data_text\'', [':send', 'x.member0', '"data_text\'']],
+      [':send x.member0 \'data \\\' text\'', [':send', 'x.member0', '\'data \\\' text\'']],
+      [':send x.member0 \'data \\\\ text\'', [':send', 'x.member0', '\'data \\\\ text\'']],
+      [':delete x', [':delete', 'x']],
+      [':reset', [':reset']],
+      [':load', [':load']],
+      [':load /path/to/script', [':load', '/path/to/script']],
+      [':save', [':save']],
+      [':save /path/to/script', [':save', '/path/to/script']],
+    ].forEach(function(p) {
+      it('"' + p[0] + '"', function() {
+        assert.deepEqual(Command.tokenize(p[0]), p[1]);
+      });
+    });
+  });
+
   describe('#expandAbbreviation', function() {
     [
       ['x:Module', ':new x Module'],
