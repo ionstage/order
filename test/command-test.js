@@ -31,6 +31,11 @@ describe('Command', function() {
       ['x :Module', ['x', ':', 'Module']],
       ['x: Module', ['x', ':', 'Module']],
       ['x : Module', ['x', ':', 'Module']],
+
+      ['x.member0 >> y.member1', ['x.member0', '>>', 'y.member1']],
+      ['x.member0>>y.member1', ['x.member0', '>>', 'y.member1']],
+      ['x.member0 >>y.member1', ['x.member0', '>>', 'y.member1']],
+      ['x.member0>> y.member1', ['x.member0', '>>', 'y.member1']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.tokenize(p[0]), p[1]);
