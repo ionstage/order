@@ -26,6 +26,11 @@ describe('Command', function() {
       [':load /path/to/script', [':load', '/path/to/script']],
       [':save', [':save']],
       [':save /path/to/script', [':save', '/path/to/script']],
+
+      ['x:Module', ['x', ':','Module']],
+      ['x :Module', ['x', ':', 'Module']],
+      ['x: Module', ['x', ':', 'Module']],
+      ['x : Module', ['x', ':', 'Module']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.tokenize(p[0]), p[1]);

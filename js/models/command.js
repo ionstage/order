@@ -6,6 +6,11 @@
   var Command = {};
 
   Command.tokenize = function(s) {
+    s = s.trim();
+    if (s.charAt(0) !== ':') {
+      /* abbreviation of 'new' command */
+      return s.match(/^([^\s:]+?)\s*(:)\s*([^\s:]+?)$/).slice(1);
+    }
     return s.match(/".*?[^\\]"|'.*?[^\\]'|\S+/g);
   };
 
