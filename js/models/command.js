@@ -11,7 +11,7 @@
       /* abbreviation of 'new' or 'bind' command */
       return s.match(/^([^\s:]+?)\s*(:|>>)\s*([^\s:]+?)$/).slice(1);
     }
-    return s.match(/".*?[^\\]"|'.*?[^\\]'|\S+/g);
+    return s.match(/".*?[^\\]"|'.*?[^\\]'|:|\S+/g);
   };
 
   Command.split = function(line) {
