@@ -44,6 +44,10 @@ describe('Command', function() {
       ['x.member0 <<data_text', ['x', '.', 'member0', '<<', 'data_text']],
       ['x.member0<< data_text', ['x', '.', 'member0', '<<', 'data_text']],
       ['x.member0 << "data_text"', ['x', '.', 'member0', '<<', '"data_text"']],
+
+      ['', []],
+      [' ', []],
+      [' \t ', []],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.tokenize(p[0]), p[1]);
