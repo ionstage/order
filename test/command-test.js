@@ -54,6 +54,10 @@ describe('Command', function() {
       [' # comment ', []],
       ['# x:Module', []],
       [' :noop # comment', [':', 'noop']],
+
+      [' :noop ', [':', 'noop']],
+      [':send x.member0 ">>y.member1"', [':', 'send', 'x', '.', 'member0', '">>y.member1"']],
+      [':send x.member0 "<<"', [':', 'send', 'x', '.', 'member0', '"<<"']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.tokenize(p[0]), p[1]);
