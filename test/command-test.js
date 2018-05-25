@@ -65,6 +65,16 @@ describe('Command', function() {
     });
   });
 
+  describe('#parse', function() {
+    [
+      [[':', 'noop'], ['noop']],
+    ].forEach(function(p) {
+      it('"' + p[0] + '"', function() {
+        assert.deepEqual(Command.parse(p[0]), p[1]);
+      });
+    });
+  });
+
   describe('#expandAbbreviation', function() {
     [
       ['x:Module', ':new x Module'],

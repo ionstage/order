@@ -11,6 +11,10 @@
     return (index !== -1 ? tokens.slice(0, index) : tokens);
   };
 
+  Command.parse = function(tokens) {
+    return (tokens[0] === ':' ? tokens.slice(1) : tokens);
+  };
+
   Command.split = function(line) {
     return line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {
       if (i % 2 === 0) {
