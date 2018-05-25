@@ -6,7 +6,9 @@
   var Command = {};
 
   Command.tokenize = function(s) {
-    return s.match(/".*?[^\\]"|'.*?[^\\]'|\.|:|>>|<<|[\w"'\/\\]+/g) || [];
+    var tokens = s.match(/".*?[^\\]"|'.*?[^\\]'|\.|#|:|>>|<<|[\w"'\/\\]+/g) || [];
+    var index = tokens.indexOf('#');
+    return (index !== -1 ? tokens.slice(0, index) : tokens);
   };
 
   Command.split = function(line) {

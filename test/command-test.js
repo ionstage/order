@@ -48,6 +48,12 @@ describe('Command', function() {
       ['', []],
       [' ', []],
       [' \t ', []],
+
+      ['#', []],
+      ['# comment', []],
+      [' # comment ', []],
+      ['# x:Module', []],
+      [' :noop # comment', [':', 'noop']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.tokenize(p[0]), p[1]);
