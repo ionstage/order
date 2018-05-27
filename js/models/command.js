@@ -12,7 +12,12 @@
   };
 
   Command.parse = function(tokens) {
-    return (tokens[0] === ':' ? tokens.slice(1) : tokens);
+    var nodes = tokens.slice();
+    if (nodes[0] === ':') {
+      nodes.shift();
+      nodes[0] = nodes[0].toLowerCase();
+    }
+    return nodes;
   };
 
   Command.split = function(line) {
