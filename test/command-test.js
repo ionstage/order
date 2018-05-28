@@ -72,6 +72,8 @@ describe('Command', function() {
       [[':', 'new', 'x', 'Module'], ['new', 'x', 'Module']],
       [[':', 'New', 'x', 'Module'], ['new', 'x', 'Module']],
       [[':', 'NEW', 'x', 'Module'], ['new', 'x', 'Module']],
+      [[':', 'bind', 'x', '.', 'member0', 'y', '.', 'member1'], ['bind', 'x', 'member0', 'y', 'member1']],
+      [[':', 'unbind', 'x', '.', 'member0', 'y', '.', 'member1'], ['unbind', 'x', 'member0', 'y', 'member1']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.parse(p[0]), p[1]);

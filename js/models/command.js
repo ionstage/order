@@ -17,7 +17,9 @@
       nodes.shift();
       nodes[0] = nodes[0].toLowerCase();
     }
-    return nodes;
+    return nodes.filter(function(node) {
+      return (node !== '.');
+    });
   };
 
   Command.split = function(line) {
