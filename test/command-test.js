@@ -67,6 +67,7 @@ describe('Command', function() {
 
   describe('#parse', function() {
     [
+      [[], []],
       [[':', 'noop'], ['noop']],
       [[':', 'new', 'x', 'Module'], ['new', 'x', 'Module']],
       [[':', 'New', 'x', 'Module'], ['new', 'x', 'Module']],
