@@ -74,6 +74,21 @@ describe('Command', function() {
       [[':', 'NEW', 'x', 'Module'], ['new', 'x', 'Module']],
       [[':', 'bind', 'x', '.', 'member0', 'y', '.', 'member1'], ['bind', 'x', 'member0', 'y', 'member1']],
       [[':', 'unbind', 'x', '.', 'member0', 'y', '.', 'member1'], ['unbind', 'x', 'member0', 'y', 'member1']],
+      [[':', 'send', 'x', '.', 'member0'], ['send', 'x', 'member0']],
+      [[':', 'send', 'x', '.', 'member0', 'data_text'], ['send', 'x', 'member0', 'data_text']],
+      [[':', 'send', 'x', '.', 'member0', '\'data text\''], ['send', 'x', 'member0', 'data text']],
+      [[':', 'send', 'x', '.', 'member0', '"data text"'], ['send', 'x', 'member0', 'data text']],
+      [[':', 'send', 'x', '.', 'member0', '"data_text"'], ['send', 'x', 'member0', 'data_text']],
+      [[':', 'send', 'x', '.', 'member0', '\\"data_text"'], ['send', 'x', 'member0', '"data_text"']],
+      [[':', 'send', 'x', '.', 'member0', '"data_text\''], ['send', 'x', 'member0', '"data_text\'']],
+      [[':', 'send', 'x', '.', 'member0', '\'data \\\' text\''], ['send', 'x', 'member0', 'data \' text']],
+      [[':', 'send', 'x', '.', 'member0', '\'data \\\\ text\''], ['send', 'x', 'member0', 'data \\\\ text']],
+      [[':', 'delete', 'x'], ['delete', 'x']],
+      [[':', 'reset'], ['reset']],
+      [[':', 'load'], ['load']],
+      [[':', 'load', '/path/to/script'], ['load', '/path/to/script']],
+      [[':', 'save'], ['save']],
+      [[':', 'save', '/path/to/script'], ['save', '/path/to/script']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.parse(p[0]), p[1]);

@@ -19,6 +19,13 @@
     }
     return nodes.filter(function(node) {
       return (node !== '.');
+    }).map(function(node) {
+      var first = node.charAt(0);
+      var last = node.slice(-1);
+      if (first === last && (first === '\'' || first === '"')) {
+        node = node.slice(1, -1);
+      }
+      return node.replace(/\\(["'])/g, '$1');
     });
   };
 
