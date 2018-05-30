@@ -16,6 +16,9 @@
     if (nodes[0] === ':') {
       nodes.shift();
       nodes[0] = nodes[0].toLowerCase();
+    } else if (nodes[1] === ':') {
+      nodes.splice(1, 1);
+      nodes.unshift('new');
     }
     return nodes.filter(function(node) {
       return (node !== '.');
