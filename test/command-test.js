@@ -27,7 +27,7 @@ describe('Command', function() {
       [':save', [':', 'save']],
       [':save /path/to/script', [':', 'save', '/path/to/script']],
 
-      ['x:Module', ['x', ':','Module']],
+      ['x:Module', ['x', ':', 'Module']],
       ['x :Module', ['x', ':', 'Module']],
       ['x: Module', ['x', ':', 'Module']],
       ['x : Module', ['x', ':', 'Module']],
