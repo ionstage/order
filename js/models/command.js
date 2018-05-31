@@ -19,6 +19,9 @@
     } else if (nodes[1] === ':') {
       nodes.splice(1, 1);
       nodes.unshift('new');
+    } else if (nodes[1] === '.' && nodes[3] === '>>' && nodes[5] === '.') {
+      nodes.splice(3, 1);
+      nodes.unshift('bind');
     }
     return nodes.filter(function(node) {
       return (node !== '.');

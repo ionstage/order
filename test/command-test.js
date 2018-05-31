@@ -92,6 +92,7 @@ describe('Command', function() {
       [[':', 'save', '/path/to/script'], ['save', '/path/to/script']],
 
       [['x', ':', 'Module'], ['new', 'x', 'Module']],
+      [['x', '.', 'member0', '>>', 'y', '.', 'member1'], ['bind', 'x', 'member0', 'y', 'member1']],
     ].forEach(function(p) {
       it('"' + p[0] + '"', function() {
         assert.deepEqual(Command.parse(p[0]), p[1]);
