@@ -22,6 +22,9 @@
     } else if (nodes[1] === '.' && nodes[3] === '>>' && nodes[5] === '.') {
       nodes.splice(3, 1);
       nodes.unshift('bind');
+    } else if (nodes[1] === '.' && nodes[3] === '<<') {
+      nodes.splice(3, 1);
+      nodes.unshift('send');
     }
     return nodes.filter(function(node) {
       return (node !== '.');
