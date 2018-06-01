@@ -103,6 +103,18 @@ describe('Command', function() {
     });
   });
 
+  describe('#parse (error)', function() {
+    [
+      [':'],
+    ].forEach(function(p) {
+      it('"' + p + '"', function() {
+        assert.throws(function() {
+          Command.parse(p);
+        }, SyntaxError);
+      });
+    });
+  });
+
   describe('#expandAbbreviation', function() {
     [
       ['x:Module', ':new x Module'],

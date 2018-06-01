@@ -13,7 +13,7 @@
 
   Command.parse = function(tokens) {
     var nodes = tokens.slice();
-    if (nodes[0] === ':') {
+    if (nodes[0] === ':' && nodes.length > 1) {
       nodes.shift();
       nodes[0] = nodes[0].toLowerCase();
     } else if (nodes[1] === ':') {
@@ -25,6 +25,8 @@
     } else if (nodes[1] === '.' && nodes[3] === '<<') {
       nodes.splice(3, 1);
       nodes.unshift('send');
+    } else if (nodes.length !== 0) {
+      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens + '"');
     }
     return nodes.filter(function(node) {
       return (node !== '.');
