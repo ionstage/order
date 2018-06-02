@@ -28,6 +28,9 @@
     } else if (nodes.length !== 0) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens + '"');
     }
+    if (nodes.length > 0 && Command.NAMES.indexOf(nodes[0]) === -1) {
+      throw new SyntaxError('OrderScript parse error: Unexpected command "' +  tokens + '"');
+    }
     return nodes.filter(function(node) {
       return (node !== '.');
     }).map(function(node) {
@@ -39,6 +42,8 @@
       return node.replace(/\\(["'])/g, '$1');
     });
   };
+
+  Command.NAMES = ['noop', 'new', 'bind', 'unbind', 'send', 'delete', 'reset', 'load', 'save'];
 
   Command.split = function(line) {
     return line.slice(1).split(/([^\\]".*?[^\\]"|[^\\]'.*?[^\\]')/).map(function(s, i, args) {

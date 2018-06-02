@@ -106,6 +106,8 @@ describe('Command', function() {
   describe('#parse (error)', function() {
     [
       [':'],
+      [':', '_command'],
+      ['command'],
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
