@@ -108,6 +108,13 @@ describe('Command', function() {
       [':'],
       [':', '_command'],
       ['command'],
+      [':', 'new'],
+      [':', 'new', 'x'],
+      [':', 'new', 'x', 'y', 'z'],
+      [':', 'new', 'x', '.', 'y', 'z'],
+      [':', 'new', 'x', 'y', '.', 'z'],
+      [':', 'new', '_x', 'y'],
+      [':', 'new', 'x', '_y'],
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
