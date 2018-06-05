@@ -115,6 +115,18 @@ describe('Command', function() {
       [':', 'new', 'x', 'y', '.', 'z'],
       [':', 'new', '_x', 'y'],
       [':', 'new', 'x', '_y'],
+      [':', 'bind'],
+      [':', 'bind', 'x', '.', 'member0'],
+      [':', 'bind', 'x', '.', 'member0', 'y', '.', 'member1', 'z', '.', 'member2'],
+      [':', 'bind', 'x', 'y'],
+      [':', 'bind', 'x', '.', 'member0', 'y'],
+      [':', 'bind', 'x', '.', 'member0', 'y', '.', 'member1', '.', 'member2'],
+      [':', 'unbind'],
+      [':', 'unbind', 'x', '.', 'member0'],
+      [':', 'unbind', 'x', '.', 'member0', 'y', '.', 'member1', 'z', '.', 'member2'],
+      [':', 'unbind', 'x', 'y'],
+      [':', 'unbind', 'x', '.', 'member0', 'y'],
+      [':', 'unbind', 'x', '.', 'member0', 'y', '.', 'member1', '.', 'member2'],
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {

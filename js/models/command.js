@@ -34,6 +34,9 @@
     if (nodes[0] === 'new' && (nodes.length !== 3 || !/^[a-zA-Z]/.test(nodes[1]) || !/^[a-zA-Z]/.test(nodes[2]))) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
     }
+    if ((nodes[0] === 'bind' || nodes[0] === 'unbind') && (nodes.length !== 7 || nodes[2] !== '.' || nodes[5] !== '.')) {
+      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+    }
     return nodes.filter(function(node) {
       return (node !== '.');
     }).map(function(node) {
