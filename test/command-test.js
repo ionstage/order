@@ -127,6 +127,11 @@ describe('Command', function() {
       [':', 'unbind', 'x', 'y'],
       [':', 'unbind', 'x', '.', 'member0', 'y'],
       [':', 'unbind', 'x', '.', 'member0', 'y', '.', 'member1', '.', 'member2'],
+      [":", "send"],
+      [":", "send", "x"],
+      [":", "send", "x", ".", "member0", ".", "member1"],
+      [":", "send", "x", ".", "member0", "data", "text"],
+      [":", "send", "x", ".", "member0", '\\"data', 'text\\"'],
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
