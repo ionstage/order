@@ -132,6 +132,10 @@ describe('Command', function() {
       [":", "send", "x", ".", "member0", ".", "member1"],
       [":", "send", "x", ".", "member0", "data", "text"],
       [":", "send", "x", ".", "member0", '\\"data', 'text\\"'],
+      [":", "delete"],
+      [":", "delete", "x", "y"],
+      [":", "delete", "_x"],
+      [":", "delete", "x", ".", "y"],
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
