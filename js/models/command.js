@@ -46,6 +46,9 @@
     if (nodes[0] === 'reset' && nodes.length !== 1) {
       throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
     }
+    if ((nodes[0] === 'load' || nodes[0] === 'save') && nodes.length > 2) {
+      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+    }
     return nodes.filter(function(node) {
       return (node !== '.');
     }).map(function(node) {
