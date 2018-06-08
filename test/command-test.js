@@ -136,6 +136,7 @@ describe('Command', function() {
       [":", "delete", "x", "y"],
       [":", "delete", "_x"],
       [":", "delete", "x", ".", "y"],
+      [":", "reset", "x"],
     ].forEach(function(p) {
       it('"' + p + '"', function() {
         assert.throws(function() {
