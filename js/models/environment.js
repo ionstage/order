@@ -114,7 +114,10 @@
     }
     return list.reduce(function(p, s) {
       return p.then(function() {
-        var args = Command.parseStatement(Command.expandAbbreviation(s));
+        var args = Command.parse(Command.tokenize(s));
+        if (args.length === 0) {
+          return;
+        }
         var name = args.shift();
         return Environment.EXEC_TABLE[name].apply(this, args);
       }.bind(this));
