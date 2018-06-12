@@ -125,7 +125,6 @@
   };
 
   Environment.EXEC_TABLE = {
-    noop: function() {},
     new: function(variableName, moduleName) {
       if (this.variableTable.hasOwnProperty(variableName)) {
         throw new Error('OrderScript runtime error: variable "' + variableName + '" is already defined');

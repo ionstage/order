@@ -61,7 +61,7 @@
     });
   };
 
-  Command.NAMES = ['noop', 'new', 'bind', 'unbind', 'send', 'delete', 'reset', 'load', 'save'];
+  Command.NAMES = ['new', 'bind', 'unbind', 'send', 'delete', 'reset', 'load', 'save'];
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = Command;

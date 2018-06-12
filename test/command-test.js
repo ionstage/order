@@ -4,7 +4,6 @@ var Command = require('../js/models/command.js');
 describe('Command', function() {
   describe('#tokenize', function() {
     [
-      [':noop', [':', 'noop']],
       [':new x Module', [':', 'new', 'x', 'Module']],
       [':new  x \t Module', [':', 'new', 'x', 'Module']],
       [':New x Module', [':', 'New', 'x', 'Module']],
@@ -53,9 +52,9 @@ describe('Command', function() {
       ['# comment', []],
       [' # comment ', []],
       ['# x:Module', []],
-      [' :noop # comment', [':', 'noop']],
+      [' :reset # comment', [':', 'reset']],
 
-      [' :noop ', [':', 'noop']],
+      [' :reset ', [':', 'reset']],
       [':send x.member0 ">>y.member1"', [':', 'send', 'x', '.', 'member0', '">>y.member1"']],
       [':send x.member0 "<<"', [':', 'send', 'x', '.', 'member0', '"<<"']],
     ].forEach(function(p) {
@@ -69,7 +68,6 @@ describe('Command', function() {
     [
       [[], []],
 
-      [[':', 'noop'], ['noop']],
       [[':', 'new', 'x', 'Module'], ['new', 'x', 'Module']],
       [[':', 'New', 'x', 'Module'], ['new', 'x', 'Module']],
       [[':', 'NEW', 'x', 'Module'], ['new', 'x', 'Module']],
