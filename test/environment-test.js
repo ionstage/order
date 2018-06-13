@@ -35,7 +35,7 @@ describe('environment', function() {
       });
     });
 
-    it('should not create variables with the same name', function(done) {
+    it('should not create variables with the same name', function() {
       var env = new Environment(defaultProps);
 
       return env.exec([
@@ -43,18 +43,16 @@ describe('environment', function() {
         ':new x Module',
       ]).catch(function(e) {
         assert(e instanceof Error);
-        done();
       });
     });
 
-    it('should not set circuit module to null', function(done) {
+    it('should not set circuit module to null', function() {
       var env = new Environment({
         circuitModuleLoader: function() { return null; },
       });
 
       return env.exec(':new x Module').catch(function(e) {
         assert(e instanceof Error);
-        done();
       });
     });
 
