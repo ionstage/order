@@ -31,23 +31,39 @@
     if (nodes.length > 0 && Command.NAMES.indexOf(nodes[0]) === -1) {
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  tokens.join(' ') + '"');
     }
-    if (nodes[0] === 'new' && (nodes.length !== 3 || !/^[a-zA-Z]/.test(nodes[1]) || !/^[a-zA-Z]/.test(nodes[2]))) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-    }
-    if ((nodes[0] === 'bind' || nodes[0] === 'unbind') && (nodes.length !== 7 || nodes[2] !== '.' || nodes[5] !== '.')) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-    }
-    if (nodes[0] === 'send' && (nodes.length < 4 || nodes.length > 5 || nodes[2] !== '.')) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-    }
-    if (nodes[0] === 'delete' && (nodes.length !== 2 || !/^[a-zA-Z]/.test(nodes[1]))) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-    }
-    if (nodes[0] === 'reset' && nodes.length !== 1) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-    }
-    if ((nodes[0] === 'load' || nodes[0] === 'save') && nodes.length > 2) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+    switch (nodes[0]) {
+      case 'new':
+        if (nodes.length !== 3 || !/^[a-zA-Z]/.test(nodes[1]) || !/^[a-zA-Z]/.test(nodes[2])) {
+          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        }
+        break;
+      case 'bind':
+      case 'unbind':
+        if (nodes.length !== 7 || nodes[2] !== '.' || nodes[5] !== '.') {
+          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        }
+        break;
+      case 'send':
+        if (nodes.length < 4 || nodes.length > 5 || nodes[2] !== '.') {
+          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        }
+        break;
+      case 'delete':
+        if (nodes.length !== 2 || !/^[a-zA-Z]/.test(nodes[1])) {
+          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        }
+        break;
+      case 'reset':
+        if (nodes.length !== 1) {
+          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        }
+        break;
+      case 'load':
+      case 'save':
+        if (nodes.length > 2) {
+          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        }
+        break;
     }
     return nodes.filter(function(node) {
       return (node !== '.');
