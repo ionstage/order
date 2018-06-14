@@ -25,8 +25,6 @@
     } else if (nodes[1] === '.' && nodes[3] === '<<') {
       nodes.splice(3, 1);
       nodes.unshift('send');
-    } else if (nodes.length !== 0) {
-      throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
     }
     if (nodes.length > 0 && Command.NAMES.indexOf(nodes[0]) === -1) {
       throw new SyntaxError('OrderScript parse error: Unexpected command "' +  tokens.join(' ') + '"');
