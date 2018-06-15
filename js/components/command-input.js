@@ -5,7 +5,10 @@
   var dom = app.dom || require('../dom.js');
 
   var CommandInput = jCore.Component.inherits(function() {
-    this.history = new CommandInput.History();
+    this.history = new CommandInput.History({
+      size: 100,
+      key: 'order/input-history',
+    });
   });
 
   CommandInput.prototype.text = function(value) {
@@ -85,11 +88,11 @@
   };
 
   CommandInput.History = (function() {
-    var History = function() {
+    var History = function(props) {
       this.data = [];
       this.index = 0;
-      this.size = 100;
-      this.key = 'order/input-history';
+      this.size = props.size;
+      this.key = props.key;
     };
 
     History.prototype.current = function() {
