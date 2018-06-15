@@ -11,71 +11,67 @@
     return (index !== -1 ? tokens.slice(0, index) : tokens);
   };
 
-  Command.parse = function(tokens) {
-    var nodes = tokens.slice();
-    if (nodes[0] === ':' && nodes.length > 1) {
-      nodes.shift();
-      nodes[0] = nodes[0].toLowerCase();
-    } else if (nodes[1] === ':') {
-      nodes.splice(1, 1);
-      nodes.unshift('new');
-    } else if (nodes[1] === '.' && nodes[3] === '>>' && nodes[5] === '.') {
-      nodes.splice(3, 1);
-      nodes.unshift('bind');
-    } else if (nodes[1] === '.' && nodes[3] === '<<') {
-      nodes.splice(3, 1);
-      nodes.unshift('send');
-    }
-    if (nodes.length > 0 && Command.NAMES.indexOf(nodes[0]) === -1) {
-      throw new SyntaxError('OrderScript parse error: Unexpected command "' +  tokens.join(' ') + '"');
-    }
-    switch (nodes[0]) {
-      case 'new':
-        if (nodes.length !== 3 || !/^[a-zA-Z]/.test(nodes[1]) || !/^[a-zA-Z]/.test(nodes[2])) {
-          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-        }
-        break;
-      case 'bind':
-      case 'unbind':
-        if (nodes.length !== 7 || nodes[2] !== '.' || nodes[5] !== '.') {
-          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-        }
-        break;
-      case 'send':
-        if (nodes.length < 4 || nodes.length > 5 || nodes[2] !== '.') {
-          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-        }
-        break;
-      case 'delete':
-        if (nodes.length !== 2 || !/^[a-zA-Z]/.test(nodes[1])) {
-          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-        }
-        break;
-      case 'reset':
-        if (nodes.length !== 1) {
-          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-        }
-        break;
-      case 'load':
-      case 'save':
-        if (nodes.length > 2) {
-          throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
-        }
-        break;
-    }
-    return nodes.filter(function(node) {
-      return (node !== '.');
-    }).map(function(node) {
-      var first = node.charAt(0);
-      var last = node.slice(-1);
-      if (first === last && (first === '\'' || first === '"')) {
-        node = node.slice(1, -1);
+  Command.parse = (function() {
+    var makeNodes = function(tokens) {
+      var nodes = tokens.slice();
+      if (nodes[0] === ':' && nodes.length >= 2) {
+        nodes.shift();
+        nodes[0] = nodes[0].toLowerCase();
+      } else if (nodes[1] === ':') {
+        nodes.splice(1, 1);
+        nodes.unshift('new');
+      } else if (nodes[1] === '.' && nodes[3] === '>>' && nodes[5] === '.') {
+        nodes.splice(3, 1);
+        nodes.unshift('bind');
+      } else if (nodes[1] === '.' && nodes[3] === '<<') {
+        nodes.splice(3, 1);
+        nodes.unshift('send');
       }
-      return node.replace(/\\(["'])/g, '$1');
-    });
-  };
+      return nodes;
+    };
 
-  Command.NAMES = ['new', 'bind', 'unbind', 'send', 'delete', 'reset', 'load', 'save'];
+    var isValidNodes = function(nodes) {
+      switch (nodes[0]) {
+        case 'new':
+          return (nodes.length === 3 && /^[a-zA-Z]/.test(nodes[1]) && /^[a-zA-Z]/.test(nodes[2]));
+        case 'bind':
+        case 'unbind':
+          return (nodes.length === 7 && nodes[2] === '.' && nodes[5] === '.');
+        case 'send':
+          return (nodes.length >= 4 && nodes.length <= 5 && nodes[2] === '.');
+        case 'delete':
+          return (nodes.length === 2 && /^[a-zA-Z]/.test(nodes[1]));
+        case 'reset':
+          return (nodes.length === 1);
+        case 'load':
+        case 'save':
+          return (nodes.length <= 2);
+        default:
+          return (nodes.length === 0);
+      }
+    };
+
+    var makeArgs = function(nodes) {
+      return nodes.filter(function(node) {
+        return (node !== '.');
+      }).map(function(node) {
+        var first = node.charAt(0);
+        var last = node.slice(-1);
+        if (first === last && (first === '\'' || first === '"')) {
+          node = node.slice(1, -1);
+        }
+        return node.replace(/\\(["'])/g, '$1');
+      });
+    };
+
+    return function(tokens) {
+      var nodes = makeNodes(tokens);
+      if (!isValidNodes(nodes)) {
+        throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+      }
+      return makeArgs(nodes);
+    };
+  })();
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = Command;
