@@ -1,8 +1,6 @@
 (function(app) {
   'use strict';
 
-  var helper = app.helper || require('../helper.js');
-
   var Command = {};
 
   Command.tokenize = function(s) {
