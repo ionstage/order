@@ -3,13 +3,13 @@
 
   var Command = {};
 
-  Command.tokenize = function(s) {
-    var tokens = s.match(/".*?[^\\]"|'.*?[^\\]'|\.|#|:|>>|<<|[\w"'\/\\]+/g) || [];
-    var index = tokens.indexOf('#');
-    return (index !== -1 ? tokens.slice(0, index) : tokens);
-  };
-
   Command.parse = (function() {
+    var tokenize = function(s) {
+      var tokens = s.match(/".*?[^\\]"|'.*?[^\\]'|\.|#|:|>>|<<|[\w"'\/\\]+/g) || [];
+      var index = tokens.indexOf('#');
+      return (index !== -1 ? tokens.slice(0, index) : tokens);
+    };
+
     var makeNodes = function(tokens) {
       var nodes = tokens.slice();
       if (nodes[0] === ':' && nodes.length >= 2) {
@@ -62,10 +62,11 @@
       });
     };
 
-    return function(tokens) {
+    return function(s) {
+      var tokens = tokenize(s);
       var nodes = makeNodes(tokens);
       if (!isValidNodes(nodes)) {
-        throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  tokens.join(' ') + '"');
+        throw new SyntaxError('OrderScript parse error: Unexpected identifier "' +  s + '"');
       }
       return makeArgs(nodes);
     };

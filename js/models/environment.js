@@ -114,7 +114,7 @@
     }
     return list.reduce(function(p, s) {
       return p.then(function() {
-        var args = Command.parse(Command.tokenize(s));
+        var args = Command.parse(s);
         if (args.length === 0) {
           return;
         }
