@@ -16,7 +16,7 @@ describe('CircuitModule.OrderModule', function() {
     assert(typeof b() === 'undefined');
   });
 
-  it('has prop members with name and value', function() {
+  it('has prop members with value', function() {
     var m = new CircuitModule.OrderModule([{ name: 'a', type: 'prop', arg: 1 }]);
     var a = m.get('a');
     assert.equal(a(), 1);
@@ -24,7 +24,7 @@ describe('CircuitModule.OrderModule', function() {
     assert.equal(a(), 2);
   });
 
-  it('has event members with name and listener', function() {
+  it('has event members with listener', function() {
     var l = sinon.spy();
     var m = new CircuitModule.OrderModule([{ name: 'a', type: 'event', arg: l }]);
     var a = m.get('a');

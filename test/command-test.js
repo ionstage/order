@@ -2,7 +2,7 @@ var assert = require('assert');
 var Command = require('../js/models/command.js');
 
 describe('Command', function() {
-  describe('#parse', function() {
+  describe('.parse', function() {
     [
       [':new x Module', ['new', 'x', 'Module']],
       [':new  x \t Module', ['new', 'x', 'Module']],
@@ -64,7 +64,7 @@ describe('Command', function() {
     });
   });
 
-  describe('#parse (error)', function() {
+  describe('.parse (error)', function() {
     [
       ':',
       ':_command',

@@ -3,7 +3,7 @@ var sinon = require('sinon');
 var CircuitModule = require('../js/models/circuit-module.js');
 var Environment = require('../js/models/environment.js');
 
-describe('environment', function() {
+describe('Environment', function() {
   var defaultProps = {
     circuitModuleLoader: function() { return Promise.resolve(new CircuitModule.OrderModule([])); },
     circuitModuleUnloader: function() { return Promise.resolve(); },
