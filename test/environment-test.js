@@ -3,23 +3,33 @@ var sinon = require('sinon');
 var CircuitModule = require('../js/models/circuit-module.js');
 var Environment = require('../js/models/environment.js');
 
-describe('Environment', function() {
-  var defaultProps = {
-    circuitModuleLoader: function() { return Promise.resolve(new CircuitModule.OrderModule([])); },
-    circuitModuleUnloader: function() { return Promise.resolve(); },
-    scriptLoader: function() { return Promise.resolve(); },
-    scriptSaver: function() { return Promise.resolve(); },
-  };
+function TestEnvironment(props) {
+  return new Environment(Object.assign({
+    circuitModuleLoader: function() {
+      return Promise.resolve(new CircuitModule.OrderModule([]));
+    },
+    circuitModuleUnloader: function() {
+      return Promise.resolve();
+    },
+    scriptLoader: function() {
+      return Promise.resolve();
+    },
+    scriptSaver: function() {
+      return Promise.resolve();
+    },
+  }, props));
+}
 
+describe('Environment', function() {
   describe('#exec', function() {
     it('accept empty command', function() {
-      var env = new Environment(defaultProps);
+      var env = TestEnvironment();
       return env.exec('');
     });
 
     it('create new variable', function() {
       var dummy = {};
-      var env = new Environment({
+      var env = TestEnvironment({
         circuitModuleLoader: function(variableName, moduleName) {
           assert.equal(variableName, 'x');
           assert.equal(moduleName, 'Module');
@@ -36,7 +46,7 @@ describe('Environment', function() {
     });
 
     it('should not create variables with the same name', function() {
-      var env = new Environment(defaultProps);
+      var env = TestEnvironment();
 
       return env.exec([
         ':new x Module',
@@ -47,7 +57,7 @@ describe('Environment', function() {
     });
 
     it('should not set circuit module to null', function() {
-      var env = new Environment({
+      var env = TestEnvironment({
         circuitModuleLoader: function() { return null; },
       });
 
@@ -58,7 +68,7 @@ describe('Environment', function() {
 
     it('bind circuit module members', function() {
       var cels = [];
-      var env = new Environment({
+      var env = TestEnvironment({
         circuitModuleLoader: function() {
           var cel = new CircuitModule.OrderModule([
             { name: 'member0', type: 'prop' },
@@ -85,7 +95,7 @@ describe('Environment', function() {
 
     it('unbind circuit module members', function() {
       var cels = [];
-      var env = new Environment({
+      var env = TestEnvironment({
         circuitModuleLoader: function() {
           var cel = new CircuitModule.OrderModule([
             { name: 'member0', type: 'prop' },
@@ -112,7 +122,7 @@ describe('Environment', function() {
     });
 
     it('send data to a member of circuit module', function() {
-      var env = new Environment({
+      var env = TestEnvironment({
         circuitModuleLoader: function() {
           return Promise.resolve(new CircuitModule.OrderModule([
             { name: 'prop', type: 'prop' },
@@ -130,7 +140,7 @@ describe('Environment', function() {
     });
 
     it('delete variable', function() {
-      var env = new Environment(defaultProps);
+      var env = TestEnvironment();
 
       env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
 
@@ -144,7 +154,7 @@ describe('Environment', function() {
     });
 
     it('reset', function() {
-      var env = new Environment(defaultProps);
+      var env = TestEnvironment();
 
       env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
 
@@ -159,7 +169,7 @@ describe('Environment', function() {
     });
 
     it('load command', function() {
-      var env = new Environment(defaultProps);
+      var env = TestEnvironment();
 
       env.scriptLoader = sinon.spy(function() {
         return Promise.resolve({ text: ':new x Module', fileName: 'test.os' });
@@ -172,7 +182,7 @@ describe('Environment', function() {
     });
 
     it('save command', function() {
-      var env = new Environment(defaultProps);
+      var env = TestEnvironment();
 
       env.scriptSaver = sinon.spy();
 
@@ -186,7 +196,7 @@ describe('Environment', function() {
   });
 
   it('#unbind all circuit module members on deleting variable', function() {
-    var env = new Environment({
+    var env = TestEnvironment({
       circuitModuleLoader: function(variableName, moduleName) {
         switch (variableName) {
           case 'x':
