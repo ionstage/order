@@ -28,26 +28,20 @@ describe('Environment', function() {
     });
 
     it('create new variable', function() {
-      var dummy = {};
-      var env = TestEnvironment({
-        circuitModuleLoader: function(variableName, moduleName) {
-          assert.equal(variableName, 'x');
-          assert.equal(moduleName, 'Module');
-          return Promise.resolve(dummy);
-        },
-      });
-
+      var m = new CircuitModule.OrderModule([]);
+      var f = sinon.spy(function() { return Promise.resolve(m); });
+      var env = TestEnvironment({ circuitModuleLoader: f });
       return env.exec(':new x Module').then(function() {
-        var v = env.variableTable.x;
-        assert.equal(v.name, 'x');
-        assert.equal(v.moduleName, 'Module');
-        assert.equal(v.circuitModule, dummy);
+        var x = env.variableTable.x;
+        assert.equal(x.name, 'x');
+        assert.equal(x.moduleName, 'Module');
+        assert.equal(x.circuitModule, m);
+        assert(f.calledWith('x', 'Module'));
       });
     });
 
     it('should not create variables with the same name', function() {
       var env = TestEnvironment();
-
       return env.exec([
         ':new x Module',
         ':new x Module',
@@ -58,65 +52,56 @@ describe('Environment', function() {
 
     it('should not set circuit module to null', function() {
       var env = TestEnvironment({
-        circuitModuleLoader: function() { return null; },
+        circuitModuleLoader: function() {
+          return null;
+        },
       });
-
       return env.exec(':new x Module').catch(function(e) {
         assert(e instanceof Error);
       });
     });
 
     it('bind circuit module members', function() {
-      var cels = [];
       var env = TestEnvironment({
         circuitModuleLoader: function() {
-          var cel = new CircuitModule.OrderModule([
-            { name: 'member0', type: 'prop' },
-            { name: 'member1', type: 'prop' },
-          ]);
-          cels.push(cel);
-          return Promise.resolve(cel);
+          return Promise.resolve(new CircuitModule.OrderModule([
+            { name: 'a', type: 'prop' },
+            { name: 'b', type: 'prop' },
+          ]));
         },
       });
-
-      CircuitModule.bind = sinon.spy();
-
+      CircuitModule.bind = sinon.spy(CircuitModule.bind);
       return env.exec([
         ':new x Module',
         ':new y Module',
-        ':bind x.member0 y.member1',
+        ':bind x.a y.b',
       ]).then(function() {
-        var member0 = cels[0].get('member0');
-        var member1 = cels[1].get('member1');
-        assert(CircuitModule.bind.calledWith(member0, member1));
+        var a = env.variableTable.x.circuitModule.get('a');
+        var b = env.variableTable.y.circuitModule.get('b');
+        assert(CircuitModule.bind.calledWith(a, b));
         assert.equal(env.bindings.length, 1);
       });
     });
 
     it('unbind circuit module members', function() {
-      var cels = [];
       var env = TestEnvironment({
         circuitModuleLoader: function() {
-          var cel = new CircuitModule.OrderModule([
-            { name: 'member0', type: 'prop' },
-            { name: 'member1', type: 'prop' },
-          ]);
-          cels.push(cel);
-          return Promise.resolve(cel);
+          return Promise.resolve(new CircuitModule.OrderModule([
+            { name: 'a', type: 'prop' },
+            { name: 'b', type: 'prop' },
+          ]));
         },
       });
-
-      CircuitModule.unbind = sinon.spy();
-
+      CircuitModule.unbind = sinon.spy(CircuitModule.unbind);
       return env.exec([
         ':new x Module',
         ':new y Module',
-        ':bind x.member0 y.member1',
-        ':unbind x.member0 y.member1',
+        ':bind x.a y.b',
+        ':unbind x.a y.b',
       ]).then(function() {
-        var member0 = cels[0].get('member0');
-        var member1 = cels[1].get('member1');
-        assert(CircuitModule.unbind.calledWith(member0, member1));
+        var a = env.variableTable.x.circuitModule.get('a');
+        var b = env.variableTable.y.circuitModule.get('b');
+        assert(CircuitModule.unbind.calledWith(a, b));
         assert.equal(env.bindings.length, 0);
       });
     });
@@ -125,123 +110,110 @@ describe('Environment', function() {
       var env = TestEnvironment({
         circuitModuleLoader: function() {
           return Promise.resolve(new CircuitModule.OrderModule([
-            { name: 'prop', type: 'prop' },
+            { name: 'a', type: 'prop' },
           ]));
         },
       });
-
       return env.exec([
         ':new x Module',
-        ':send x.prop data_text',
+        ':send x.a data_text',
       ]).then(function() {
-        var member = env.variableTable.x.circuitModule.get('prop');
-        assert.equal(member(), 'data_text');
+        var a = env.variableTable.x.circuitModule.get('a');
+        assert.equal(a(), 'data_text');
       });
     });
 
     it('delete variable', function() {
-      var env = TestEnvironment();
-
-      env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
-
+      var f = sinon.spy(function() { return Promise.resolve(); });
+      var env = TestEnvironment({ circuitModuleUnloader: f });
       return env.exec([
         ':new x Module',
         ':delete x',
       ]).then(function() {
         assert.equal(Object.keys(env.variableTable).length, 0);
-        assert(env.circuitModuleUnloader.calledOnce);
+        assert(f.calledOnce);
+      });
+    });
+
+    it('unbind all circuit module members on deleting variable', function() {
+      var env = TestEnvironment({
+        circuitModuleLoader: function(variableName, moduleName) {
+          return Promise.resolve(new CircuitModule.OrderModule([
+            { name: 'a', type: 'prop' },
+            { name: 'b', type: 'prop' },
+          ]));
+        },
+      });
+      var x, y, z;
+      CircuitModule.unbind = sinon.spy(CircuitModule.unbind);
+      return env.exec([
+        ':new x Module',
+        ':new y Module',
+        ':new z Module',
+        ':bind x.a y.a',
+        ':bind x.b y.a',
+        ':bind y.a z.a',
+        ':bind y.a z.b',
+        ':bind x.b y.b',
+        ':bind y.b z.b',
+      ]).then(function() {
+        x = env.variableTable.x;
+        y = env.variableTable.y;
+        z = env.variableTable.z;
+        return env.exec(':delete y');
+      }).then(function() {
+        var args = CircuitModule.unbind.args;
+        assert.equal(args[0][0], x.circuitModule.get('a'));
+        assert.equal(args[0][1], y.circuitModule.get('a'));
+        assert.equal(args[1][0], x.circuitModule.get('b'));
+        assert.equal(args[1][1], y.circuitModule.get('a'));
+        assert.equal(args[2][0], y.circuitModule.get('a'));
+        assert.equal(args[2][1], z.circuitModule.get('a'));
+        assert.equal(args[3][0], y.circuitModule.get('a'));
+        assert.equal(args[3][1], z.circuitModule.get('b'));
+        assert.equal(args[4][0], x.circuitModule.get('b'));
+        assert.equal(args[4][1], y.circuitModule.get('b'));
+        assert.equal(args[5][0], y.circuitModule.get('b'));
+        assert.equal(args[5][1], z.circuitModule.get('b'));
       });
     });
 
     it('reset', function() {
-      var env = TestEnvironment();
-
-      env.circuitModuleUnloader = sinon.spy(env.circuitModuleUnloader);
-
+      var f = sinon.spy(function() { return Promise.resolve(); });
+      var env = TestEnvironment({ circuitModuleUnloader: f });
       return env.exec([
         ':new x Module',
         ':new y Module',
         ':reset',
       ]).then(function() {
         assert.equal(Object.keys(env.variableTable).length, 0);
-        assert(env.circuitModuleUnloader.calledTwice);
+        assert(f.calledTwice);
       });
     });
 
     it('load command', function() {
-      var env = TestEnvironment();
-
-      env.scriptLoader = sinon.spy(function() {
-        return Promise.resolve({ text: ':new x Module', fileName: 'test.os' });
+      var f = sinon.spy(function() {
+        return Promise.resolve({
+          text: ':new x Module',
+          fileName: 'test.os',
+        });
       });
-
+      var env = TestEnvironment({ scriptLoader: f });
       return env.exec(':load /path/to/script').then(function() {
-        assert(env.scriptLoader.calledWith('/path/to/script'));
         assert(env.variableTable.hasOwnProperty('x'));
+        assert(f.calledWith('/path/to/script'));
       });
     });
 
     it('save command', function() {
-      var env = TestEnvironment();
-
-      env.scriptSaver = sinon.spy();
-
+      var f = sinon.spy(function() { return Promise.resolve(); });
+      var env = TestEnvironment({ scriptSaver: f });
       return env.exec([
         ':new x Module',
         ':save /path/to/script',
       ]).then(function() {
-        assert(env.scriptSaver.calledWith('/path/to/script', 'x:Module\n'));
+        assert(f.calledWith('/path/to/script', 'x:Module\n'));
       });
-    });
-  });
-
-  it('#unbind all circuit module members on deleting variable', function() {
-    var env = TestEnvironment({
-      circuitModuleLoader: function(variableName, moduleName) {
-        switch (variableName) {
-          case 'x':
-            return Promise.resolve(new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
-          case 'y':
-            return Promise.resolve(new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
-          case 'z':
-            return Promise.resolve(new CircuitModule.OrderModule([{ name: 'a', type: 'prop' }, { name: 'b', type: 'prop' }]));
-        }
-      },
-      circuitModuleUnloader: function() { return Promise.resolve(); },
-    });
-
-    var x, y, z;
-    CircuitModule.unbind = sinon.spy();
-
-    return env.exec([
-      ':new x Module',
-      ':new y Module',
-      ':new z Module',
-      ':bind x.a y.a',
-      ':bind x.b y.a',
-      ':bind y.a z.a',
-      ':bind y.a z.b',
-      ':bind x.b y.b',
-      ':bind y.b z.b',
-    ]).then(function() {
-      x = env.variableTable['x'];
-      y = env.variableTable['y'];
-      z = env.variableTable['z'];
-      return env.exec(':delete y');
-    }).then(function() {
-      var args = CircuitModule.unbind.args;
-      assert.equal(args[0][0], x.circuitModule.get('a'));
-      assert.equal(args[0][1], y.circuitModule.get('a'));
-      assert.equal(args[1][0], x.circuitModule.get('b'));
-      assert.equal(args[1][1], y.circuitModule.get('a'));
-      assert.equal(args[2][0], y.circuitModule.get('a'));
-      assert.equal(args[2][1], z.circuitModule.get('a'));
-      assert.equal(args[3][0], y.circuitModule.get('a'));
-      assert.equal(args[3][1], z.circuitModule.get('b'));
-      assert.equal(args[4][0], x.circuitModule.get('b'));
-      assert.equal(args[4][1], y.circuitModule.get('b'));
-      assert.equal(args[5][0], y.circuitModule.get('b'));
-      assert.equal(args[5][1], z.circuitModule.get('b'));
     });
   });
 });
