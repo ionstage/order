@@ -17,12 +17,12 @@
     "jcore": "^0.3.0"
   },
   "devDependencies": {
-    "browser-sync": "^2.7.6",
-    "browserify": "^10.2.3",
-    "clean-css": "^3.3.1",
-    "mocha": "^2.3.3",
-    "sinon": "^1.17.2",
-    "uglify-js": "^2.4.23"
+    "browser-sync": "^2.24.5",
+    "browserify": "^16.2.2",
+    "clean-css-cli": "^4.1.11",
+    "mocha": "^5.2.0",
+    "sinon": "^6.0.1",
+    "uglify-js": "^3.4.2"
   },
   "private": true
 }
