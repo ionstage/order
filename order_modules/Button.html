@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <title></title>
   <style>
     body {
@@ -16,6 +16,7 @@
       box-sizing: border-box;
       display: block;
       height: 28px;
+      outline: 0;
       width: 100%;
     }
 
@@ -33,20 +34,20 @@
 </head>
 <body>
   <button id="button"></button>
-  <script src="js/order-module.js"></script>
+  <script src="/order/js/order-module.js"></script>
   <script>
     (function() {
       var buttonElement = document.getElementById('button');
 
-      var cel = new order.Module([
-        { name: 'click', type: 'event' }
+      var module = new order.Module([
+        { name: 'click', type: 'event' },
       ]);
 
       buttonElement.addEventListener('click', function() {
-        cel.get('click')();
+        module.get('click')();
       });
 
-      order.exports = cel;
+      order.exports = module;
     })();
   </script>
 </body>
