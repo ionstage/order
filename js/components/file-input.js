@@ -12,10 +12,10 @@
         resolve(dom.file(dom.target(event)));
       };
       dom.on(this.element(), 'change', onchange);
+      dom.click(this.element());
       dom.once(dom.body(), 'focus', function() {
         dom.off(this.element(), 'change', onchange);
       }.bind(this), true);
-      dom.click(this.element());
     }.bind(this)).then(function(file) {
       var fileName = dom.fileName(file);
       dom.value(this.element(), '');
