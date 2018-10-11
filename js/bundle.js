@@ -1822,7 +1822,7 @@ if (typeof module !== "undefined" && module.exports) {
 
 },{}],"jcore":[function(require,module,exports){
 /**
- * jCore v0.3.0
+ * jCore v0.3.1
  * (c) 2016 iOnStage
  * Released under the MIT License.
  */
@@ -1830,8 +1830,8 @@ if (typeof module !== "undefined" && module.exports) {
 (function(global) {
   'use strict';
 
-  if (!global.requestAnimationFrame) {
-    global.requestAnimationFrame = function(callback) {
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function(callback) {
       return setTimeout(callback, 1000 / 60);
     };
   }
@@ -1870,7 +1870,7 @@ if (typeof module !== "undefined" && module.exports) {
   };
 
   dom.supportsTouch = function() {
-    return ('createTouch' in document);
+    return ('ontouchstart' in window || (typeof DocumentTouch !== 'undefined' && document instanceof DocumentTouch));
   };
 
   dom.changedTouch = function(event) {
@@ -2118,7 +2118,7 @@ if (typeof module !== "undefined" && module.exports) {
       if (this.requestID) {
         return;
       }
-      this.requestID = global.requestAnimationFrame(this.onanimate.bind(this));
+      this.requestID = window.requestAnimationFrame(this.onanimate.bind(this));
     };
 
     Main.prototype.update = function(index) {
